@@ -22,6 +22,9 @@
     <meta name="apple-mobile-web-app-title" content="Gabriel" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6896632008434347"
+        crossorigin="anonymous"></script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
