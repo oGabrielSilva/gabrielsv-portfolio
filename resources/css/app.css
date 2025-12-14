@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    /* Definição da fonte padrão do projeto */
+    --font-sans: "Inter", "Instrument Sans", ui-sans-serif, system-ui,
+        sans-serif;
+
+    /* Cores personalizadas extraídas do seu HTML original */
+    --color-bulma-primary: #00d1b2;
+    --color-bulma-link: #3273dc;
+    --color-bulma-dark: #363636;
+    --color-bulma-grey-dark: #2c2f33;
+
+    --color-neutral-900: #1a1a1a;
+    --color-neutral-800: #242424;
+    --color-neutral-700: #2f2f2f;
+}
+
+/* Estilos globais e Scrollbar */
+body {
+    background-color: var(--color-neutral-900);
+    color: #f5f5f5;
+    overflow-x: hidden;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--color-bulma-primary);
+    outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-neutral-900);
+}
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-bulma-primary);
+}
