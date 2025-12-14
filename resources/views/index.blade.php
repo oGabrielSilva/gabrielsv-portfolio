@@ -39,10 +39,8 @@
                 <a href="#sobre" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Sobre</a>
                 <a href="#servicos"
                     class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Serviços</a>
-                <a href="#blog-section"
-                    class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
-                <a href="#work"
-                    class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Projetos</a>
+                <a href="#blog" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
+
                 <a href="https://eu.gabrielsv.com" target="_blank"
                     class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
                     Blog <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
@@ -59,8 +57,7 @@
             <div class="flex flex-col gap-4">
                 <a href="#sobre" class="text-gray-300">Sobre</a>
                 <a href="#servicos" class="text-gray-300">Serviços</a>
-                <a href="#work" class="text-gray-300">Trabalho</a>
-                <a href="#blog-section" class="text-gray-300">Artigos</a>
+                <a href="#blog" class="text-gray-300">Artigos</a>
                 <a href="https://eu.gabrielsv.com" class="text-bulma-primary font-medium">Ir para o Blog</a>
             </div>
         </div>
@@ -68,15 +65,19 @@
 
     <main class="max-w-5xl mx-auto px-6 pt-32 pb-32">
 
-        <div class="max-w-2xl py-10" data-aos="fade-up" data-aos-delay="200">
+        <div class="py-12" data-aos="fade-up" data-aos-delay="200">
             <span class="text-bulma-primary font-medium tracking-wide text-sm mb-4 block uppercase">DESENVOLVEDOR
                 FULLSTACK</span>
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
-                Construindo experiências digitais sólidas e funcionais.
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-0 tracking-tight leading-tight">
+                Gabriel Henrique da Silva
             </h1>
-            <p class="text-xl text-gray-400 mb-10 leading-relaxed">
-                Olá, eu sou Gabriel. Escrevo código e compartilho conhecimento.
-                O foco central do meu conteúdo está no meu subdomínio pessoal.
+            <h3 class="mb-6 text-5xl md:text-6xl font-bold text-gray-400 tracking-tight leading-tight">
+                Código limpo. Soluções robustas.
+            </h3>
+            <p class="max-w-xl text-gray-400 pb-10 leading-relaxed">
+                Especialista em Desenvolvimento Web com foco em ecossistemas modernos do Node.js e PHP. Uso este espaço
+                para unir o útil ao agradável: compartilhar insights sobre tecnologia e carreira enquanto aprimoro, em
+                público, o Capsulepress, o tema que dá vida a estas páginas.
             </p>
 
             <div class="flex flex-wrap gap-4">
@@ -101,21 +102,20 @@
                         <div class="h-px w-8 bg-bulma-primary"></div>
                         <span class="text-bulma-primary font-medium text-sm tracking-wider uppercase">Quem sou eu</span>
                     </div>
-                    <h2 class="text-3xl font-bold text-white mb-6">Gabriel SV</h2>
+                    <h2 class="text-3xl font-bold text-white mb-6">Gabriel Silva</h2>
                     <div class="space-y-4 text-gray-400 leading-relaxed text-lg">
                         <p>
-                            Sou um desenvolvedor apaixonado por transformar ideias complexas em interfaces simples e
-                            intuitivas. Minha jornada na tecnologia começou pela curiosidade de entender como as coisas
-                            funcionam por trás da tela.
+                            Com pós-graduação em Desenvolvimento Web, minha abordagem vai além da sintaxe.
+                            Foco na arquitetura completa da aplicação, unindo performance no backend com interfaces
+                            reativas no frontend.
                         </p>
                         <p>
-                            Atualmente, foco em construir soluções robustas utilizando tecnologias modernas como React e
-                            Node.js. Acredito no poder do código limpo e na importância de compartilhar conhecimento com
-                            a comunidade.
+                            Meu stack principal gira em torno de Laravel, Node.js e Vue/Nuxt, mas também tenho um pé
+                            firme na infraestrutura.
                         </p>
                         <p>
-                            Quando não estou programando, você pode me encontrar escrevendo novos artigos para o blog ou
-                            explorando novas tecnologias.
+                            Quando não estou desenvolvendo ou refatorando código, estou documentando esses
+                            aprendizados no meu blog ou explorando novas tecnologias do ecossistema web.
                         </p>
                     </div>
 
@@ -124,11 +124,11 @@
                             <span class="text-3xl font-bold text-white">5+</span>
                             <span class="text-sm text-gray-500">Anos de XP</span>
                         </div>
-                        <!-- <div class="w-px bg-neutral-700 mx-2"></div>
+                        <div class="w-px bg-neutral-700 mx-2"></div>
                         <div class="flex flex-col">
-                            <span class="text-3xl font-bold text-white">20+</span>
-                            <span class="text-sm text-gray-500">Projetos</span>
-                        </div> -->
+                            <span class="text-3xl font-bold text-white">15+</span>
+                            <span class="text-sm text-gray-500">Artigos</span>
+                        </div>
                     </div>
                 </div>
 
@@ -139,55 +139,116 @@
                     <div class="w-64 h-64 md:w-80 md:h-80 overflow-hidden relative z-10 bg-neutral-800 transition-all duration-500 ease-in-out hover:scale-105"
                         style="border-radius: 56% 44% 71% 29% / 46% 56% 44% 54%; box-shadow: 0 0 0 8px rgba(26, 26, 26, 0.5);">
                         <img src="/IMG_20241226_184124563.jpg" alt="Imagem de Gabriel Silva"
-                            class="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-700">
+                            class="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-400">
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="servicos" class="mb-24 scroll-mt-32">
-            <div class="flex items-end justify-between mb-10" data-aos="fade-right">
-                <h2 class="text-3xl font-bold text-white">Meus Serviços</h2>
-                <div class="h-1 w-20 bg-bulma-primary hidden md:block rounded"></div>
+            <div class="flex items-end justify-between mb-12" data-aos="fade-right">
+                <div>
+                    <span class="text-bulma-primary font-bold tracking-wider text-sm uppercase">O que eu faço</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Soluções Especializadas</h2>
+                </div>
+                <div class="h-1 w-24 bg-bulma-primary hidden md:block rounded"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-8 bg-neutral-800 rounded-lg border border-neutral-700 hover:border-bulma-primary transition-all duration-300 hover:-translate-y-2 group"
-                    data-aos="fade-up" data-aos-delay="100">
-                    <div
-                        class="w-12 h-12 bg-neutral-900 rounded-lg flex items-center justify-center mb-6 text-bulma-primary text-2xl group-hover:bg-bulma-primary group-hover:text-neutral-900 transition-colors">
-                        <i class="fa-solid fa-code"></i>
+            <div class="flex flex-wrap justify-center gap-6">
+
+                <div class="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-16px)] p-8 bg-neutral-800/50 backdrop-blur-sm rounded-xl border border-neutral-700
+                    hover:border-bulma-primary hover:bg-neutral-800 hover:shadow-[0_10px_40px_-10px_rgba(0,209,178,0.2)]
+                    transition-all duration-500 ease-out hover:-translate-y-2 group" data-aos="fade-up"
+                    data-aos-delay="0">
+
+                    <div class="w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6 text-bulma-primary text-2xl
+                        group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">
+                        <i class="fa-solid fa-layer-group"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Desenvolvimento Web</h3>
-                    <p class="text-gray-400 leading-relaxed text-sm">Criação de sites e aplicações web modernas
-                        utilizando React, Node.js e tecnologias de ponta.</p>
+                    <h3
+                        class="text-xl font-bold text-white mb-3 group-hover:text-bulma-primary transition-colors duration-300">
+                        Frontend Moderno</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Desenvolvimento de interfaces reativas e SPAs utilizando <strong>Vue.js</strong> e
+                        <strong>Nuxt</strong>. Foco total em usabilidade e design systems consistentes.
+                    </p>
                 </div>
 
-                <div class="p-8 bg-neutral-800 rounded-lg border border-neutral-700 hover:border-bulma-link transition-all duration-300 hover:-translate-y-2 group"
-                    data-aos="fade-up" data-aos-delay="200">
-                    <div
-                        class="w-12 h-12 bg-neutral-900 rounded-lg flex items-center justify-center mb-6 text-bulma-link text-2xl group-hover:bg-bulma-link group-hover:text-white transition-colors">
-                        <i class="fa-solid fa-database"></i>
+                <div class="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-16px)] p-8 bg-neutral-800/50 backdrop-blur-sm rounded-xl border border-neutral-700
+                    hover:border-blue-500 hover:bg-neutral-800 hover:shadow-[0_10px_40px_-10px_rgba(59,130,246,0.2)]
+                    transition-all duration-500 ease-out hover:-translate-y-2 group" data-aos="fade-up"
+                    data-aos-delay="100">
+
+                    <div class="w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6 text-blue-500 text-2xl
+                        group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">
+                        <i class="fa-solid fa-server"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Backend & API</h3>
-                    <p class="text-gray-400 leading-relaxed text-sm">Arquitetura de servidores, bancos de dados
-                        SQL/NoSQL e construção de APIs RESTful escaláveis.</p>
+                    <h3
+                        class="text-xl font-bold text-white mb-3 group-hover:text-blue-500 transition-colors duration-300">
+                        Backend & API</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Arquitetura sólida com <strong>Laravel</strong> ou <strong>Node.js</strong>. Criação de APIs
+                        RESTful seguras, integrações complexas e modelagem de bancos de dados.
+                    </p>
                 </div>
 
-                <div class="p-8 bg-neutral-800 rounded-lg border border-neutral-700 hover:border-purple-500 transition-all duration-300 hover:-translate-y-2 group"
-                    data-aos="fade-up" data-aos-delay="300">
-                    <div
-                        class="w-12 h-12 bg-neutral-900 rounded-lg flex items-center justify-center mb-6 text-purple-500 text-2xl group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                        <i class="fa-solid fa-rocket"></i>
+                <div class="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-16px)] p-8 bg-neutral-800/50 backdrop-blur-sm rounded-xl border border-neutral-700
+                    hover:border-sky-400 hover:bg-neutral-800 hover:shadow-[0_10px_40px_-10px_rgba(56,189,248,0.2)]
+                    transition-all duration-500 ease-out hover:-translate-y-2 group" data-aos="fade-up"
+                    data-aos-delay="200">
+
+                    <div class="w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6 text-sky-400 text-2xl
+                        group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">
+                        <i class="fa-brands fa-wordpress"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Otimização</h3>
-                    <p class="text-gray-400 leading-relaxed text-sm">Melhoria de performance, SEO técnico e refatoração
-                        de código para garantir velocidade.</p>
+                    <h3
+                        class="text-xl font-bold text-white mb-3 group-hover:text-sky-400 transition-colors duration-300">
+                        Soluções WordPress</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Desenvolvimento de <strong>temas personalizados</strong> e plugins. Transformo o CMS mais usado
+                        do mundo em plataformas robustas e performáticas.
+                    </p>
                 </div>
+
+                <div class="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-16px)] p-8 bg-neutral-800/50 backdrop-blur-sm rounded-xl border border-neutral-700
+                    hover:border-orange-400 hover:bg-neutral-800 hover:shadow-[0_10px_40px_-10px_rgba(251,146,60,0.2)]
+                    transition-all duration-500 ease-out hover:-translate-y-2 group" data-aos="fade-up"
+                    data-aos-delay="300">
+
+                    <div class="w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6 text-orange-400 text-2xl
+                        group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">
+                        <i class="fa-regular fa-envelope-open"></i>
+                    </div>
+                    <h3
+                        class="text-xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300">
+                        Email Development</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Desenvolvimento de e-mails compatíveis com os principais clientes de e-mail.
+                    </p>
+                </div>
+
+                <div class="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-16px)] p-8 bg-neutral-800/50 backdrop-blur-sm rounded-xl border border-neutral-700
+                    hover:border-emerald-400 hover:bg-neutral-800 hover:shadow-[0_10px_40px_-10px_rgba(52,211,153,0.2)]
+                    transition-all duration-500 ease-out hover:-translate-y-2 group" data-aos="fade-up"
+                    data-aos-delay="500">
+
+                    <div class="w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6 text-emerald-400 text-2xl
+                        group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <h3
+                        class="text-xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors duration-300">
+                        Performance & SEO</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Otimização técnica (Core Web Vitals), melhoria de tempo de carregamento e boas práticas de SEO
+                        aplicadas diretamente no código.
+                    </p>
+                </div>
+
             </div>
         </section>
 
-        <section id="blog-section" class="mb-24 py-10 border-t border-b border-neutral-800 scroll-mt-32">
+        <section id="blog" class="mb-24 py-10 border-t border-b border-neutral-800 scroll-mt-32">
             <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" data-aos="fade-up">
                 <div>
                     <h2 class="text-3xl font-bold text-white mb-2">Últimos Artigos</h2>
@@ -249,7 +310,7 @@
             </div>
         </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
 
             <section id="work" data-aos="fade-right" class="scroll-mt-32">
                 <h2 class="text-2xl font-bold text-white mb-6">Projetos Selecionados</h2>
@@ -314,7 +375,7 @@
                     </div>
                 </div>
             </section>
-        </div>
+        </div> -->
 
     </main>
 
