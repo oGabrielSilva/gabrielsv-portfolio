@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'google_ads' => [
+        'client_id' => env('GOOGLE_ADS_CLIENT_ID'),
+    ],
+
 ];

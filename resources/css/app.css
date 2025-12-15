@@ -46,3 +46,72 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-bulma-primary);
 }
+
+svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+/* ==========================================================================
+   Service Card Color Variants
+   ========================================================================== */
+
+/* bulma-primary */
+.service-card--bulma-primary .service-card__icon {
+    @apply text-bulma-primary;
+}
+.group.service-card--bulma-primary:hover .service-card__title {
+    @apply text-bulma-primary;
+}
+.group.service-card--bulma-primary:hover {
+    @apply border-bulma-primary;
+    box-shadow: 0 10px 40px -10px rgba(0, 209, 178, 0.2);
+}
+
+/* blue-500 */
+.service-card--blue-500 .service-card__icon {
+    @apply text-blue-500;
+}
+.group.service-card--blue-500:hover .service-card__title {
+    @apply text-blue-500;
+}
+.group.service-card--blue-500:hover {
+    @apply border-blue-500;
+    box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.2);
+}
+
+/* sky-400 */
+.service-card--sky-400 .service-card__icon {
+    @apply text-sky-400;
+}
+.group.service-card--sky-400:hover .service-card__title {
+    @apply text-sky-400;
+}
+.group.service-card--sky-400:hover {
+    @apply border-sky-400;
+    box-shadow: 0 10px 40px -10px rgba(56, 189, 248, 0.2);
+}
+
+/* orange-400 */
+.service-card--orange-400 .service-card__icon {
+    @apply text-orange-400;
+}
+.group.service-card--orange-400:hover .service-card__title {
+    @apply text-orange-400;
+}
+.group.service-card--orange-400:hover {
+    @apply border-orange-400;
+    box-shadow: 0 10px 40px -10px rgba(251, 146, 60, 0.2);
+}
+
+/* emerald-400 */
+.service-card--emerald-400 .service-card__icon {
+    @apply text-emerald-400;
+}
+.group.service-card--emerald-400:hover .service-card__title {
+    @apply text-emerald-400;
+}
+.group.service-card--emerald-400:hover {
+    @apply border-emerald-400;
+    box-shadow: 0 10px 40px -10px rgba(52, 211, 153, 0.2);
+}
