@@ -41,11 +41,11 @@
                 </a>
 
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="#sobre"
+                    <a href="{{ url('/#sobre') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Sobre</a>
-                    <a href="#servicos"
+                    <a href="{{ url('/#servicos') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Serviços</a>
-                    <a href="#blog"
+                    <a href="{{ url('/#blog') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
 
                     <a href="https://eu.gabrielsv.com" target="_blank"
@@ -66,9 +66,9 @@
             <div id="mobile-menu"
                 class="absolute top-full left-0 w-full bg-neutral-800 border-b border-neutral-700 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 md:hidden">
                 <div class="px-6 py-4 flex flex-col gap-4">
-                    <a href="#sobre" class="text-gray-300 hover:text-white transition-colors block">Sobre</a>
-                    <a href="#servicos" class="text-gray-300 hover:text-white transition-colors block">Serviços</a>
-                    <a href="#blog" class="text-gray-300 hover:text-white transition-colors block">Artigos</a>
+                    <a href="{{ url('/#sobre') }}" class="text-gray-300 hover:text-white transition-colors block">Sobre</a>
+                    <a href="{{ url('/#servicos') }}" class="text-gray-300 hover:text-white transition-colors block">Serviços</a>
+                    <a href="{{ url('/#blog') }}" class="text-gray-300 hover:text-white transition-colors block">Artigos</a>
                     <a href="https://eu.gabrielsv.com" class="text-bulma-primary font-medium block">Ir para o Blog</a>
                 </div>
             </div>
