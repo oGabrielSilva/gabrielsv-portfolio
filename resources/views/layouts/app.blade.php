@@ -2,9 +2,12 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gabriel Henrique da Silva - Desenvolvedor Fullstack</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Portfolio</title>
+
+    @yield('extra_head')
     <meta name="description" content="O laboratório de um desenvolvedor full stack em constante compilação">
 
     <script src="https://kit.fontawesome.com/78b3364728.js" crossorigin="anonymous"></script>
