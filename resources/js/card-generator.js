@@ -1,7 +1,7 @@
 // Card Generator Logic
 // dom-to-image is loaded via CDN and available globally as 'domtoimage'
 
-const CLASSES = {
+let CLASSES = {
     WARRIOR: {
         name: "Guerreiro",
         color: "#C41E3A",
@@ -86,9 +86,11 @@ const RARITIES = {
 
 // State
 let isExporting = false;
+let uploadedImage = null;
 
 // Elements
 let cardPreview,
+    cardBackPreview,
     cardName,
     cardDescription,
     cardClass,
@@ -96,7 +98,8 @@ let cardPreview,
     cardType,
     summonType,
     cardAtk,
-    cardDef;
+    cardDef,
+    cardImage;
 let previewName, previewClassRarity, previewDescription, previewAtk, previewDef;
 let classIcon,
     artworkArea,
@@ -106,9 +109,13 @@ let classIcon,
     statsSection,
     artworkIcon;
 let exportBtn;
+let addClassBtn, classModal, closeModalBtn, cancelModalBtn, classForm;
+let classKeyInput, classNameInput, classColorInput, classColorPicker, classThemeSelect, classIconSelect;
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
+    // Load custom classes from localStorage
+    loadCustomClasses();
     // Get form elements
     cardName = document.getElementById("card-name");
     cardDescription = document.getElementById("card-description");
@@ -118,9 +125,11 @@ document.addEventListener("DOMContentLoaded", () => {
     summonType = document.getElementById("summon-type");
     cardAtk = document.getElementById("card-atk");
     cardDef = document.getElementById("card-def");
+    cardImage = document.getElementById("card-image");
 
     // Get preview elements
     cardPreview = document.getElementById("card-preview");
+    cardBackPreview = document.getElementById("card-back-preview");
     previewName = document.getElementById("preview-name");
     previewClassRarity = document.getElementById("preview-class-rarity");
     previewDescription = document.getElementById("preview-description");
@@ -144,10 +153,50 @@ document.addEventListener("DOMContentLoaded", () => {
     summonType.addEventListener("change", updatePreview);
     cardAtk.addEventListener("input", updatePreview);
     cardDef.addEventListener("input", updatePreview);
+    cardImage.addEventListener("change", handleImageUpload);
     exportBtn.addEventListener("click", handleExport);
+
+    // Get modal elements
+    addClassBtn = document.getElementById("add-class-btn");
+    classModal = document.getElementById("class-modal");
+    closeModalBtn = document.getElementById("close-modal-btn");
+    cancelModalBtn = document.getElementById("cancel-modal-btn");
+    classForm = document.getElementById("class-form");
+    classKeyInput = document.getElementById("class-key");
+    classNameInput = document.getElementById("class-name");
+    classColorInput = document.getElementById("class-color");
+    classColorPicker = document.getElementById("class-color-picker");
+    classThemeSelect = document.getElementById("modal-class-theme");
+    classIconSelect = document.getElementById("modal-class-icon");
+
+    // Modal event listeners
+    addClassBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    cancelModalBtn.addEventListener("click", closeModal);
+    classModal.addEventListener("click", (e) => {
+        if (e.target === classModal) closeModal();
+    });
+    classForm.addEventListener("submit", handleClassSubmit);
+
+    // Sync color picker with text input
+    classColorPicker.addEventListener("input", (e) => {
+        classColorInput.value = e.target.value.toUpperCase();
+    });
+    classColorInput.addEventListener("input", (e) => {
+        const value = e.target.value;
+        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+            classColorPicker.value = value;
+        }
+    });
+
+    // Auto-uppercase class key
+    classKeyInput.addEventListener("input", (e) => {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z_]/g, "");
+    });
 
     // Initial update
     updatePreview();
+    updateClassSelect();
 });
 
 function updatePreview() {
@@ -178,9 +227,14 @@ function updatePreview() {
     // Update artwork area gradient
     artworkArea.className = `relative flex-grow bg-gradient-to-br ${classInfo.theme} flex items-center justify-center overflow-hidden border-b border-white/5`;
 
-    // Update artwork icon based on card type
-    const iconType = isEntity ? "star" : "zap";
-    artworkIcon.innerHTML = `<i data-lucide="${iconType}" class="w-17.5 h-17.5" style="color: rgba(255,255,255,0.03); stroke-width: 1;"></i>`;
+    // Update artwork - use uploaded image or icon
+    if (uploadedImage) {
+        artworkIcon.innerHTML = `<img src="${uploadedImage}" alt="Card artwork" class="w-full h-full object-cover" style="max-width: 100%; max-height: 100%;" />`;
+    } else {
+        // Update artwork icon based on card type
+        const iconType = isEntity ? "star" : "zap";
+        artworkIcon.innerHTML = `<i data-lucide="${iconType}" class="w-17.5 h-17.5" style="color: rgba(255,255,255,0.03); stroke-width: 1;"></i>`;
+    }
 
     // Update card border and glow
     cardPreview.className = `relative w-64 h-96 rounded-[1.25rem] border-[3px] ${rarityInfo.borderColor} ${rarityInfo.glow} overflow-hidden bg-[#050505] text-white flex flex-col transition-all duration-500`;
@@ -222,6 +276,18 @@ function updatePreview() {
     }
 }
 
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        uploadedImage = e.target.result;
+        updatePreview();
+    };
+    reader.readAsDataURL(file);
+}
+
 async function handleExport() {
     if (isExporting) return;
 
@@ -229,11 +295,11 @@ async function handleExport() {
     updateButtonState(true);
 
     try {
-        // Aguarda um pouco para garantir que o DOM está estável
+        // Wait a bit to ensure DOM is stable
         await new Promise((resolve) => setTimeout(resolve, 100));
 
+        // Export only the front card
         const dataUrl = await domtoimage.toPng(cardPreview, {
-            bgcolor: "transparent",
             quality: 1,
             width: cardPreview.offsetWidth * 3,
             height: cardPreview.offsetHeight * 3,
@@ -245,15 +311,16 @@ async function handleExport() {
             },
         });
 
+        // Download the image
         const link = document.createElement("a");
-        link.download = `${
-            cardName.value.trim().replace(/\s+/g, "_") || "card"
-        }.png`;
+        const fileName = cardName.value.trim().replace(/\s+/g, "_") || "card";
+        link.download = `${fileName}.png`;
         link.href = dataUrl;
         link.click();
+
     } catch (err) {
-        console.error("Erro ao exportar:", err);
-        alert("Erro ao exportar a imagem. Por favor, tente novamente.");
+        console.error("Export error:", err);
+        alert("Erro ao exportar. Tente novamente.");
     } finally {
         isExporting = false;
         updateButtonState(false);
@@ -268,14 +335,160 @@ function updateButtonState(loading) {
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
+            Exportando...
         `;
     } else {
         exportBtn.innerHTML = `
-            <i data-lucide="download" class="w-4.5 h-4.5" style="stroke-width: 3;"></i>
-            Descarregar PNG
+            <i data-lucide="download" class="w-4 h-4"></i>
+            Exportar Carta (Frente)
         `;
         if (typeof lucide !== "undefined") {
             lucide.createIcons();
         }
+    }
+}
+
+// Modal Functions
+function openModal() {
+    classModal.classList.remove("hidden");
+    classModal.classList.add("flex");
+    classForm.reset();
+
+    // Recreate icons after modal is shown
+    setTimeout(() => {
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+    }, 50);
+}
+
+function closeModal() {
+    classModal.classList.add("hidden");
+    classModal.classList.remove("flex");
+    classForm.reset();
+}
+
+function handleClassSubmit(e) {
+    e.preventDefault();
+
+    // Verify elements exist
+    if (!classKeyInput || !classNameInput || !classColorInput || !classThemeSelect || !classIconSelect) {
+        console.error("Form elements not found:", {
+            classKeyInput,
+            classNameInput,
+            classColorInput,
+            classThemeSelect,
+            classIconSelect
+        });
+        alert("Erro ao acessar os campos do formulário.");
+        return;
+    }
+
+    const key = classKeyInput.value.trim().toUpperCase();
+    const name = classNameInput.value.trim();
+    const color = classColorInput.value.trim();
+    const theme = classThemeSelect.value.trim();
+    const icon = classIconSelect.value.trim();
+
+    // Validate
+    if (!key || !name || !color || !theme || !icon) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+    }
+
+    if (!/^[A-Z_]+$/.test(key)) {
+        alert("A chave deve conter apenas letras maiúsculas e underscores.");
+        return;
+    }
+
+    if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
+        alert("A cor deve estar no formato HEX (#RRGGBB).");
+        return;
+    }
+
+    if (CLASSES[key]) {
+        const confirm = window.confirm(`A classe "${key}" já existe. Deseja substituir?`);
+        if (!confirm) return;
+    }
+
+    // Add new class
+    CLASSES[key] = {
+        name: name,
+        color: color,
+        theme: theme,
+        icon: icon,
+    };
+
+    // Save to localStorage
+    saveCustomClasses();
+
+    // Update select
+    updateClassSelect();
+
+    // Select the new class
+    cardClass.value = key;
+    updatePreview();
+
+    // Close modal
+    closeModal();
+
+    alert(`Classe "${name}" adicionada com sucesso!`);
+}
+
+function loadCustomClasses() {
+    try {
+        const saved = localStorage.getItem("customCardClasses");
+        if (saved) {
+            const customClasses = JSON.parse(saved);
+            // Merge with default classes (custom classes can override defaults)
+            CLASSES = { ...CLASSES, ...customClasses };
+        }
+    } catch (err) {
+        console.error("Error loading custom classes:", err);
+    }
+}
+
+function saveCustomClasses() {
+    try {
+        // Save only custom classes (exclude defaults)
+        const defaultKeys = ["WARRIOR", "ARCANE", "SHADOW", "SACRED", "BEAST", "MECHANICAL", "ELEMENTAL", "ABYSSAL"];
+        const customClasses = {};
+
+        for (const key in CLASSES) {
+            if (!defaultKeys.includes(key)) {
+                customClasses[key] = CLASSES[key];
+            }
+        }
+
+        localStorage.setItem("customCardClasses", JSON.stringify(customClasses));
+    } catch (err) {
+        console.error("Error saving custom classes:", err);
+    }
+}
+
+function updateClassSelect() {
+    const currentValue = cardClass.value;
+    const select = cardClass;
+
+    // Clear all options
+    select.innerHTML = "";
+
+    // Add all classes (sorted alphabetically)
+    const sortedClasses = Object.keys(CLASSES).sort((a, b) => {
+        return CLASSES[a].name.localeCompare(CLASSES[b].name);
+    });
+
+    sortedClasses.forEach((key) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = CLASSES[key].name;
+        select.appendChild(option);
+    });
+
+    // Restore previous value if it exists
+    if (CLASSES[currentValue]) {
+        select.value = currentValue;
+    } else if (sortedClasses.length > 0) {
+        select.value = sortedClasses[0];
     }
 }
