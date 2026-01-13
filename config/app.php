@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'owner_blog_url' => env('OWNER_BLOG_URL'),
+
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\BlogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -12,7 +13,7 @@ class HomeController extends Controller
     {
         $posts = Cache::remember('_gabrielsv_blog_posts', 60 * 60 * 12, function () {
             try {
-                $response = Http::timeout(5)->get('https://eu.gabrielsv.com/wp-json/wp/v2/posts?per_page=6&_embed');
+                $response = Http::timeout(5)->get(BlogHelper::getOwnerBlogURL('/wp-json/wp/v2/posts?per_page=6&_embed'));
                 return $response->successful() ? $response->json() : [];
             } catch (\Exception $e) {
                 return [];

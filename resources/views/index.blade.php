@@ -25,7 +25,7 @@
         </p>
 
         <div class="flex flex-wrap gap-4">
-            <a href="https://eu.gabrielsv.com" target="_blank"
+            <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
                 class="bg-bulma-primary hover:bg-opacity-90 text-neutral-900 font-bold py-3 px-6 rounded transition-all inline-flex items-center gap-2 transform hover:-translate-y-1">
                 Acessar meus Artigos
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -65,7 +65,7 @@
                 <p class="text-gray-400 text-sm">Direto de <span class="text-bulma-primary">eu.gabrielsv.com</span>
                 </p>
             </div>
-            <a href="https://eu.gabrielsv.com" target="_blank"
+            <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
                 class="text-sm font-bold text-bulma-primary hover:text-white transition-colors">
                 Ver todos os posts <i class="fa-solid fa-arrow-right ml-1"></i>
             </a>
@@ -77,7 +77,7 @@
             @empty
                 <div class="col-span-full text-center py-8">
                     <p class="text-gray-400 mb-4">Acesse o blog para conferir o conteúdo completo.</p>
-                    <a href="https://eu.gabrielsv.com" target="_blank"
+                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
                         class="inline-block px-6 py-2 border border-bulma-primary text-bulma-primary rounded hover:bg-bulma-primary hover:text-neutral-900 transition-colors">
                         Acessar Blog
                     </a>
