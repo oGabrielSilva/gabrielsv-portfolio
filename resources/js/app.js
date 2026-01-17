@@ -1,5 +1,6 @@
 import AOS from "aos";
 import "aos/dist/aos.css";
+import "preline";
 import "./bootstrap";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -12,9 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn = document.getElementById("mobile-menu-btn");
     const menu = document.getElementById("mobile-menu");
-    const iconPath = btn?.querySelector("path"); // Seleciona o desenho dentro do SVG
+    const iconPath = btn?.querySelector("path");
 
-    // Desenhos dos ícones (Hambúrguer vs X)
     const paths = {
         hamburger: "M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z",
         close: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z",
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (iconPath) {
                 iconPath.setAttribute(
                     "d",
-                    isOpen ? paths.close : paths.hamburger
+                    isOpen ? paths.close : paths.hamburger,
                 );
             }
         };

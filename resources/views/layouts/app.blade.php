@@ -47,6 +47,8 @@
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Serviços</a>
                     <a href="{{ url('/#blog') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
+                    <a href="{{ route('tools.index') }}"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Ferramentas</a>
 
                     <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
@@ -69,6 +71,7 @@
                     <a href="{{ url('/#sobre') }}" class="text-gray-300 hover:text-white transition-colors block">Sobre</a>
                     <a href="{{ url('/#servicos') }}" class="text-gray-300 hover:text-white transition-colors block">Serviços</a>
                     <a href="{{ url('/#blog') }}" class="text-gray-300 hover:text-white transition-colors block">Artigos</a>
+                    <a href="{{ route('tools.index') }}" class="text-gray-300 hover:text-white transition-colors block">Ferramentas</a>
                     <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" class="text-bulma-primary font-medium block">Ir para o Blog</a>
                 </div>
             </div>

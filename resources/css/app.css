@@ -1,14 +1,27 @@
 @import "tailwindcss";
+@import "../../node_modules/preline/variants.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../../node_modules/preline/dist/*.js';
+
+/* Adds pointer cursor to buttons */
+@layer base {
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+/* Defaults hover styles on all devices */
+@custom-variant hover (&:hover);
 
 @theme {
     /* Definição da fonte padrão do projeto */
-    --font-sans: "Inter", "Instrument Sans", ui-sans-serif, system-ui,
-        sans-serif;
+    --font-sans:
+        "Inter", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
 
     /* Cores personalizadas extraídas do seu HTML original */
     --color-bulma-primary: #00d1b2;

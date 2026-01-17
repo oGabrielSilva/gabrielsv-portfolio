@@ -58,6 +58,44 @@
         </div>
     </section>
 
+    <section id="ferramentas" class="mb-24 py-10 border-t border-neutral-800 scroll-mt-32">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" data-aos="fade-up">
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-2">Ferramentas Online</h2>
+                <p class="text-gray-400 text-sm">Utilitários gratuitos para desenvolvedores</p>
+            </div>
+            <a href="{{ route('tools.index') }}"
+                class="text-sm font-bold text-bulma-primary hover:text-white transition-colors">
+                Ver todas as ferramentas <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach(array_slice($toolsList, 0, 4) as $tool)
+                <a href="{{ route($tool['route']) }}"
+                   class="group block p-6 bg-neutral-800/50 border border-neutral-700/50 rounded-xl hover:border-{{ $tool['color'] }}/50 hover:bg-neutral-800 transition-all duration-300"
+                   data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-neutral-700/50 text-{{ $tool['color'] }} group-hover:bg-{{ $tool['color'] }}/10 transition-colors">
+                            <i class="fa-solid {{ $tool['icon'] }} text-xl"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-semibold text-white group-hover:text-{{ $tool['color'] }} transition-colors">
+                                {{ $tool['name'] }}
+                            </h3>
+                            <p class="text-sm text-gray-400 mt-1">
+                                {{ $tool['description'] }}
+                            </p>
+                        </div>
+                        <div class="flex-shrink-0 text-gray-600 group-hover:text-{{ $tool['color'] }} transition-colors">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
     <section id="blog" class="mb-24 py-10 border-t border-neutral-800 scroll-mt-32">
         <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" data-aos="fade-up">
             <div>
