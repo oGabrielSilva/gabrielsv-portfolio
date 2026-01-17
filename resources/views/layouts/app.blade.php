@@ -14,8 +14,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
         rel="stylesheet">
 
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -68,11 +67,16 @@
             <div id="mobile-menu"
                 class="absolute top-full left-0 w-full bg-neutral-800 border-b border-neutral-700 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 md:hidden">
                 <div class="px-6 py-4 flex flex-col gap-4">
-                    <a href="{{ url('/#sobre') }}" class="text-gray-300 hover:text-white transition-colors block">Sobre</a>
-                    <a href="{{ url('/#servicos') }}" class="text-gray-300 hover:text-white transition-colors block">Serviços</a>
-                    <a href="{{ url('/#blog') }}" class="text-gray-300 hover:text-white transition-colors block">Artigos</a>
-                    <a href="{{ route('tools.index') }}" class="text-gray-300 hover:text-white transition-colors block">Ferramentas</a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" class="text-bulma-primary font-medium block">Ir para o Blog</a>
+                    <a href="{{ url('/#sobre') }}"
+                        class="text-gray-300 hover:text-white transition-colors block">Sobre</a>
+                    <a href="{{ url('/#servicos') }}"
+                        class="text-gray-300 hover:text-white transition-colors block">Serviços</a>
+                    <a href="{{ url('/#blog') }}"
+                        class="text-gray-300 hover:text-white transition-colors block">Artigos</a>
+                    <a href="{{ route('tools.index') }}"
+                        class="text-gray-300 hover:text-white transition-colors block">Ferramentas</a>
+                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}"
+                        class="text-bulma-primary font-medium block">Ir para o Blog</a>
                 </div>
             </div>
         </nav>

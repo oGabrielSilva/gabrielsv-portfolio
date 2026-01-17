@@ -14,8 +14,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
         rel="stylesheet">
 
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -96,7 +95,7 @@
                         <li>
                             <a href="{{ route($tool['route']) }}"
                                 class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
-                                          {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
+                                                      {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
                                 <i class="fa-solid {{ $tool['icon'] }} w-4"></i>
                                 {{ $tool['name'] }}
                             </a>
