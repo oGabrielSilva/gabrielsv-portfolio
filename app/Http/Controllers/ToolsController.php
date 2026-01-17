@@ -13,7 +13,8 @@ class ToolsController extends Controller
     public function __construct(
         private UuidService $uuidService,
         private LoremService $loremService
-    ) {}
+    ) {
+    }
 
     public function index()
     {
@@ -80,7 +81,7 @@ class ToolsController extends Controller
             'types' => $types,
             'text' => $text,
             'type' => 'paragraphs',
-            'quantity' => 3,
+            'quantity' => 5,
             'startWithLorem' => true,
         ]);
     }

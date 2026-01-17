@@ -28,120 +28,103 @@
     @stack('scripts')
 </head>
 
-<body class="antialiased text-gray-300">
+<body class="antialiased text-gray-300 bg-[#121212] overflow-x-hidden w-full">
     {{-- Header --}}
-    <header>
-        <nav class="w-dvw py-4 fixed top-0 z-50 bg-[#1a1a1a]/90 backdrop-blur-md border-b border-white/5">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
-                <div class="flex items-center gap-4">
-                    <a href="{{ url('/') }}"
-                        class="text-xl font-bold text-white tracking-tight hover:text-bulma-primary transition-colors">
-                        <img src="/favicon.svg" alt="Logo" class="w-8 h-8 inline-block">
-                    </a>
+    <header class="fixed top-0 z-50 w-full bg-[#1a1a1a]/90 backdrop-blur-md border-b border-white/5">
+        <nav class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+
+            {{-- Esquerda: Logo + Botão Sidebar Mobile --}}
+            <div class="flex items-center gap-3">
+                {{-- Botão para abrir o Offcanvas (Sidebar de Ferramentas) no Mobile --}}
+                <button type="button"
+                    class="lg:hidden p-2 inline-flex justify-center items-center gap-2 rounded-lg border border-neutral-700 font-medium bg-neutral-800 text-gray-400 shadow-sm align-middle hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-800 focus:ring-bulma-primary transition-all text-sm"
+                    data-hs-overlay="#sidebar-tools">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+
+                <a href="{{ url('/') }}" class="flex-shrink-0">
+                    <img src="/favicon.svg" alt="Logo" class="w-8 h-8">
+                </a>
+
+                {{-- Breadcrumbs (Escondido em telas muito pequenas) --}}
+                <div class="hidden sm:flex items-center gap-2 text-sm ml-2">
                     <span class="text-gray-600">/</span>
                     <a href="{{ route('tools.index') }}"
-                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors">
-                        Ferramentas
-                    </a>
+                        class="text-gray-400 hover:text-white transition-colors">Ferramentas</a>
                     @hasSection('tool_name')
                         <span class="text-gray-600">/</span>
-                        <span class="text-sm font-medium text-white">@yield('tool_name')</span>
+                        <span class="text-white font-medium truncate max-w-[100px] md:max-w-none">@yield('tool_name')</span>
                     @endif
                 </div>
-
-                <div class="hidden md:flex items-center gap-6">
-                    <a href="{{ url('/') }}"
-                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors">
-                        <i class="fa-solid fa-home mr-1"></i> Início
-                    </a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}" target="_blank"
-                        class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
-                        Blog <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
-                    </a>
-                </div>
-
-                {{-- Mobile menu button --}}
-                <button id="mobile-menu-btn" type="button"
-                    class="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700/50"
-                    aria-controls="mobile-menu" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
-                    </svg>
-                </button>
             </div>
 
-            {{-- Mobile menu --}}
-            <div id="mobile-menu"
-                class="absolute top-full left-0 w-full bg-neutral-800 border-b border-neutral-700 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 md:hidden">
-                <div class="px-6 py-4 flex flex-col gap-4">
-                    <a href="{{ url('/') }}" class="text-gray-300 hover:text-white transition-colors block">Início</a>
-                    <a href="{{ route('tools.index') }}"
-                        class="text-gray-300 hover:text-white transition-colors block">Ferramentas</a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
-                        class="text-bulma-primary font-medium block">Ir para o Blog</a>
+            {{-- Direita: Links e Menu Mobile Site --}}
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-6 mr-4">
+                    <a href="{{ url('/') }}"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Início</a>
+                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}" target="_blank"
+                        class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
+                        Blog <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+                    </a>
                 </div>
+
+                <button id="mobile-menu-btn" type="button"
+                    class="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
         </nav>
     </header>
 
-    <div class="flex pt-16 min-h-screen">
-        {{-- Sidebar --}}
-        <aside
-            class="hidden lg:block w-64 fixed left-0 top-16 h-[calc(100vh-4rem)] bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
-            <nav class="p-4">
-                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Ferramentas</h3>
-                <ul class="space-y-1">
-                    @foreach($toolsList as $tool)
-                        <li>
-                            <a href="{{ route($tool['route']) }}"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
-                                                      {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
-                                <i class="fa-solid {{ $tool['icon'] }} w-4"></i>
-                                {{ $tool['name'] }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+    {{-- Offcanvas Sidebar para Mobile (Preline UI) --}}
+    <div id="sidebar-tools"
+        class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full fixed top-0 start-0 transition-all duration-300 transform h-full max-w-xs w-full z-[60] bg-neutral-900 border-e border-neutral-800 hidden lg:hidden"
+        tabindex="-1">
+        <div class="flex justify-between items-center py-3 px-4 border-b border-neutral-800">
+            <h3 class="font-bold text-white">Menu de Ferramentas</h3>
+            <button type="button"
+                class="inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-lg text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-bulma-primary transition-all text-sm"
+                data-hs-overlay="#sidebar-tools">
+                <span class="sr-only">Fechar</span>
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <div class="p-4 h-[calc(100%-60px)] overflow-y-auto custom-scrollbar">
+            @include('layouts.partials.tools-navigation') {{-- Recomendo mover a lista para um partial --}}
+        </div>
+    </div>
 
-                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 mt-6">Em breve</h3>
-                <ul class="space-y-1">
-                    @php
-                        $upcoming = [
-                            ['icon' => 'fa-code', 'name' => 'JSON Formatter'],
-                            ['icon' => 'fa-lock', 'name' => 'Base64 Encode/Decode'],
-                            ['icon' => 'fa-palette', 'name' => 'Color Converter'],
-                        ];
-                    @endphp
-                    @foreach($upcoming as $tool)
-                        <li>
-                            <span
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600 cursor-not-allowed">
-                                <i class="fa-solid {{ $tool['icon'] }} w-4"></i>
-                                {{ $tool['name'] }}
-                            </span>
-                        </li>
-                    @endforeach
-                </ul>
+    <div class="flex pt-16 min-h-screen">
+        {{-- Sidebar Desktop --}}
+        <aside
+            class="hidden lg:block w-64 fixed left-0 top-16 h-[calc(100vh-4rem)] bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto custom-scrollbar">
+            <nav class="p-4">
+                @include('layouts.partials.tools-navigation')
             </nav>
         </aside>
 
         {{-- Main content --}}
-        <main class="flex-1 lg:ml-64">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <main class="flex-1 lg:ml-64 w-full">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 md:py-8">
                 @yield('content')
             </div>
         </main>
     </div>
 
     {{-- Footer --}}
-    <footer class="lg:ml-64 border-t border-neutral-800 py-8 bg-neutral-900">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-gray-500 text-sm">
+    <footer class="lg:ml-64 border-t border-neutral-800 py-8 bg-neutral-900/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-gray-500 text-sm text-center md:text-left">
                 &copy; {{ date('Y') }} Gabriel Henrique da Silva
             </div>
             <div class="flex items-center gap-6">
                 <a href="https://github.com/oGabrielSilva" target="_blank"
-                    class="text-gray-500 hover:text-bulma-primary transition-colors text-xl">
+                    class="text-gray-500 hover:text-white transition-colors text-xl">
                     <i class="fa-brands fa-github"></i>
                 </a>
                 <a href="https://www.linkedin.com/in/ogabriel-henrique" target="_blank"

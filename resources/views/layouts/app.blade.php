@@ -29,7 +29,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="antialiased text-gray-300">
+<body class="antialiased text-gray-300 max-w-dvw overflow-x-hidden w-dvw">
 
     <header>
         <nav class="w-dvw py-6 fixed top-0 z-50 bg-[#1a1a1a]/90 backdrop-blur-md border-b border-white/5">
