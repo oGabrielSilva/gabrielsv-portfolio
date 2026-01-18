@@ -14,7 +14,7 @@
 
         {{-- Configurações --}}
         <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {{-- Tipo --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
@@ -23,7 +23,8 @@
                             class="hs-dropdown-toggle w-full py-3 px-4 inline-flex justify-between items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-bulma-primary transition-all"
                             aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
                             <span id="lorem-type-label">{{ $types[$type]['label'] }}</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform"></i>
+                            <i data-lucide="chevron-down"
+                                class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform"></i>
                         </button>
                         <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-full bg-neutral-800 shadow-md rounded-lg p-2 mt-2 border border-neutral-700 z-50"
                             role="menu" aria-orientation="vertical">
@@ -46,7 +47,7 @@
                 </div>
 
                 {{-- Botão Gerar --}}
-                <div class="flex items-end sm:col-span-2 lg:col-span-1">
+                <div class="flex items-end col-span-full">
                     <button type="button" id="generate-btn"
                         class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg bg-bulma-primary text-neutral-900 hover:bg-bulma-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         <i data-lucide="sparkles" class="w-4 h-4" id="generate-icon"></i>
