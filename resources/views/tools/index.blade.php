@@ -22,14 +22,16 @@
                             <i data-lucide="{{ $tool['icon'] }}" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h2 class="text-base sm:text-lg font-semibold text-white group-hover:text-{{ $tool['color'] }} transition-colors">
+                            <h2
+                                class="text-base sm:text-lg font-semibold text-white group-hover:text-{{ $tool['color'] }} transition-colors">
                                 {{ $tool['name'] }}
                             </h2>
                             <p class="text-xs sm:text-sm text-gray-400 mt-1 line-clamp-2">
                                 {{ $tool['description'] }}
                             </p>
                         </div>
-                        <div class="shrink-0 text-gray-600 group-hover:text-{{ $tool['color'] }} transition-colors hidden sm:block">
+                        <div
+                            class="shrink-0 text-gray-600 group-hover:text-{{ $tool['color'] }} transition-colors hidden sm:block">
                             <i data-lucide="arrow-right" class="w-5 h-5"></i>
                         </div>
                     </div>
@@ -37,27 +39,6 @@
             @endforeach
         </div>
 
-        {{-- Em breve --}}
-        <div class="mt-8 sm:mt-12">
-            <h2 class="text-lg sm:text-xl font-semibold text-white mb-4">Em breve</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                @php
-                    $upcoming = [
-                        ['name' => 'JSON Formatter', 'icon' => 'code'],
-                        ['name' => 'Color Converter', 'icon' => 'palette'],
-                        ['name' => 'Consulta CEP', 'icon' => 'map-pin'],
-                        ['name' => 'Gerador de Senhas', 'icon' => 'key'],
-                    ];
-                @endphp
-                @foreach($upcoming as $tool)
-                    <div class="p-3 sm:p-4 bg-neutral-800/30 border border-neutral-700/30 rounded-lg opacity-50">
-                        <div class="flex items-center gap-2 sm:gap-3">
-                            <i data-lucide="{{ $tool['icon'] }}" class="w-4 h-4 text-gray-600 shrink-0"></i>
-                            <span class="text-gray-500 text-xs sm:text-sm truncate">{{ $tool['name'] }}</span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
+
     </div>
 @endsection
