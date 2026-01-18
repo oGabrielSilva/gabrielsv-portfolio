@@ -5,16 +5,16 @@
 @section('description', 'Gere textos Lorem Ipsum para seus projetos de design e desenvolvimento')
 
 @section('content')
-    <div class="space-y-6">
+    <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
-            <h1 class="text-2xl font-bold text-white mb-2">Lorem Ipsum Generator</h1>
-            <p class="text-gray-400">Gere textos placeholder para seus projetos</p>
+            <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Lorem Ipsum Generator</h1>
+            <p class="text-gray-400 text-sm sm:text-base">Gere textos placeholder para seus projetos</p>
         </div>
 
         {{-- Configurações --}}
-        <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {{-- Tipo --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
@@ -23,11 +23,7 @@
                             class="hs-dropdown-toggle w-full py-3 px-4 inline-flex justify-between items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-bulma-primary transition-all"
                             aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
                             <span id="lorem-type-label">{{ $types[$type]['label'] }}</span>
-                            <svg class="hs-dropdown-open:rotate-180 size-4 transition-transform"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m6 9 6 6 6-6" />
-                            </svg>
+                            <i data-lucide="chevron-down" class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform"></i>
                         </button>
                         <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-full bg-neutral-800 shadow-md rounded-lg p-2 mt-2 border border-neutral-700 z-50"
                             role="menu" aria-orientation="vertical">
@@ -50,10 +46,10 @@
                 </div>
 
                 {{-- Botão Gerar --}}
-                <div class="flex items-end">
+                <div class="flex items-end sm:col-span-2 lg:col-span-1">
                     <button type="button" id="generate-btn"
                         class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg bg-bulma-primary text-neutral-900 hover:bg-bulma-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                        <i class="fa-solid fa-wand-magic-sparkles" id="generate-icon"></i>
+                        <i data-lucide="sparkles" class="w-4 h-4" id="generate-icon"></i>
                         <span id="generate-text">Gerar</span>
                     </button>
                 </div>
@@ -70,14 +66,14 @@
         </div>
 
         {{-- Resultado --}}
-        <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-6" id="result-container">
-            <div class="flex justify-between items-center mb-4">
+        <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6" id="result-container">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
                 <h2 class="text-lg font-semibold text-white">Resultado</h2>
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-gray-500" id="word-count">0 palavras</span>
                     <button type="button" id="copy-btn"
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
-                        <i class="fa-solid fa-copy"></i>
+                        <i data-lucide="copy" class="w-4 h-4"></i>
                         Copiar
                     </button>
                 </div>
@@ -86,12 +82,12 @@
                 <div id="text-result">
                     @if($type === 'paragraphs')
                         @foreach($text as $paragraph)
-                            <p class="mb-4 text-gray-300 leading-relaxed">{{ $paragraph }}</p>
+                            <p class="mb-4 text-gray-300 leading-relaxed text-sm sm:text-base">{{ $paragraph }}</p>
                         @endforeach
                     @elseif($type === 'sentences')
-                        <p class="text-gray-300 leading-relaxed">{{ implode(' ', $text) }}</p>
+                        <p class="text-gray-300 leading-relaxed text-sm sm:text-base">{{ implode(' ', $text) }}</p>
                     @else
-                        <p class="text-gray-300 leading-relaxed">{{ $text[0] }}</p>
+                        <p class="text-gray-300 leading-relaxed text-sm sm:text-base">{{ $text[0] }}</p>
                     @endif
                 </div>
             </div>
@@ -99,8 +95,8 @@
 
         {{-- Toast --}}
         <div id="toast"
-            class="fixed bottom-4 right-4 py-3 px-4 bg-bulma-primary text-neutral-900 rounded-lg shadow-lg font-medium transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-none">
-            <i class="fa-solid fa-check mr-2"></i>
+            class="fixed bottom-4 right-4 py-3 px-4 bg-bulma-primary text-neutral-900 rounded-lg shadow-lg font-medium transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-none inline-flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
             Copiado!
         </div>
     </div>
@@ -108,7 +104,7 @@
     @push('scripts')
         <script>
             window.loremConfig = {
-                generateUrl: '{{ route("tools.lorem.generate") }}',
+                generateUrl: '{{ route('tools.lorem.generate') }}',
                 csrfToken: '{{ csrf_token() }}'
             };
 

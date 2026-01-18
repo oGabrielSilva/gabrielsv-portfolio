@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
             'slug' => 'uuid',
             'name' => 'UUID Generator',
             'description' => 'Gere UUIDs em diferentes versões (v1, v4, v6, v7), CUIDs e NanoIDs',
-            'icon' => 'fa-fingerprint',
+            'icon' => 'fingerprint',
             'color' => 'bulma-primary',
         ],
         [
@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
             'slug' => 'lorem',
             'name' => 'Lorem Ipsum',
             'description' => 'Gere textos placeholder para seus projetos',
-            'icon' => 'fa-align-left',
+            'icon' => 'align-left',
             'color' => 'blue-500',
         ],
         [
@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
             'slug' => 'percentage',
             'name' => 'Calculadora de Porcentagem',
             'description' => 'Calcule porcentagens, aumentos e descontos facilmente',
-            'icon' => 'fa-percent',
+            'icon' => 'percent',
             'color' => 'emerald-400',
         ],
         [
@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
             'slug' => 'image-compressor',
             'name' => 'Compressor de Imagem',
             'description' => 'Comprima imagens PNG e JPG mantendo a qualidade',
-            'icon' => 'fa-image',
+            'icon' => 'image',
             'color' => 'orange-400',
         ],
     ];

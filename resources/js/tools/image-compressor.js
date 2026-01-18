@@ -187,41 +187,41 @@ class ImageCompressor {
     renderImageCard(image) {
         const card = document.createElement('div');
         card.id = `image-${image.id}`;
-        card.className = 'bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4';
+        card.className = 'bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-3 sm:p-4 overflow-hidden';
 
         const url = URL.createObjectURL(image.file);
 
         card.innerHTML = `
-            <div class="flex gap-4">
-                <div class="flex-shrink-0">
+            <div class="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-4">
+                <div class="shrink-0">
                     <img src="${url}" alt="${image.file.name}"
-                        class="w-24 h-24 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                        class="w-16 h-16 sm:w-24 sm:h-24 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                         data-image-id="${image.id}">
                 </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="min-w-0 flex-1">
-                            <h3 class="text-white font-medium truncate">${image.file.name}</h3>
-                            <p class="text-sm text-gray-500">
+                <div class="flex-1 min-w-0 w-full sm:w-auto">
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <div class="min-w-0 flex-1 basis-full sm:basis-auto">
+                            <h3 class="text-white text-sm sm:text-base font-medium break-all">${image.file.name}</h3>
+                            <p class="text-xs sm:text-sm text-gray-500">
                                 Original: ${this.formatSize(image.file.size)}
                             </p>
                         </div>
-                        <div class="flex gap-2 ml-4">
-                            <button type="button" class="compress-single-btn py-2 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg bg-bulma-primary text-neutral-900 hover:bg-bulma-primary/90 transition-all"
+                        <div class="flex gap-2 shrink-0">
+                            <button type="button" class="compress-single-btn py-1.5 sm:py-2 px-2 sm:px-3 inline-flex items-center gap-x-1.5 text-xs font-medium rounded-lg bg-bulma-primary text-neutral-900 hover:bg-bulma-primary/90 transition-all whitespace-nowrap"
                                 data-image-id="${image.id}">
-                                <i class="fa-solid fa-compress"></i>
-                                Comprimir
+                                <i data-lucide="minimize-2" class="w-3.5 h-3.5 shrink-0"></i>
+                                <span class="hidden sm:inline">Comprimir</span>
                             </button>
-                            <button type="button" class="remove-image-btn py-2 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 text-gray-400 hover:text-white hover:bg-neutral-700 transition-all"
+                            <button type="button" class="remove-image-btn py-1.5 sm:py-2 px-2 sm:px-3 inline-flex items-center justify-center text-xs font-medium rounded-lg border border-neutral-600 text-gray-400 hover:text-white hover:bg-neutral-700 transition-all shrink-0"
                                 data-image-id="${image.id}">
-                                <i class="fa-solid fa-trash"></i>
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5 shrink-0"></i>
                             </button>
                         </div>
                     </div>
 
                     <div class="status-container">
-                        <span class="inline-flex items-center gap-1 text-sm text-gray-400">
-                            <i class="fa-solid fa-circle-dot"></i>
+                        <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm text-gray-400">
+                            <i data-lucide="circle-dot" class="w-3.5 h-3.5 shrink-0"></i>
                             Pronto
                         </span>
                     </div>
@@ -234,6 +234,11 @@ class ImageCompressor {
         `;
 
         this.imagesList.appendChild(card);
+
+        // Initialize Lucide icons in the new card
+        if (window.lucide) {
+            window.lucide.createIcons({ nodes: [card] });
+        }
 
         // Add event listeners
         card.querySelector('.compress-single-btn')?.addEventListener('click', () =>
@@ -317,8 +322,8 @@ class ImageCompressor {
         // Update status
         if (image.status === 'compressing') {
             statusContainer.innerHTML = `
-                <span class="inline-flex items-center gap-2 text-sm text-bulma-primary">
-                    <svg class="animate-spin size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <span class="inline-flex items-center gap-2 text-xs sm:text-sm text-bulma-primary">
+                    <svg class="animate-spin w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -328,8 +333,8 @@ class ImageCompressor {
             compressBtn.disabled = true;
         } else if (image.status === 'compressed') {
             statusContainer.innerHTML = `
-                <span class="inline-flex items-center gap-1 text-sm text-emerald-400">
-                    <i class="fa-solid fa-circle-check"></i>
+                <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm text-emerald-400">
+                    <i data-lucide="circle-check" class="w-3.5 h-3.5"></i>
                     Comprimido
                 </span>
             `;
@@ -342,25 +347,30 @@ class ImageCompressor {
                 const color = reduction > 0 ? 'text-emerald-400' : 'text-orange-400';
 
                 return `
-                    <div class="flex items-center justify-between py-2 px-3 bg-neutral-900 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-medium text-gray-400 uppercase w-12">${format}</span>
-                            <span class="text-sm text-white">${this.formatSize(result.size)}</span>
-                            <span class="text-sm ${color}">${reduction > 0 ? '-' : '+'}${Math.abs(reduction)}%</span>
+                    <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 py-2 px-2 sm:px-3 bg-neutral-900 rounded-lg">
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3 min-w-0">
+                            <span class="text-xs font-medium text-gray-400 uppercase shrink-0">${format}</span>
+                            <span class="text-xs sm:text-sm text-white shrink-0">${this.formatSize(result.size)}</span>
+                            <span class="text-xs sm:text-sm ${color} shrink-0">${reduction > 0 ? '-' : '+'}${Math.abs(reduction)}%</span>
                         </div>
-                        <div class="flex gap-2">
-                            <button type="button" class="preview-result-btn py-1 px-2 text-xs rounded-lg border border-neutral-600 text-gray-400 hover:text-white hover:bg-neutral-700 transition-all"
+                        <div class="flex gap-1.5 sm:gap-2 shrink-0">
+                            <button type="button" class="preview-result-btn py-1 px-1.5 sm:px-2 text-xs rounded-lg border border-neutral-600 text-gray-400 hover:text-white hover:bg-neutral-700 transition-all shrink-0"
                                 data-image-id="${image.id}" data-format="${format}">
-                                <i class="fa-solid fa-eye"></i>
+                                <i data-lucide="eye" class="w-3.5 h-3.5 shrink-0"></i>
                             </button>
-                            <button type="button" class="download-result-btn py-1 px-2 text-xs rounded-lg border border-neutral-600 text-gray-400 hover:text-white hover:bg-neutral-700 transition-all"
+                            <button type="button" class="download-result-btn py-1 px-1.5 sm:px-2 text-xs rounded-lg border border-neutral-600 text-gray-400 hover:text-white hover:bg-neutral-700 transition-all shrink-0"
                                 data-image-id="${image.id}" data-format="${format}">
-                                <i class="fa-solid fa-download"></i>
+                                <i data-lucide="download" class="w-3.5 h-3.5 shrink-0"></i>
                             </button>
                         </div>
                     </div>
                 `;
             }).join('');
+
+            // Initialize Lucide icons in the updated containers
+            if (window.lucide) {
+                window.lucide.createIcons({ nodes: [statusContainer, resultsContainer] });
+            }
 
             // Add event listeners to result buttons
             resultsContainer.querySelectorAll('.preview-result-btn').forEach(btn => {
@@ -380,12 +390,17 @@ class ImageCompressor {
             });
         } else if (image.status === 'error') {
             statusContainer.innerHTML = `
-                <span class="inline-flex items-center gap-1 text-sm text-red-400">
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm text-red-400">
+                    <i data-lucide="circle-alert" class="w-3.5 h-3.5"></i>
                     Erro ao comprimir
                 </span>
             `;
             compressBtn.disabled = false;
+
+            // Initialize Lucide icons
+            if (window.lucide) {
+                window.lucide.createIcons({ nodes: [statusContainer] });
+            }
         }
     }
 

@@ -10,6 +10,9 @@ _Essenciais para atrair tráfego técnico e recorrência._
 - **Slugify (Gerador de Slugs)**
 - **Formatador e Validador JSON**
 - **Encoder/Decoder Base64**
+- **Regex Tester**
+- **Hash Generator**
+- **JWT Generator/Validator**
 - **Explicador de Expressões Cron:** Interface visual para entender agendamentos do sistema e gerar cron jobs
 - **Previewer de Markdown:** Editor simples com visualização em tempo real.
 - **Horário Mundial:** Uma view que deve mostrar algum local do planeta, seu horário, dia, etc.
