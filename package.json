@@ -17,6 +17,7 @@
     "dependencies": {
         "aos": "^2.3.4",
         "browser-image-compression": "^2.0.2",
+        "cpf-cnpj-validator": "^1.0.3",
         "jszip": "^3.10.1",
         "preline": "^3.2.3"
     },

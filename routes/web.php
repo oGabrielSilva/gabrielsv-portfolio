@@ -23,4 +23,15 @@ Route::prefix('tools')->name('tools.')->group(function () {
 
     Route::get('/percentage', [ToolsController::class, 'percentage'])->name('percentage');
     Route::get('/image-compressor', [ToolsController::class, 'imageCompressor'])->name('image-compressor');
+
+    // CPF/CNPJ Generator - URLs amigáveis para SEO
+    Route::get('/cpf-cnpj', fn() => redirect()->route('tools.cpf'))->name('cpf-cnpj');
+    Route::get('/cpf', [ToolsController::class, 'cpfCnpj'])->name('cpf')->defaults('type', 'cpf');
+    Route::get('/cnpj', [ToolsController::class, 'cpfCnpj'])->name('cnpj')->defaults('type', 'cnpj');
+
+    // Base64 Encoder/Decoder
+    Route::get('/base64', [ToolsController::class, 'base64'])->name('base64');
+
+    // Slugify
+    Route::get('/slugify', [ToolsController::class, 'slugify'])->name('slugify');
 });

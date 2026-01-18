@@ -53,7 +53,7 @@
 
             {{-- Mobile menu --}}
             <div id="mobile-menu"
-                class="absolute top-full left-0 w-full bg-neutral-800 border-b border-neutral-700 overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 md:hidden">
+                class="absolute top-full left-0 w-full max-w-dvh bg-neutral-800 border-b border-neutral-700 overflow-y-auto transition-all duration-300 ease-in-out opacity-0 md:hidden h-dvh sm:h-auto max-h-0">
                 <div class="px-4 py-4 space-y-4">
                     {{-- Navigation links --}}
                     <div class="flex flex-col gap-2">
@@ -72,11 +72,11 @@
                     {{-- Tools list --}}
                     <div class="border-t border-neutral-700 pt-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Ferramentas</p>
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="pb-4">
                             @foreach($toolsList as $tool)
                                 <a href="{{ route($tool['route']) }}"
                                     class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors
-                                        {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
+                                                                                                                                                        {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
                                     <i data-lucide="{{ $tool['icon'] }}" class="w-4 h-4 shrink-0"></i>
                                     <span class="truncate">{{ $tool['name'] }}</span>
                                 </a>
@@ -99,8 +99,7 @@
 
     <div class="flex pt-14 sm:pt-16 min-h-screen">
         {{-- Sidebar (desktop only) --}}
-        <aside
-            class="hidden lg:block w-64 fixed left-0 top-14 sm:top-16 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
+        <aside class="hidden relative lg:block bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
             <nav class="p-4">
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Ferramentas</h3>
                 <ul class="space-y-1">
@@ -108,7 +107,7 @@
                         <li>
                             <a href="{{ route($tool['route']) }}"
                                 class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
-                                    {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
+                                                                                                                                                    {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
                                 <i data-lucide="{{ $tool['icon'] }}" class="w-4 h-4"></i>
                                 {{ $tool['name'] }}
                             </a>
@@ -116,36 +115,19 @@
                     @endforeach
                 </ul>
 
-                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 mt-6">Em breve</h3>
-                <ul class="space-y-1">
-                    @php
-                        $upcoming = [
-                            ['icon' => 'code', 'name' => 'JSON Formatter'],
-                            ['icon' => 'lock', 'name' => 'Base64 Encode/Decode'],
-                            ['icon' => 'palette', 'name' => 'Color Converter'],
-                        ];
-                    @endphp
-                    @foreach($upcoming as $tool)
-                        <li>
-                            <span class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600 cursor-not-allowed">
-                                <i data-lucide="{{ $tool['icon'] }}" class="w-4 h-4"></i>
-                                {{ $tool['name'] }}
-                            </span>
-                        </li>
-                    @endforeach
-                </ul>
+
             </nav>
         </aside>
 
         {{-- Main content --}}
-        <main class="flex-1 lg:ml-64">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <main class="flex-1">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 @yield('content')
             </div>
         </main>
     </div>
 
-    @include('partials.footer', ['footerClass' => 'lg:ml-64'])
+    @include('partials.footer')
 
     <script>
         // Initialize Lucide icons

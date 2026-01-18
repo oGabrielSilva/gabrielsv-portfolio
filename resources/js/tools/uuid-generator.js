@@ -1,5 +1,3 @@
-import 'preline/preline';
-
 class UuidGenerator {
     constructor() {
         this.ids = [];
@@ -65,10 +63,10 @@ class UuidGenerator {
         this.generateBtn.disabled = loading;
 
         if (loading) {
-            this.generateIcon.className = 'fa-solid fa-spinner fa-spin';
+            this.generateIcon.classList.add('animate-spin');
             this.generateText.textContent = 'Gerando...';
         } else {
-            this.generateIcon.className = 'fa-solid fa-wand-magic-sparkles';
+            this.generateIcon.classList.remove('animate-spin');
             this.generateText.textContent = 'Gerar';
         }
     }
@@ -76,12 +74,17 @@ class UuidGenerator {
     renderIds() {
         this.idsList.innerHTML = this.ids.map(id => `
             <div class="flex items-center gap-2 group">
-                <code class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-sm text-gray-300 font-mono break-all uuid-item">${this.escapeHtml(id)}</code>
-                <button type="button" class="copy-btn p-2 text-gray-500 hover:text-bulma-primary transition-colors opacity-0 group-hover:opacity-100" data-value="${this.escapeHtml(id)}" title="Copiar">
-                    <i class="fa-solid fa-copy"></i>
+                <code class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-xs sm:text-sm text-gray-300 font-mono break-all uuid-item">${this.escapeHtml(id)}</code>
+                <button type="button" class="copy-btn p-2 text-gray-500 hover:text-bulma-primary transition-colors" data-value="${this.escapeHtml(id)}" title="Copiar">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
                 </button>
             </div>
         `).join('');
+
+        // Re-init Lucide icons
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
     }
 
     escapeHtml(text) {

@@ -44,11 +44,9 @@
                 @php
                     $upcoming = [
                         ['name' => 'JSON Formatter', 'icon' => 'code'],
-                        ['name' => 'Base64 Encode/Decode', 'icon' => 'lock'],
                         ['name' => 'Color Converter', 'icon' => 'palette'],
-                        ['name' => 'Hash Generator', 'icon' => 'hash'],
-                        ['name' => 'Regex Tester', 'icon' => 'asterisk'],
-                        ['name' => 'QR Code Generator', 'icon' => 'qr-code'],
+                        ['name' => 'Consulta CEP', 'icon' => 'map-pin'],
+                        ['name' => 'Gerador de Senhas', 'icon' => 'key'],
                     ];
                 @endphp
                 @foreach($upcoming as $tool)

@@ -75,7 +75,7 @@
                         <code
                             class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-xs sm:text-sm text-gray-300 font-mono break-all uuid-item">{{ $id }}</code>
                         <button type="button"
-                            class="copy-btn p-2 text-gray-500 hover:text-bulma-primary transition-colors sm:opacity-0 sm:group-hover:opacity-100"
+                            class="copy-btn p-2 text-gray-500 hover:text-bulma-primary transition-colors"
                             data-value="{{ $id }}" title="Copiar">
                             <i data-lucide="copy" class="w-4 h-4"></i>
                         </button>

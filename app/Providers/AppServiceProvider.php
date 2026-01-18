@@ -47,6 +47,33 @@ class AppServiceProvider extends ServiceProvider
             'icon' => 'image',
             'color' => 'orange-400',
         ],
+        [
+            'route' => 'tools.cpf',
+            'routeMatch' => 'tools.cpf*',
+            'slug' => 'cpf',
+            'name' => 'CPF / CNPJ',
+            'description' => 'Gere e valide CPF e CNPJ para testes',
+            'icon' => 'id-card',
+            'color' => 'violet-400',
+        ],
+        [
+            'route' => 'tools.base64',
+            'routeMatch' => 'tools.base64',
+            'slug' => 'base64',
+            'name' => 'Base64',
+            'description' => 'Codifique e decodifique texto em Base64',
+            'icon' => 'lock',
+            'color' => 'cyan-400',
+        ],
+        [
+            'route' => 'tools.slugify',
+            'routeMatch' => 'tools.slugify',
+            'slug' => 'slugify',
+            'name' => 'Slugify',
+            'description' => 'Converta texto para slug URL-friendly',
+            'icon' => 'link',
+            'color' => 'amber-400',
+        ],
     ];
 
     /**

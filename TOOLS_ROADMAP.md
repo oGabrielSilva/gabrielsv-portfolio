@@ -9,14 +9,14 @@ Checklist de ferramentas a serem implementadas no projeto.
 
 ---
 
-## 1. Refatorar Tools Existentes
+## 1. Tools Existentes (Concluídas)
 
-Remover Alpine.js e seguir o padrão do UUID Generator.
+Todas as tools já usam Vanilla JS ES6. Alpine.js foi removido.
 
-- [x] **UUID Generator** - Service + Vanilla JS + URLs SEO
-- [ ] **Lorem Ipsum** - Criar `LoremService`, refatorar view/JS
-- [ ] **Calculadora %** - Refatorar view/JS (100% frontend)
-- [ ] **Compressor de Imagem** - Refatorar view/JS (100% frontend)
+- [x] **UUID Generator** - UuidService + Vanilla JS + URLs SEO
+- [x] **Lorem Ipsum** - LoremService + Vanilla JS
+- [x] **Calculadora %** - Vanilla JS (100% frontend)
+- [x] **Compressor de Imagem** - Vanilla JS (100% frontend)
 
 ---
 
@@ -25,9 +25,9 @@ Remover Alpine.js e seguir o padrão do UUID Generator.
 _Essenciais para atrair tráfego técnico e recorrência._
 
 - [x] Gerador de UUID/ULID/CUID
-- [ ] Slugify (Gerador de Slugs)
+- [x] Slugify (Gerador de Slugs)
 - [ ] Formatador e Validador JSON
-- [ ] Encoder/Decoder Base64
+- [x] Encoder/Decoder Base64
 - [ ] Explicador de Expressões Cron
 - [ ] Previewer de Markdown
 - [ ] Horário Mundial
@@ -38,7 +38,7 @@ _Essenciais para atrair tráfego técnico e recorrência._
 
 _Foco em desenvolvedores e usuários brasileiros._
 
-- [ ] Gerador e Validador de CPF/CNPJ
+- [x] Gerador e Validador de CPF/CNPJ
 - [ ] Validador de CNH
 - [ ] Gerador de Placas (Mercosul/Antiga)
 - [ ] Consulta de CEP (integração API)
@@ -50,7 +50,7 @@ _Foco em desenvolvedores e usuários brasileiros._
 _Cálculos rápidos para o dia a dia._
 
 - [ ] Calculadora de Regra de Três
-- [ ] Calculadora de Porcentagem (refatorar existente)
+- [x] Calculadora de Porcentagem
 - [ ] Calculadora de Juros (Compostos e Simples)
 - [ ] Calculadora de IMC
 - [ ] Conversor de Moedas (integração API)
@@ -63,7 +63,7 @@ _Cálculos rápidos para o dia a dia._
 _Ferramentas para criadores de conteúdo._
 
 - [ ] Contador de Caracteres e Palavras
-- [ ] Gerador de Texto Lorem Ipsum (refatorar existente)
+- [x] Gerador de Texto Lorem Ipsum
 - [ ] Gerador de Senhas Fortes
 - [ ] Case Converter (UPPER, lower, camelCase, snake_case, kebab-case)
 - [ ] Removedor de Linhas Duplicadas
@@ -74,7 +74,7 @@ _Ferramentas para criadores de conteúdo._
 
 _Processamento de arquivos e conversão visual._
 
-- [ ] Compressor de Imagens (refatorar existente)
+- [x] Compressor de Imagens
 - [ ] Conversor de PX para REM, CM, etc.
 - [ ] Seletor de Cores (RGB/HEX/HSL)
 
@@ -84,18 +84,17 @@ _Processamento de arquivos e conversão visual._
 
 Cada ferramenta deve seguir:
 
-1. **Service Class** - Lógica isolada em `app/Services/`
-2. **URLs SEO** - Rotas amigáveis para indexação (ex: `/tools/uuid/v4`)
-3. **Valores Pré-gerados** - Página abre com dados já gerados
-4. **Vanilla JS** - Sem Alpine.js, classes ES6 buildadas pelo Vite
-5. **Preline UI** - Dropdowns e componentes estilizados
+1. **Service Class** - Lógica no backend em `app/Services/` (quando aplicável)
+2. **Valores Pré-gerados** - Página abre com dados já gerados (quando fizer sentido)
+3. **Vanilla JS** - Classes ES6 buildadas pelo Vite, sem Alpine.js
+4. **Preline UI** - Dropdowns e componentes estilizados
 
 ---
 
 ## Prioridade de Implementação
 
-1. Refatorar Lorem/Percentage/Image (consistência)
-2. CPF/CNPJ (alta busca Brasil)
+1. ~~Refatorar Lorem/Percentage/Image~~ ✅
+2. ~~CPF/CNPJ (alta busca Brasil)~~ ✅
 3. JSON Formatter (alta busca dev)
-4. Base64 (simples e útil)
-5. Slugify (rápido de implementar)
+4. ~~Base64 (simples e útil)~~ ✅
+5. ~~Slugify (rápido de implementar)~~ ✅

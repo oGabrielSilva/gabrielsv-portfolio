@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             menu.classList.toggle("max-h-0");
             menu.classList.toggle("opacity-0");
-            menu.classList.toggle("max-h-96");
+            // menu.classList.toggle("max-h-96");
             menu.classList.toggle("opacity-100");
 
             const isOpen = !menu.classList.contains("max-h-0");

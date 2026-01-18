@@ -115,4 +115,21 @@ class ToolsController extends Controller
     {
         return view('tools.image-compressor');
     }
+
+    public function cpfCnpj(string $type = 'cpf')
+    {
+        return view('tools.cpf-cnpj', [
+            'type' => $type,
+        ]);
+    }
+
+    public function base64()
+    {
+        return view('tools.base64');
+    }
+
+    public function slugify()
+    {
+        return view('tools.slugify');
+    }
 }
