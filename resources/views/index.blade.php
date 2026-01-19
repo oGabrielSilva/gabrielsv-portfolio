@@ -58,6 +58,7 @@
         </div>
     </section>
 
+    {{-- TODO: Seção de ferramentas temporariamente desativada
     <section id="ferramentas" class="mb-24 py-10 border-t border-neutral-800 scroll-mt-32">
         <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" data-aos="fade-up">
             <div>
@@ -66,7 +67,7 @@
             </div>
             <a href="{{ route('tools.index') }}"
                 class="text-sm font-bold text-bulma-primary hover:text-white transition-colors">
-                Ver todas as ferramentas <i class="fa-solid fa-arrow-right ml-1"></i>
+                Ver todas as ferramentas <i data-lucide="arrow-right" class="w-4 h-4 inline-block ml-1"></i>
             </a>
         </div>
 
@@ -77,7 +78,7 @@
                    data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                     <div class="flex items-start gap-4">
                         <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-neutral-700/50 text-{{ $tool['color'] }} group-hover:bg-{{ $tool['color'] }}/10 transition-colors">
-                            <i class="fa-solid {{ $tool['icon'] }} text-xl"></i>
+                            <i data-lucide="{{ $tool['icon'] }}" class="w-6 h-6"></i>
                         </div>
                         <div class="flex-1 min-w-0">
                             <h3 class="text-lg font-semibold text-white group-hover:text-{{ $tool['color'] }} transition-colors">
@@ -88,13 +89,14 @@
                             </p>
                         </div>
                         <div class="flex-shrink-0 text-gray-600 group-hover:text-{{ $tool['color'] }} transition-colors">
-                            <i class="fa-solid fa-arrow-right"></i>
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
                         </div>
                     </div>
                 </a>
             @endforeach
         </div>
     </section>
+    --}}
 
     <section id="blog" class="mb-24 py-10 border-t border-neutral-800 scroll-mt-32">
         <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" data-aos="fade-up">

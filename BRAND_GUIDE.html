@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Brand Guide — Gabriel Silva (PDF Version)</title>
+
+        <!-- Google Sans Flex & Fallbacks -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Inter:wght@400;500;700&family=Instrument+Sans:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Phosphor Icons -->
+        <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: [
+                                '"Google Sans Flex"',
+                                "Inter",
+                                "Instrument Sans",
+                                "system-ui",
+                                "sans-serif",
+                            ],
+                        },
+                        colors: {
+                            brand: {
+                                primary: "var(--color-primary)",
+                                background: "var(--color-background)",
+                                surface: "var(--color-surface)",
+                                border: "var(--color-border)",
+                                text: {
+                                    primary: "var(--color-text-primary)",
+                                    secondary: "var(--color-text-secondary)",
+                                    muted: "var(--color-text-muted)",
+                                },
+                            },
+                            // Cores Estáticas para Demonstração
+                            static: {
+                                dark: {
+                                    primary: "#00d1b2",
+                                    bg: "#1a1a1a",
+                                    surface: "#242424",
+                                    border: "#2f2f2f",
+                                },
+                                light: {
+                                    primary: "#00a896",
+                                    bg: "#ffffff",
+                                    surface: "#f5f5f5",
+                                    border: "#e5e5e5",
+                                },
+                            },
+                        },
+                        boxShadow: {
+                            card: "var(--shadow-card)",
+                            elevated: "var(--shadow-elevated)",
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            :root {
+                /* Definindo o tema padrão como DARK para o documento base */
+                --color-primary: #00d1b2;
+                --color-background: #1a1a1a;
+                --color-surface: #242424;
+                --color-border: #2f2f2f;
+                --color-text-primary: #ffffff;
+                --color-text-secondary: #a3a3a3;
+                --color-text-muted: #6b7280;
+
+                --shadow-card: 0 10px 40px -10px rgba(0, 209, 178, 0.15);
+                --shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Configurações específicas para Impressão/PDF */
+            @media print {
+                body {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                .break-inside-avoid {
+                    page-break-inside: avoid;
+                }
+                .break-before {
+                    page-break-before: always;
+                }
+            }
+
+            body {
+                background-color: var(--color-background);
+                color: var(--color-text-primary);
+            }
+
+            /* Classes utilitárias para simular estados */
+            .simulated-hover {
+                transform: translateY(-8px);
+                border-color: var(--color-primary) !important;
+            }
+
+            .simulated-btn-hover {
+                transform: translateY(-4px);
+                opacity: 0.9;
+            }
+
+            .simulated-focus {
+                outline: none;
+                box-shadow:
+                    0 0 0 2px var(--color-background),
+                    0 0 0 4px var(--color-primary);
+            }
+        </style>
+    </head>
+    <body
+        class="antialiased min-h-screen font-sans p-8 md:p-12 max-w-[1100px] mx-auto bg-brand-background text-brand-text-primary"
+    >
+        <!-- Header / Capa -->
+        <header class="mb-16 border-b border-brand-border pb-12">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span
+                        class="inline-block px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold uppercase tracking-wider mb-4 border border-brand-primary/20"
+                        >Versão 1.0 • 2026</span
+                    >
+                    <h1
+                        class="text-5xl md:text-6xl font-bold tracking-tight mb-4"
+                    >
+                        Gabriel Silva
+                    </h1>
+                    <p class="text-2xl text-brand-text-secondary">
+                        Sistema de Design & Identidade Visual
+                    </p>
+                </div>
+                <div class="text-right hidden sm:block">
+                    <div
+                        class="w-16 h-16 bg-brand-primary rounded-xl flex items-center justify-center text-brand-background text-3xl font-bold shadow-lg"
+                    >
+                        GS
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="mt-8 p-6 bg-brand-surface border border-brand-border rounded-lg"
+            >
+                <p class="text-brand-text-secondary leading-relaxed">
+                    Este documento serve como referência estática para a
+                    identidade visual. Ele abrange tokens de cores, tipografia,
+                    espaçamento e o comportamento esperado dos componentes de
+                    interface.
+                </p>
+            </div>
+        </header>
+
+        <!-- Colors Section -->
+        <section class="mb-16 break-inside-avoid">
+            <h2
+                class="text-3xl font-bold mb-8 flex items-center gap-3 border-b border-brand-border pb-4"
+            >
+                <i class="ph ph-palette text-brand-primary"></i> 1. Paleta de
+                Cores
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- Dark Mode (Principal) -->
+                <div
+                    class="bg-[#1a1a1a] p-6 rounded-2xl border border-[#2f2f2f] shadow-2xl relative"
+                >
+                    <div
+                        class="absolute top-0 right-0 bg-[#242424] px-3 py-1 text-xs font-bold text-[#a3a3a3] rounded-bl-lg rounded-tr-xl border-l border-b border-[#2f2f2f]"
+                    >
+                        DARK MODE (Default)
+                    </div>
+
+                    <h3 class="text-white font-bold mb-6 mt-2">
+                        Tokens Principais
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded bg-[#00d1b2] shadow-lg"
+                            ></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-white font-medium"
+                                        >Primary</span
+                                    >
+                                    <span
+                                        class="text-[#00d1b2] font-mono text-sm"
+                                        >#00d1b2</span
+                                    >
+                                </div>
+                                <p class="text-[#6b7280] text-xs">
+                                    CTAs, Destaques
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded bg-[#1a1a1a] border border-[#2f2f2f]"
+                            ></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-white font-medium"
+                                        >Background</span
+                                    >
+                                    <span
+                                        class="text-[#a3a3a3] font-mono text-sm"
+                                        >#1a1a1a</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded bg-[#242424] border border-[#2f2f2f]"
+                            ></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-white font-medium"
+                                        >Surface</span
+                                    >
+                                    <span
+                                        class="text-[#a3a3a3] font-mono text-sm"
+                                        >#242424</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded bg-[#2f2f2f]"></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-white font-medium"
+                                        >Border</span
+                                    >
+                                    <span
+                                        class="text-[#a3a3a3] font-mono text-sm"
+                                        >#2f2f2f</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Light Mode (Referência) -->
+                <div
+                    class="bg-white p-6 rounded-2xl border border-gray-200 shadow-lg relative"
+                >
+                    <div
+                        class="absolute top-0 right-0 bg-gray-100 px-3 py-1 text-xs font-bold text-gray-500 rounded-bl-lg rounded-tr-xl border-l border-b border-gray-200"
+                    >
+                        LIGHT MODE
+                    </div>
+
+                    <h3 class="text-gray-900 font-bold mb-6 mt-2">
+                        Tokens Principais
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded bg-[#00a896] shadow-md"
+                            ></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-900 font-medium"
+                                        >Primary</span
+                                    >
+                                    <span
+                                        class="text-[#00a896] font-mono text-sm"
+                                        >#00a896</span
+                                    >
+                                </div>
+                                <p class="text-gray-400 text-xs">
+                                    CTAs, Destaques
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded bg-[#ffffff] border border-gray-200"
+                            ></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-900 font-medium"
+                                        >Background</span
+                                    >
+                                    <span
+                                        class="text-gray-400 font-mono text-sm"
+                                        >#ffffff</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded bg-[#f5f5f5] border border-gray-200"
+                            ></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-900 font-medium"
+                                        >Surface</span
+                                    >
+                                    <span
+                                        class="text-gray-400 font-mono text-sm"
+                                        >#f5f5f5</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded bg-[#e5e5e5]"></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-900 font-medium"
+                                        >Border</span
+                                    >
+                                    <span
+                                        class="text-gray-400 font-mono text-sm"
+                                        >#e5e5e5</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-brand-text-secondary mb-4">
+                Cores de Acento (Compartilhado)
+            </h3>
+            <div class="grid grid-cols-4 gap-4">
+                <div
+                    class="bg-brand-surface p-4 rounded-lg border border-brand-border text-center"
+                >
+                    <div class="h-12 w-full bg-[#3b82f6] rounded mb-2"></div>
+                    <span class="text-sm font-bold block">Blue</span>
+                    <span class="text-xs font-mono text-brand-text-muted"
+                        >#3b82f6</span
+                    >
+                </div>
+                <div
+                    class="bg-brand-surface p-4 rounded-lg border border-brand-border text-center"
+                >
+                    <div class="h-12 w-full bg-[#38bdf8] rounded mb-2"></div>
+                    <span class="text-sm font-bold block">Sky</span>
+                    <span class="text-xs font-mono text-brand-text-muted"
+                        >#38bdf8</span
+                    >
+                </div>
+                <div
+                    class="bg-brand-surface p-4 rounded-lg border border-brand-border text-center"
+                >
+                    <div class="h-12 w-full bg-[#fb923c] rounded mb-2"></div>
+                    <span class="text-sm font-bold block">Orange</span>
+                    <span class="text-xs font-mono text-brand-text-muted"
+                        >#fb923c</span
+                    >
+                </div>
+                <div
+                    class="bg-brand-surface p-4 rounded-lg border border-brand-border text-center"
+                >
+                    <div class="h-12 w-full bg-[#34d399] rounded mb-2"></div>
+                    <span class="text-sm font-bold block">Emerald</span>
+                    <span class="text-xs font-mono text-brand-text-muted"
+                        >#34d399</span
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Section -->
+        <section class="mb-16 break-inside-avoid">
+            <h2
+                class="text-3xl font-bold mb-8 flex items-center gap-3 border-b border-brand-border pb-4"
+            >
+                <i class="ph ph-text-aa text-brand-primary"></i> 2. Tipografia
+            </h2>
+
+            <div
+                class="bg-brand-surface border border-brand-border rounded-2xl p-8"
+            >
+                <div
+                    class="flex items-center gap-6 mb-8 pb-6 border-b border-brand-border"
+                >
+                    <span class="text-6xl font-bold text-brand-text-primary"
+                        >Aa</span
+                    >
+                    <div>
+                        <h3 class="text-2xl font-bold">Google Sans Flex</h3>
+                        <p class="text-brand-text-muted">
+                            Principal fonte geométrica para toda a interface.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="grid grid-cols-12 gap-4 items-baseline">
+                        <div
+                            class="col-span-3 text-brand-text-muted text-sm font-mono"
+                        >
+                            H1 / Bold / 48-60px
+                        </div>
+                        <div class="col-span-9">
+                            <h1
+                                class="text-5xl font-bold text-brand-text-primary leading-[1.1]"
+                            >
+                                The quick brown fox
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-baseline">
+                        <div
+                            class="col-span-3 text-brand-text-muted text-sm font-mono"
+                        >
+                            H2 / Bold / 30-36px
+                        </div>
+                        <div class="col-span-9">
+                            <h2
+                                class="text-3xl font-bold text-brand-text-primary leading-[1.2]"
+                            >
+                                Jumps over the lazy dog
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-baseline">
+                        <div
+                            class="col-span-3 text-brand-text-muted text-sm font-mono"
+                        >
+                            Body / Reg / 16px
+                        </div>
+                        <div class="col-span-9">
+                            <p
+                                class="text-base text-brand-text-secondary leading-[1.6]"
+                            >
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit. Sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components & Interactions (The Important Part) -->
+        <section class="break-before">
+            <h2
+                class="text-3xl font-bold mb-8 flex items-center gap-3 border-b border-brand-border pb-4"
+            >
+                <i class="ph ph-cursor-click text-brand-primary"></i> 3.
+                Componentes & Interações
+            </h2>
+            <p class="mb-8 text-brand-text-secondary">
+                Comparação visual lado a lado dos estados de componentes para
+                referência de desenvolvimento.
+            </p>
+
+            <!-- Buttons Comparison -->
+            <div class="mb-12">
+                <h3
+                    class="text-xl font-bold text-brand-text-primary mb-4 pl-4 border-l-4 border-brand-primary"
+                >
+                    Botões
+                </h3>
+                <div
+                    class="bg-brand-surface border border-brand-border rounded-xl p-8"
+                >
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <!-- Estado Normal -->
+                        <div>
+                            <span
+                                class="block text-xs font-bold text-brand-text-muted uppercase tracking-wider mb-4 border-b border-brand-border pb-2"
+                                >Estado: Normal</span
+                            >
+                            <div class="flex gap-4">
+                                <div
+                                    class="bg-brand-primary text-white font-bold py-3 px-6 rounded text-sm inline-block shadow-lg shadow-brand-primary/20"
+                                >
+                                    Primary Button
+                                </div>
+                                <div
+                                    class="bg-brand-surface border border-brand-border text-brand-text-primary font-bold py-3 px-6 rounded text-sm inline-block"
+                                >
+                                    Secondary
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado Hover -->
+                        <div>
+                            <span
+                                class="block text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 border-b border-brand-border pb-2"
+                                >Estado: Hover / Active</span
+                            >
+                            <div class="flex gap-4">
+                                <!-- Simulating Hover -->
+                                <div
+                                    class="bg-brand-primary text-white font-bold py-3 px-6 rounded text-sm inline-block simulated-btn-hover cursor-pointer shadow-lg shadow-brand-primary/40 relative"
+                                >
+                                    Primary Button
+                                </div>
+                                <!-- Simulating Hover Secondary -->
+                                <div
+                                    class="bg-brand-background border border-brand-border text-brand-text-primary font-bold py-3 px-6 rounded text-sm inline-block simulated-btn-hover cursor-pointer relative"
+                                >
+                                    Secondary
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inputs Comparison -->
+            <div class="mb-12 break-inside-avoid">
+                <h3
+                    class="text-xl font-bold text-brand-text-primary mb-4 pl-4 border-l-4 border-brand-primary"
+                >
+                    Campos de Texto (Inputs)
+                </h3>
+                <div
+                    class="bg-brand-surface border border-brand-border rounded-xl p-8"
+                >
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <!-- Estado Normal -->
+                        <div>
+                            <span
+                                class="block text-xs font-bold text-brand-text-muted uppercase tracking-wider mb-4 border-b border-brand-border pb-2"
+                                >Estado: Normal (Empty)</span
+                            >
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-brand-text-muted uppercase tracking-wide mb-2"
+                                    >Email</label
+                                >
+                                <div
+                                    class="w-full bg-brand-border border border-[#404040] text-brand-text-primary px-4 py-3 rounded-lg flex items-center text-brand-text-muted"
+                                >
+                                    nome@gabrielsv.com
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado Focus -->
+                        <div>
+                            <span
+                                class="block text-xs font-bold text-brand-primary uppercase tracking-wider mb-4 border-b border-brand-border pb-2"
+                                >Estado: Focus / Typing</span
+                            >
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-brand-text-muted uppercase tracking-wide mb-2"
+                                    >Email</label
+                                >
+                                <div
+                                    class="w-full bg-brand-border border border-[#404040] text-brand-text-primary px-4 py-3 rounded-lg simulated-focus relative"
+                                >
+                                    nome@gabrielsv.com<span
+                                        class="animate-pulse"
+                                        >|</span
+                                    >
+                                    <div
+                                        class="absolute -right-2 -top-2 bg-brand-primary text-white text-[10px] px-2 py-1 rounded font-bold shadow-lg"
+                                    >
+                                        FOCUS
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards Interaction Comparison -->
+            <div class="mb-12 break-inside-avoid">
+                <h3
+                    class="text-xl font-bold text-brand-text-primary mb-4 pl-4 border-l-4 border-brand-primary"
+                >
+                    Cards Interativos
+                </h3>
+                <div
+                    class="bg-brand-surface border border-brand-border rounded-xl p-8"
+                >
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <!-- Card Normal -->
+                        <div
+                            class="bg-brand-surface/50 border border-brand-border p-6 rounded-xl"
+                        >
+                            <span
+                                class="block text-xs font-bold text-brand-text-muted uppercase tracking-wider mb-4"
+                                >Estado: Normal</span
+                            >
+                            <div
+                                class="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary mb-3"
+                            >
+                                <i class="ph ph-star text-xl"></i>
+                            </div>
+                            <h5
+                                class="text-lg font-bold text-brand-text-primary mb-1"
+                            >
+                                Destaque
+                            </h5>
+                            <p class="text-brand-text-secondary text-sm">
+                                O card permanece plano na superfície com borda
+                                sutil.
+                            </p>
+                        </div>
+
+                        <!-- Card Hover -->
+                        <div
+                            class="bg-brand-surface/50 border border-brand-border p-6 rounded-xl simulated-hover relative"
+                        >
+                            <div
+                                class="absolute -top-3 -right-3 bg-brand-primary text-white text-[10px] px-2 py-1 rounded font-bold shadow-lg z-10"
+                            >
+                                HOVER
+                            </div>
+                            <span
+                                class="block text-xs font-bold text-brand-primary uppercase tracking-wider mb-4"
+                                >Estado: Hover</span
+                            >
+
+                            <div
+                                class="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary mb-3 transform scale-110 rotate-3 transition-transform"
+                            >
+                                <i class="ph ph-star text-xl"></i>
+                            </div>
+                            <h5
+                                class="text-lg font-bold text-brand-text-primary mb-1"
+                            >
+                                Destaque
+                            </h5>
+                            <p class="text-brand-text-secondary text-sm">
+                                O card flutua (-8px) e a borda assume a cor
+                                primária.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing & Radius -->
+        <section class="break-inside-avoid mb-12">
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <h2
+                        class="text-2xl font-bold mb-6 flex items-center gap-3 border-b border-brand-border pb-4"
+                    >
+                        <i class="ph ph-ruler text-brand-primary"></i>
+                        Espaçamento
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="w-8 text-sm font-mono text-brand-text-muted"
+                                >sm</span
+                            >
+                            <div
+                                class="h-6 bg-brand-primary/20 border border-brand-primary/50 text-[10px] flex items-center justify-center text-brand-primary font-bold w-2"
+                            >
+                                8
+                            </div>
+                            <span class="text-xs text-brand-text-muted"
+                                >8px</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="w-8 text-sm font-mono text-brand-text-muted"
+                                >md</span
+                            >
+                            <div
+                                class="h-6 bg-brand-primary/20 border border-brand-primary/50 text-[10px] flex items-center justify-center text-brand-primary font-bold w-4"
+                            >
+                                16
+                            </div>
+                            <span class="text-xs text-brand-text-muted"
+                                >16px</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="w-8 text-sm font-mono text-brand-text-muted"
+                                >lg</span
+                            >
+                            <div
+                                class="h-6 bg-brand-primary/20 border border-brand-primary/50 text-[10px] flex items-center justify-center text-brand-primary font-bold w-6"
+                            >
+                                24
+                            </div>
+                            <span class="text-xs text-brand-text-muted"
+                                >24px</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="w-8 text-sm font-mono text-brand-text-muted"
+                                >xl</span
+                            >
+                            <div
+                                class="h-6 bg-brand-primary/20 border border-brand-primary/50 text-[10px] flex items-center justify-center text-brand-primary font-bold w-8"
+                            >
+                                32
+                            </div>
+                            <span class="text-xs text-brand-text-muted"
+                                >32px</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2
+                        class="text-2xl font-bold mb-6 flex items-center gap-3 border-b border-brand-border pb-4"
+                    >
+                        <i class="ph ph-corners-out text-brand-primary"></i>
+                        Radius
+                    </h2>
+                    <div class="flex gap-4">
+                        <div
+                            class="w-16 h-16 bg-brand-surface border border-brand-border flex items-center justify-center flex-col rounded text-brand-primary font-bold text-sm"
+                        >
+                            sm
+                            <span
+                                class="text-[10px] font-normal text-brand-text-muted"
+                                >4px</span
+                            >
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-brand-surface border border-brand-border flex items-center justify-center flex-col rounded-lg text-brand-primary font-bold text-sm"
+                        >
+                            md
+                            <span
+                                class="text-[10px] font-normal text-brand-text-muted"
+                                >8px</span
+                            >
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-brand-surface border border-brand-border flex items-center justify-center flex-col rounded-xl text-brand-primary font-bold text-sm"
+                        >
+                            lg
+                            <span
+                                class="text-[10px] font-normal text-brand-text-muted"
+                                >12px</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer
+            class="text-center text-brand-text-muted text-sm py-8 border-t border-brand-border mt-12"
+        >
+            <p>
+                © 2026 Gabriel Silva. Documento gerado para referência de
+                desenvolvimento.
+            </p>
+        </footer>
+    </body>
+</html>

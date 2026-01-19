@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandGuideController;
 use App\Http\Controllers\CardGeneratorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ToolsController;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/card-generator', [CardGeneratorController::class, 'index'])->name('card-generator');
+Route::get('/brand-guide', [BrandGuideController::class, 'index'])->name('brand-guide');
 
 // Tools routes
 Route::prefix('tools')->name('tools.')->group(function () {
