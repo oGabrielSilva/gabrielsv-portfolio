@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Libs Python para adaptar para JS/TS</title>
+</head>
+<body>
+  <article>
+    <h1>Libs Python para adaptar para o ecossistema JS/TS</h1>
+
+    <p>
+      A ideia aqui não é portar biblioteca Python por nostalgia. O recorte bom é outro:
+    </p>
+
+    <blockquote>
+      Quais libs fazem uma empresa JS-first criar scripts, workers ou microserviços em Python porque o ecossistema JS não resolve aquela dor tão bem?
+    </blockquote>
+
+    <p>
+      Esse é o tipo de projeto que pode virar portfólio forte, porque mostra uma dor real:
+      reduzir dependência de Python em times que já trabalham com Node, TypeScript, browser,
+      edge, Bun, Deno ou automações JS.
+    </p>
+
+    <p>
+      O filtro principal é simples: portar lib só fica interessante quando existe gap real,
+      DX melhor e empacotamento sério. Não é sobre copiar uma lib famosa. É sobre transformar
+      uma dor comum em uma solução mais acessível para o ecossistema JS.
+    </p>
+
+    <hr />
+
+    <h2>Critério de escolha</h2>
+
+    <p>Uma lib candidata precisa responder “sim” para pelo menos 3 perguntas:</p>
+
+    <ul>
+      <li>Uma empresa JS-first criaria um script Python só para resolver isso?</li>
+      <li>O equivalente JS atual é fraco, fragmentado, abandonado ou chato de integrar?</li>
+      <li>Dá para entregar uma versão menor, bem documentada e TypeScript-first?</li>
+      <li>Funciona em Node e, quando possível, browser/edge?</li>
+      <li>Tem demo fácil para README, artigo e landing page?</li>
+      <li>Resolve uma dor que aparece em SaaS, automação, CRM, dados, documentos ou tooling?</li>
+    </ul>
+
+    <hr />
+
+    <h2>Tier S — maior oportunidade real</h2>
+
+    <h3>CleverCSV → csv-doctor / smart-csv-kit</h3>
+
+    <p>
+      CleverCSV é uma lib Python focada em lidar com CSVs bagunçados. Ela tenta detectar melhor
+      o “dialeto” do arquivo, como separador, aspas e estrutura, especialmente em arquivos exportados
+      por sistemas antigos, ERPs, CRMs ou planilhas mal formatadas.
+    </p>
+
+    <p>
+      Essa é uma das melhores apostas porque CSV zoado é uma dor real de empresa:
+      ERP antigo, exportação de CRM, base de lead, planilha de cliente, relatório financeiro,
+      CSV com ponto e vírgula, vírgula, encoding quebrado, aspas inconsistentes e header feio.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const result = await parseMessyCsv(file, {
+  detectDialect: true,
+  normalizeHeaders: true,
+  inferTypes: true,
+  reportProblems: true
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Dor comum em SaaS B2B.</li>
+      <li>Demo fácil: “jogue seu CSV quebrado e veja virar JSON limpo”.</li>
+      <li>Escopo controlável.</li>
+      <li>Pode funcionar em Node e browser.</li>
+      <li>Serve para importação de leads, produtos, clientes, pedidos e relatórios.</li>
+    </ul>
+
+    <h4>Nomes possíveis</h4>
+
+    <ul>
+      <li>csv-doctor</li>
+      <li>messy-csv</li>
+      <li>smart-csv-kit</li>
+      <li>tabular-cleaner</li>
+    </ul>
+
+    <hr />
+
+    <h3>Frictionless → table-contract / csv-schema</h3>
+
+    <p>
+      Frictionless é um framework Python para descrever, extrair, validar e transformar dados tabulares.
+      A oportunidade aqui não é clonar tudo. A oportunidade é criar uma versão TS-first focada em upload
+      de CSV e Excel em apps web.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const schema = defineTable({
+  email: string().email(),
+  company: string().min(2),
+  revenue: number().optional(),
+  country: enumOf(["BR", "US", "MX"])
+})
+
+const report = await validateTable(csvFile, schema)</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Toda empresa que importa planilha precisa validar coluna, tipo, valor obrigatório e erro por linha.</li>
+      <li>É uma dor muito comum em dashboards internos e SaaS.</li>
+      <li>Dá para gerar relatório visual de erros.</li>
+      <li>Dá para integrar com Zod, Valibot ou uma DSL própria.</li>
+      <li>Pode virar uma lib muito boa para front + back.</li>
+    </ul>
+
+    <h4>Nomes possíveis</h4>
+
+    <ul>
+      <li>table-contract</li>
+      <li>csv-schema</li>
+      <li>tabular-guard</li>
+      <li>sheet-guard</li>
+    </ul>
+
+    <hr />
+
+    <h3>MarkItDown → file-to-markdown / any-to-md</h3>
+
+    <p>
+      MarkItDown, da Microsoft, é uma ferramenta Python leve para converter arquivos variados em Markdown,
+      especialmente para uso com LLMs, indexing e pipelines de análise de texto.
+    </p>
+
+    <p>
+      Essa é uma oportunidade forte porque muita empresa JS-first está mexendo com LLM/RAG e precisa transformar
+      PDF, DOCX, PPTX, XLSX, HTML e outros arquivos em texto usável.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const markdown = await convertToMarkdown(file, {
+  preserveTables: true,
+  includeMetadata: true,
+  strategy: "llm-friendly"
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Muito atual por causa de LLMs/RAG.</li>
+      <li>Empresas Node acabam usando worker Python só para ingestão de documentos.</li>
+      <li>Pode começar pequeno: HTML, TXT, CSV, DOCX.</li>
+      <li>Depois evoluir para PDF, PPTX, XLSX e imagens.</li>
+      <li>Tem narrativa forte: “document ingestion for TypeScript apps”.</li>
+    </ul>
+
+    <h4>Nomes possíveis</h4>
+
+    <ul>
+      <li>file-to-markdown</li>
+      <li>any-to-md</li>
+      <li>md-ingest</li>
+      <li>doc-to-md</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> formatos de arquivo viram buraco negro. O ideal é começar com poucos formatos
+      e deixar a arquitetura plugável.
+    </p>
+
+    <hr />
+
+    <h3>Trafilatura → maintext-js / cleanpage</h3>
+
+    <p>
+      Trafilatura é uma lib e CLI Python para coletar texto da web. Ela inclui crawling, download, scraping,
+      extração de texto principal, metadata e comentários, com saída para formatos comuns.
+    </p>
+
+    <p>
+      Essa lib entra muito bem no mundo de SEO, prospecção, scraping e RAG. Em JS existem parsers de HTML,
+      mas a dor real é: “me dá só o conteúdo principal da página, sem menu, header, footer, ads e lixo”.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const article = extractMainContent(html, {
+  includeMetadata: true,
+  includeLinks: false,
+  output: "markdown"
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Útil para SEO, scraping, monitoramento de concorrentes e RAG.</li>
+      <li>Pode rodar em Node.</li>
+      <li>Tem demo simples: URL → texto limpo.</li>
+      <li>Conversa com automações, n8n, crawlers e análise de sites.</li>
+      <li>Pode ser menor e mais prática do que uma stack completa de scraping.</li>
+    </ul>
+
+    <h4>Nomes possíveis</h4>
+
+    <ul>
+      <li>maintext-js</li>
+      <li>cleanpage</li>
+      <li>article-extract</li>
+      <li>readable-html</li>
+    </ul>
+
+    <hr />
+
+    <h3>dedupe → entity-match / lead-dedupe</h3>
+
+    <p>
+      dedupe é uma lib Python para deduplicação, fuzzy matching e entity resolution em dados estruturados.
+      Ela é útil para cenários como remover duplicados em planilhas, juntar listas de clientes e encontrar
+      registros que representam a mesma entidade mesmo sem ID único.
+    </p>
+
+    <p>
+      Essa talvez seja uma das ideias mais próximas de prospecção, CRM, Snov.io, leads e bases comerciais.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const clusters = await dedupeRecords(records, {
+  fields: ["company", "email", "phone", "address"],
+  threshold: 0.87
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>CRM sujo é uma dor universal.</li>
+      <li>Base de lead duplicada é muito comum.</li>
+      <li>Dá para começar sem ML pesado, usando scoring por regras + similaridade.</li>
+      <li>Pode evoluir para active learning depois.</li>
+      <li>Tem uso real em vendas, marketing, logística, financeiro e atendimento.</li>
+    </ul>
+
+    <h4>Nomes possíveis</h4>
+
+    <ul>
+      <li>entity-match</li>
+      <li>lead-dedupe</li>
+      <li>record-linker</li>
+      <li>fuzzy-records</li>
+    </ul>
+
+    <hr />
+
+    <h2>Tier A — muito boas, mas com escopo mais perigoso</h2>
+
+    <h3>Pandera → dataframe-guard / table-validate</h3>
+
+    <p>
+      Pandera é uma lib de validação para objetos tipo dataframe. Para JS, a melhor abordagem não seria
+      clonar dataframe. Seria criar uma lib para validar arrays de objetos, CSVs e JSON tabular.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const customers = tableSchema({
+  id: column.string(),
+  age: column.number().between(18, 120),
+  email: column.string().email(),
+  country: column.enum(["BR", "US", "MX"])
+})
+
+customers.validate(rows)</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Bom para pipelines Node.</li>
+      <li>Bom para importação de dados.</li>
+      <li>Bom para validar resposta de API externa em lote.</li>
+      <li>Pode funcionar junto com csv-doctor.</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> se ficar genérico demais, vira só mais um validador.
+      Precisa focar em dados tabulares.
+    </p>
+
+    <hr />
+
+    <h3>unstructured → doc-elements / document-partition</h3>
+
+    <p>
+      unstructured oferece componentes para ingestão e pré-processamento de documentos como PDFs, HTML,
+      Word docs e outros formatos, com foco em fluxos de dados para LLMs.
+    </p>
+
+    <p>
+      Essa é uma oportunidade forte, mas grande. Melhor fazer uma versão pequena e plugável.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const doc = await partitionDocument(file)
+
+doc.elements
+// [
+//   { type: "title", text: "..." },
+//   { type: "paragraph", text: "..." },
+//   { type: "list_item", text: "..." }
+// ]</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Muito útil para RAG.</li>
+      <li>JS tem parsers isolados, mas falta uma API única boa.</li>
+      <li>Pode integrar com Markdown, embeddings e chunking.</li>
+      <li>Dá para começar com HTML/Markdown/TXT e depois ir para DOCX/PDF.</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> tentar suportar todos os formatos logo no começo.
+    </p>
+
+    <hr />
+
+    <h3>pdfplumber → pdf-inspector / pdf-table-lite</h3>
+
+    <p>
+      pdfplumber extrai informações detalhadas de PDFs, incluindo caracteres, linhas, texto, tabelas
+      e debugging visual. Essa é uma dor muito real, mas PDF é um inferno técnico.
+    </p>
+
+    <p>
+      O ideal não seria começar por “PDF parser geral”. Melhor limitar o escopo para PDFs text-based
+      ou gerados por máquina.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const pdf = await inspectPdf(file)
+
+const text = pdf.pages[0].text()
+const tables = pdf.pages[0].tables()</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Empresas vivem extraindo dados de PDFs.</li>
+      <li>Muito comum em relatórios, boletos, propostas, catálogos e documentos financeiros.</li>
+      <li>Dá portfólio forte.</li>
+      <li>Pode ter uma demo visual muito boa.</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> PDFs escaneados exigem OCR. Melhor declarar suporte inicial apenas
+      para PDFs text-based/machine-generated.
+    </p>
+
+    <hr />
+
+    <h3>Camelot → pdf-table-extract</h3>
+
+    <p>
+      Camelot é uma lib Python focada em extrair tabelas de PDFs. Essa opção talvez seja melhor do que
+      tentar portar algo tipo pdfplumber inteiro. Uma lib só para tabela em PDF text-based já resolve
+      uma dor grande.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const tables = await extractPdfTables(file, {
+  pages: "1-3",
+  strategy: "lattice"
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Caso de uso claro.</li>
+      <li>Escopo mais fechado.</li>
+      <li>Empresas fazem muito isso em Python.</li>
+      <li>Pode exportar para CSV, JSON e Markdown.</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> ainda assim é PDF. Precisa ser honesto no README sobre limitações.
+    </p>
+
+    <hr />
+
+    <h3>libpostal / pylibpostal → address-br / address-latam</h3>
+
+    <p>
+      libpostal é uma lib em C para parsing e normalização de endereços no mundo todo.
+      Existem bindings para outras linguagens, mas normalmente dependem da lib C por baixo.
+    </p>
+
+    <p>
+      Por isso, eu não faria um clone mundial. Eu faria uma lib menor, focada em Brasil/LatAm.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>parseAddressBR("Av Paulista, 1000 cj 32 - Bela Vista, São Paulo - SP")
+
+// {
+//   street: "Av Paulista",
+//   number: "1000",
+//   complement: "cj 32",
+//   district: "Bela Vista",
+//   city: "São Paulo",
+//   state: "SP"
+// }</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Endereço é dado sujo.</li>
+      <li>Muito útil para CRM, logística, marketplace e cadastros.</li>
+      <li>Uma versão BR/LatAm é mais realista do que competir com libpostal.</li>
+      <li>Pode incluir CEP, UF, cidade, bairro, número e complemento.</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> parsing de endereço sem base de dados geográfica tem limite.
+      Precisa ser vendido como parser/normalizador, não como geocoding.
+    </p>
+
+    <hr />
+
+    <h2>Tier B — boas libs de dev/tooling, mas menos “empresa criou Python por isso”</h2>
+
+    <h3>DeepDiff → audit-diff / deep-change</h3>
+
+    <p>
+      DeepDiff compara profundamente objetos Python e também inclui recursos como busca, hash,
+      delta e extração. Em JS já existem libs de deep diff, mas muitas são ruins para auditoria humana,
+      payloads grandes ou relatórios bonitos.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const diff = deepDiff(before, after, {
+  ignoreOrder: true,
+  pathFormat: "json-pointer",
+  humanReadable: true
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Audit logs.</li>
+      <li>Admin panels.</li>
+      <li>Comparação de payloads.</li>
+      <li>Snapshots de API.</li>
+      <li>CMS e SaaS multi-tenant.</li>
+    </ul>
+
+    <p>
+      <strong>Onde encaixa bem:</strong> no Linq, por exemplo, para registrar mudança de configuração,
+      billing, organização, links e QR codes.
+    </p>
+
+    <p>
+      <strong>Risco:</strong> concorrência grande. Tem que ser muito bom em DX, output e TypeScript.
+    </p>
+
+    <hr />
+
+    <h3>glom → json-transform-spec</h3>
+
+    <p>
+      glom é uma lib Python para acessar e transformar dados aninhados. JS mexe com JSON o tempo todo,
+      então a dor existe. O problema é que também existem várias libs parecidas.
+    </p>
+
+    <h4>Produto JS possível</h4>
+
+    <pre><code>const output = transform(input, {
+  name: "user.profile.name",
+  city: "company.address.city",
+  firstOrder: "orders.0.id"
+})</code></pre>
+
+    <h4>Por que faz sentido</h4>
+
+    <ul>
+      <li>Bom para integrar APIs externas.</li>
+      <li>Bom para normalizar payloads.</li>
+      <li>Bom para ETL pequeno.</li>
+      <li>Bom para automações.</li>
+    </ul>
+
+    <p>
+      <strong>Risco:</strong> precisa ter uma API muito melhor que lodash.get, object-path,
+      JSONata e similares. Senão vira mais uma lib de transformação.
+    </p>
+
+    <hr />
+
+    <h2>Não colocaria como prioridade agora</h2>
+
+    <h3>Great Expectations</h3>
+
+    <p>
+      É muito forte no mundo de data quality, mas grande demais para virar um port direto.
+      A ideia boa aqui seria pegar apenas um pedaço: validação de CSV/JSON tabular para apps Node.
+    </p>
+
+    <h3>pdfplumber completo</h3>
+
+    <p>
+      Muito forte tecnicamente, mas escopo grande e cheio de caso edge. Melhor começar com
+      pdf-table-extract limitado a PDFs text-based.
+    </p>
+
+    <h3>unstructured completo</h3>
+
+    <p>
+      Excelente inspiração, mas tentar suportar PDF, DOCX, imagem, OCR, HTML, chunking e metadata
+      de uma vez vai virar um produto gigante.
+    </p>
+
+    <hr />
+
+    <h2>Sugestão concreta de linha de pacotes</h2>
+
+    <p>
+      Em vez de um pacote aleatório, eu criaria uma mini-suite com um posicionamento claro:
+    </p>
+
+    <blockquote>
+      Python-grade data utilities for TypeScript apps.
+    </blockquote>
+
+    <p>Ou em português:</p>
+
+    <blockquote>
+      Utilitários de dados com qualidade de Python, mas feitos para apps TypeScript.
+    </blockquote>
+
+    <p>Sem usar <code>@otech</code>, algumas opções de namespace/naming:</p>
+
+    <h3>Opção com seu nome</h3>
+
+    <pre><code>@gabrielsv/csv-doctor
+@gabrielsv/file-to-markdown
+@gabrielsv/maintext
+@gabrielsv/entity-match
+@gabrielsv/audit-diff</code></pre>
+
+    <h3>Opção com marca própria</h3>
+
+    <pre><code>@datakit/csv-doctor
+@datakit/file-to-markdown
+@datakit/maintext
+@datakit/entity-match
+@datakit/audit-diff</code></pre>
+
+    <h3>Opção mais dev/tooling</h3>
+
+    <pre><code>@typekit-data/csv-doctor
+@typekit-data/file-to-markdown
+@typekit-data/maintext
+@typekit-data/entity-match
+@typekit-data/audit-diff</code></pre>
+
+    <h3>Opção mais simples, sem scope</h3>
+
+    <pre><code>csv-doctor
+file-to-markdown
+maintext-js
+entity-match
+audit-diff</code></pre>
+
+    <p>
+      Minha preferência seria começar sem inventar uma marca gigante:
+    </p>
+
+    <pre><code>csv-doctor
+entity-match
+file-to-markdown</code></pre>
+
+    <p>
+      Depois, se algum pegar tração, aí sim criar uma suite com escopo próprio.
+    </p>
+
+    <hr />
+
+    <h2>Ordem recomendada de implementação</h2>
+
+    <h3>1. csv-doctor</h3>
+
+    <p>
+      Melhor equilíbrio entre dor real, escopo possível, demo fácil e utilidade para empresa.
+    </p>
+
+    <h4>MVP</h4>
+
+    <ul>
+      <li>Detectar separador.</li>
+      <li>Detectar encoding básico.</li>
+      <li>Normalizar headers.</li>
+      <li>Inferir tipos.</li>
+      <li>Gerar relatório de erros.</li>
+      <li>Exportar JSON.</li>
+      <li>Rodar em Node e browser.</li>
+    </ul>
+
+    <h4>Demo ideal</h4>
+
+    <p>
+      Uma página onde o usuário arrasta um CSV bagunçado e vê:
+    </p>
+
+    <ul>
+      <li>dialeto detectado;</li>
+      <li>headers normalizados;</li>
+      <li>prévia da tabela;</li>
+      <li>erros por linha;</li>
+      <li>JSON final.</li>
+    </ul>
+
+    <hr />
+
+    <h3>2. entity-match</h3>
+
+    <p>
+      Muito útil para CRM, leads, Snov.io, bases comerciais e dedupe.
+    </p>
+
+    <h4>MVP</h4>
+
+    <ul>
+      <li>Similaridade entre strings.</li>
+      <li>Normalização de empresa.</li>
+      <li>Dedupe por campos configuráveis.</li>
+      <li>Clusters de registros parecidos.</li>
+      <li>Score explicável.</li>
+    </ul>
+
+    <h4>Demo ideal</h4>
+
+    <p>
+      Upload de uma lista de empresas duplicadas e resultado agrupado:
+    </p>
+
+    <ul>
+      <li>“Huawei Technologies”</li>
+      <li>“Huawei Brasil”</li>
+      <li>“Huwei”</li>
+      <li>“Huawei do Brasil Ltda”</li>
+    </ul>
+
+    <hr />
+
+    <h3>3. file-to-markdown</h3>
+
+    <p>
+      Mais ambicioso, mas com muito apelo por causa de LLM/RAG.
+    </p>
+
+    <h4>MVP</h4>
+
+    <ul>
+      <li>TXT para Markdown.</li>
+      <li>HTML para Markdown.</li>
+      <li>CSV para tabela Markdown.</li>
+      <li>DOCX para Markdown.</li>
+      <li>Metadados básicos.</li>
+    </ul>
+
+    <h4>Depois</h4>
+
+    <ul>
+      <li>PDF text-based.</li>
+      <li>PPTX.</li>
+      <li>XLSX.</li>
+      <li>Chunking para LLM.</li>
+      <li>Estratégias de output: clean, compact, llm-friendly.</li>
+    </ul>
+
+    <hr />
+
+    <h2>Checklist de empacotamento sério</h2>
+
+    <p>Para qualquer uma dessas libs virar portfólio de verdade:</p>
+
+    <ul>
+      <li>TypeScript nativo.</li>
+      <li>ESM-first.</li>
+      <li>CJS apenas se fizer sentido.</li>
+      <li>Tree-shaking funcional.</li>
+      <li>Zero dependências de runtime, ou dependências muito bem justificadas.</li>
+      <li>Funciona em Node + browser quando possível.</li>
+      <li>Compatível com Bun e Deno quando não exigir APIs específicas do Node.</li>
+      <li>CDN-ready via jsDelivr, esm.sh ou unpkg.</li>
+      <li>Testes com Vitest.</li>
+      <li>Fixtures reais e casos quebrados.</li>
+      <li>Benchmarks contra alternativas.</li>
+      <li>README com exemplos simples.</li>
+      <li>Docs com casos reais.</li>
+      <li>Playground online.</li>
+      <li>GitHub Actions.</li>
+      <li>Semver disciplinado.</li>
+      <li>CHANGELOG mantido.</li>
+      <li>Issue templates.</li>
+      <li>Contributing guide.</li>
+    </ul>
+
+    <hr />
+
+    <h2>Aposta final</h2>
+
+    <p>
+      Se fosse para escolher uma única ideia para começar, eu iria de:
+    </p>
+
+    <blockquote>
+      csv-doctor
+    </blockquote>
+
+    <p>
+      É a melhor combinação de:
+    </p>
+
+    <ul>
+      <li>dor real;</li>
+      <li>escopo controlável;</li>
+      <li>utilidade empresarial;</li>
+      <li>demo visual;</li>
+      <li>potencial de artigo;</li>
+      <li>NPM/CDN;</li>
+      <li>uso em browser e Node.</li>
+    </ul>
+
+    <p>
+      Como segunda aposta, eu faria:
+    </p>
+
+    <blockquote>
+      entity-match
+    </blockquote>
+
+    <p>
+      Porque conversa diretamente com CRM, prospecção, base comercial, deduplicação e fuzzy matching.
+    </p>
+
+    <p>
+      E como terceira, mais ambiciosa:
+    </p>
+
+    <blockquote>
+      file-to-markdown
+    </blockquote>
+
+    <p>
+      Porque o mercado de LLM/RAG está criando muita demanda para ingestão de documentos.
+    </p>
+
+    <p>
+      A tese final seria:
+    </p>
+
+    <blockquote>
+      Criar libs TypeScript para resolver problemas que hoje empurram times JS para scripts Python.
+    </blockquote>
+
+    <p>
+      Isso é bem mais forte do que “portar libs Python para JS”.
+    </p>
+  </article>
+</body>
+</html>

@@ -55,6 +55,7 @@ _Cálculos rápidos para o dia a dia._
 - [ ] Calculadora de IMC
 - [ ] Conversor de Moedas (integração API)
 - [ ] MDC, MMC e Fatoração
+- [ ] Testador de Teclado (Exibir teclas e acender elas ao clicar no teclado)
 
 ---
 

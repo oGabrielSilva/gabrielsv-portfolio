@@ -75,7 +75,7 @@ class ToolsController extends Controller
     public function lorem()
     {
         $types = $this->loremService->getTypes();
-        $text = $this->loremService->generate('paragraphs', 3, true);
+        $text = $this->loremService->generate('paragraphs', 5, true);
 
         return view('tools.lorem', [
             'types' => $types,
@@ -131,5 +131,40 @@ class ToolsController extends Controller
     public function slugify()
     {
         return view('tools.slugify');
+    }
+
+    public function jsonFormatter()
+    {
+        return view('tools.json-formatter');
+    }
+
+    public function cron()
+    {
+        return view('tools.cron');
+    }
+
+    public function markdown()
+    {
+        return view('tools.markdown');
+    }
+
+    public function worldClock()
+    {
+        return view('tools.world-clock');
+    }
+
+    public function keyboardTester()
+    {
+        return view('tools.keyboard-tester');
+    }
+
+    public function passwordGenerator()
+    {
+        return view('tools.password-generator');
+    }
+
+    public function colorPicker()
+    {
+        return view('tools.color-picker');
     }
 }

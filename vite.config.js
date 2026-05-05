@@ -23,11 +23,7 @@ export default defineConfig({
                 "resources/js/card-generator.js", // Esse estava fora da pasta tools
 
                 // Injeta automaticamente todos os JS da pasta tools
-                ...getFiles("resources/js/tools", [
-                    "resources/css/app.css",
-                    "resources/js/app.js",
-                    "resources/js/card-generator.js",
-                ]),
+                ...getFiles("resources/js/tools"),
             ],
             refresh: true,
         }),

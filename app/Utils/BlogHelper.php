@@ -7,7 +7,7 @@ class BlogHelper
 
     public static function getOwnerBlogURL(string $path = null)
     {
-        $url = config('app.owner_blog_url') ?? env('OWNER_BLOG_URL');
+        $url = config('app.owner_blog_url');
 
         if (!$url)
             return '';

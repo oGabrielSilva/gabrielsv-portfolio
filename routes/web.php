@@ -36,4 +36,25 @@ Route::prefix('tools')->name('tools.')->group(function () {
 
     // Slugify
     Route::get('/slugify', [ToolsController::class, 'slugify'])->name('slugify');
+
+    // JSON Formatter
+    Route::get('/json-formatter', [ToolsController::class, 'jsonFormatter'])->name('json-formatter');
+
+    // Cron Explainer
+    Route::get('/cron', [ToolsController::class, 'cron'])->name('cron');
+
+    // Markdown Preview
+    Route::get('/markdown', [ToolsController::class, 'markdown'])->name('markdown');
+
+    // Horário Mundial
+    Route::get('/world-clock', [ToolsController::class, 'worldClock'])->name('world-clock');
+
+    // Testador de Teclado
+    Route::get('/keyboard-tester', [ToolsController::class, 'keyboardTester'])->name('keyboard-tester');
+
+    // Gerador de Senhas
+    Route::get('/password-generator', [ToolsController::class, 'passwordGenerator'])->name('password-generator');
+
+    // Seletor de Cores
+    Route::get('/color-picker', [ToolsController::class, 'colorPicker'])->name('color-picker');
 });

@@ -4,6 +4,7 @@
 <head>
     <script src="https://unpkg.com/lucide@latest"></script>
     @include('partials.head')
+    @stack('styles')
 </head>
 
 <body class="antialiased text-gray-300 max-w-dvw overflow-x-hidden w-dvw">

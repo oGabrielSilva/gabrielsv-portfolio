@@ -72,15 +72,6 @@ body {
     background: var(--color-bulma-primary);
 }
 
-svg {
-    width: 1.2rem;
-    height: 1.2rem;
-}
-
-.flex {
-    flex-wrap: wrap;
-}
-
 /* ==========================================================================
    Service Card Color Variants
    ========================================================================== */
@@ -143,4 +134,8 @@ svg {
 .group.service-card--emerald-400:hover {
     @apply border-emerald-400;
     box-shadow: 0 10px 40px -10px rgba(52, 211, 153, 0.2);
+}
+
+.flex {
+    flex-wrap: wrap;
 }

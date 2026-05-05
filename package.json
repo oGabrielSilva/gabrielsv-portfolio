@@ -19,6 +19,7 @@
         "browser-image-compression": "^2.0.2",
         "cpf-cnpj-validator": "^1.0.3",
         "jszip": "^3.10.1",
+        "marked": "^18.0.3",
         "preline": "^3.2.3"
     },
     "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"

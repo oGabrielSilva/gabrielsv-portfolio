@@ -1,5 +1,3 @@
-import 'preline/preline';
-
 class LoremGenerator {
     constructor() {
         this.text = [];
@@ -86,6 +84,10 @@ class LoremGenerator {
                 }),
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
             const data = await response.json();
             this.text = data.text;
             this.renderText();
@@ -101,10 +103,10 @@ class LoremGenerator {
         this.generateBtn.disabled = loading;
 
         if (loading) {
-            this.generateIcon.className = 'fa-solid fa-spinner fa-spin';
+            this.generateIcon.classList.add('animate-spin');
             this.generateText.textContent = 'Gerando...';
         } else {
-            this.generateIcon.className = 'fa-solid fa-wand-magic-sparkles';
+            this.generateIcon.classList.remove('animate-spin');
             this.generateText.textContent = 'Gerar';
         }
     }
