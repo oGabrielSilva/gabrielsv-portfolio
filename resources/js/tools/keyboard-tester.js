@@ -1,3 +1,18 @@
+// Codes that the browser would otherwise consume (scroll, navigate, focus
+// changes). preventDefault is restricted to these so shortcuts like
+// Ctrl+R / Ctrl+W / F12 keep working.
+const PREVENTABLE_CODES = new Set([
+    'Tab', 'Space', 'Backspace', 'Enter',
+    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+    'PageUp', 'PageDown', 'Home', 'End',
+    "'", '/', "Slash", "Quote",
+]);
+
+function shouldPreventDefault(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return false;
+    return PREVENTABLE_CODES.has(e.code);
+}
+
 class KeyboardTester {
     constructor() {
         this.infoKey = document.getElementById('info-key');
@@ -22,12 +37,12 @@ class KeyboardTester {
         });
 
         document.addEventListener('keydown', (e) => {
-            e.preventDefault();
+            if (shouldPreventDefault(e)) e.preventDefault();
             this.handleKeyDown(e);
         });
 
         document.addEventListener('keyup', (e) => {
-            e.preventDefault();
+            if (shouldPreventDefault(e)) e.preventDefault();
             this.handleKeyUp(e);
         });
 
