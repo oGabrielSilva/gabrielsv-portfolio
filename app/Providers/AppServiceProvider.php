@@ -182,6 +182,24 @@ class AppServiceProvider extends ServiceProvider
             'icon' => 'link-2',
             'color' => 'cyan-400',
         ],
+        [
+            'route' => 'tools.whatsapp-link',
+            'routeMatch' => 'tools.whatsapp-link',
+            'slug' => 'whatsapp-link',
+            'name' => 'Gerador de Link WhatsApp',
+            'description' => 'Crie links wa.me com número e mensagem pré-preenchida',
+            'icon' => 'message-circle',
+            'color' => 'emerald-400',
+        ],
+        [
+            'route' => 'tools.email-link',
+            'routeMatch' => 'tools.email-link',
+            'slug' => 'email-link',
+            'name' => 'Gerador de Link de E-mail',
+            'description' => 'Monte links mailto: com destinatários, CC, BCC, assunto e corpo',
+            'icon' => 'mail',
+            'color' => 'sky-400',
+        ],
     ];
 
     /**

@@ -192,4 +192,14 @@ class ToolsController extends Controller
     {
         return view('tools.url-validator');
     }
+
+    public function whatsappLink()
+    {
+        return view('tools.whatsapp-link');
+    }
+
+    public function emailLink()
+    {
+        return view('tools.email-link');
+    }
 }
