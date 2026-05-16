@@ -5,6 +5,18 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     @include('partials.head')
     @stack('styles')
+
+    @push('jsonld')
+        <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => config('app.name', 'Gabriel') . ' — Ferramentas',
+            'url' => route('tools.index'),
+            'inLanguage' => 'pt-BR',
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+    @endpush
 </head>
 
 <body class="antialiased text-gray-300 max-w-dvw overflow-x-hidden w-dvw">

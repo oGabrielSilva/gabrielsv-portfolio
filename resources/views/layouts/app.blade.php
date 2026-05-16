@@ -4,6 +4,31 @@
 <head>
     <script src="https://kit.fontawesome.com/78b3364728.js" crossorigin="anonymous"></script>
     @include('partials.head')
+
+    @push('jsonld')
+        <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => 'Gabriel Henrique da Silva',
+            'jobTitle' => 'Desenvolvedor Full Stack',
+            'url' => url('/'),
+            'sameAs' => array_values(array_filter([
+                config('app.owner_blog_url'),
+                'https://github.com/gabrielsv-com',
+            ])),
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+        <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => config('app.name', 'Gabriel'),
+            'url' => url('/'),
+            'inLanguage' => 'pt-BR',
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+    @endpush
 </head>
 
 <body class="antialiased text-gray-300 max-w-dvw overflow-x-hidden w-dvw">
