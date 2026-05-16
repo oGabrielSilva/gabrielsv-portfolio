@@ -16,6 +16,33 @@
             'inLanguage' => 'pt-BR',
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
+
+        @php
+            $currentTool = collect($toolsList)->first(fn($t) => request()->routeIs($t['routeMatch']));
+        @endphp
+        @if($currentTool)
+            <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'SoftwareApplication',
+                'name' => $currentTool['name'],
+                'description' => $currentTool['description'],
+                'url' => route($currentTool['route']),
+                'applicationCategory' => 'DeveloperApplication',
+                'operatingSystem' => 'Web',
+                'inLanguage' => 'pt-BR',
+                'offers' => [
+                    '@type' => 'Offer',
+                    'price' => '0',
+                    'priceCurrency' => 'BRL',
+                ],
+                'creator' => [
+                    '@type' => 'Person',
+                    'name' => 'Gabriel Henrique da Silva',
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+            </script>
+        @endif
     @endpush
 </head>
 
