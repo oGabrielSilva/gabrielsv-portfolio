@@ -12,7 +12,7 @@ class HomeController extends Controller
     {
         $posts = Cache::remember('_gabrielsv_blog_posts', 60 * 60 * 12, function () {
             try {
-                $response = Http::timeout(5)->get(BlogHelper::getOwnerBlogURL('/wp-json/wp/v2/posts?per_page=6&_embed'));
+                $response = Http::timeout(10)->get(BlogHelper::getOwnerBlogURL('/wp-json/wp/v2/posts?per_page=6&_embed'));
                 return $response->successful() ? $response->json() : [];
             } catch (\Exception $e) {
                 return [];
