@@ -1,7 +1,14 @@
+import { escapeHtml } from '../utils/dom.js';
+import { copyText } from '../utils/clipboard.js';
+import { showToast } from '../utils/toast.js';
+import { postJson, ApiError } from '../utils/api.js';
+
 class LoremGenerator {
-    constructor() {
+    constructor(root) {
+        this.root = root;
+        this.generateUrl = root.dataset.generateUrl;
+        this.type = root.dataset.initialType || 'paragraphs';
         this.text = [];
-        this.type = 'paragraphs';
         this.loading = false;
 
         this.typeButtons = document.querySelectorAll('[data-lorem-type]');
@@ -14,50 +21,35 @@ class LoremGenerator {
         this.textResult = document.getElementById('text-result');
         this.wordCount = document.getElementById('word-count');
         this.copyBtn = document.getElementById('copy-btn');
-        this.toast = document.getElementById('toast');
 
         this.init();
     }
 
     init() {
-        // Type selection
         this.typeButtons?.forEach(btn => {
             btn.addEventListener('click', () => {
                 this.type = btn.dataset.loremType;
                 this.updateTypeButtons();
-                // Fecha o dropdown do Preline
                 const dropdown = document.querySelector('#lorem-type-dropdown');
-                if (dropdown && window.HSDropdown) {
-                    window.HSDropdown.close(dropdown);
-                }
+                if (dropdown && window.HSDropdown) window.HSDropdown.close(dropdown);
             });
         });
 
-        // Generate button
         this.generateBtn?.addEventListener('click', () => this.generate());
-
-        // Copy button
         this.copyBtn?.addEventListener('click', () => this.copy());
 
-        // Inicializa o Preline
         window.HSStaticMethods?.autoInit();
-
-        // Atualiza botões de tipo inicial
         this.updateTypeButtons();
     }
 
     updateTypeButtons() {
         this.typeButtons?.forEach(btn => {
-            if (btn.dataset.loremType === this.type) {
-                btn.classList.add('bg-bulma-primary/10', 'text-bulma-primary');
-                btn.classList.remove('text-gray-300');
-            } else {
-                btn.classList.remove('bg-bulma-primary/10', 'text-bulma-primary');
-                btn.classList.add('text-gray-300');
-            }
+            const active = btn.dataset.loremType === this.type;
+            btn.classList.toggle('bg-bulma-primary/10', active);
+            btn.classList.toggle('text-bulma-primary', active);
+            btn.classList.toggle('text-gray-300', !active);
         });
 
-        // Atualiza o label do dropdown
         const dropdownLabel = document.getElementById('lorem-type-label');
         const activeButton = Array.from(this.typeButtons).find(btn => btn.dataset.loremType === this.type);
         if (dropdownLabel && activeButton) {
@@ -67,31 +59,21 @@ class LoremGenerator {
 
     async generate() {
         if (this.loading) return;
-
         this.setLoading(true);
 
         try {
-            const response = await fetch(window.loremConfig.generateUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': window.loremConfig.csrfToken,
-                },
-                body: JSON.stringify({
-                    type: this.type,
-                    quantity: parseInt(this.quantityInput.value) || 3,
-                    start_with_lorem: this.startWithLoremCheckbox.checked,
-                }),
+            const data = await postJson(this.generateUrl, {
+                type: this.type,
+                quantity: parseInt(this.quantityInput.value, 10) || 3,
+                start_with_lorem: this.startWithLoremCheckbox.checked,
             });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
             this.text = data.text;
             this.renderText();
         } catch (error) {
+            const msg = error instanceof ApiError && error.status === 419
+                ? 'Sessão expirada, recarregue a página'
+                : 'Erro ao gerar Lorem Ipsum';
+            showToast(msg, { variant: 'error' });
             console.error('Erro ao gerar Lorem Ipsum:', error);
         } finally {
             this.setLoading(false);
@@ -101,64 +83,42 @@ class LoremGenerator {
     setLoading(loading) {
         this.loading = loading;
         this.generateBtn.disabled = loading;
-
-        if (loading) {
-            this.generateIcon.classList.add('animate-spin');
-            this.generateText.textContent = 'Gerando...';
-        } else {
-            this.generateIcon.classList.remove('animate-spin');
-            this.generateText.textContent = 'Gerar';
-        }
+        this.generateIcon.classList.toggle('animate-spin', loading);
+        this.generateText.textContent = loading ? 'Gerando...' : 'Gerar';
     }
 
     renderText() {
         if (this.type === 'paragraphs') {
             this.textResult.innerHTML = this.text.map(p =>
-                `<p class="mb-4 text-gray-300 leading-relaxed">${this.escapeHtml(p)}</p>`
+                `<p class="mb-4 text-gray-300 leading-relaxed">${escapeHtml(p)}</p>`
             ).join('');
         } else if (this.type === 'sentences') {
-            this.textResult.innerHTML = `<p class="text-gray-300 leading-relaxed">${this.text.map(s => this.escapeHtml(s)).join(' ')}</p>`;
+            this.textResult.innerHTML = `<p class="text-gray-300 leading-relaxed">${this.text.map(s => escapeHtml(s)).join(' ')}</p>`;
         } else {
-            this.textResult.innerHTML = `<p class="text-gray-300 leading-relaxed">${this.escapeHtml(this.text[0])}</p>`;
+            this.textResult.innerHTML = `<p class="text-gray-300 leading-relaxed">${escapeHtml(this.text[0])}</p>`;
         }
 
-        // Atualiza contagem de palavras
         const fullText = Array.isArray(this.text) ? this.text.join(' ') : this.text;
-        const count = fullText.split(/\s+/).filter(w => w).length;
+        const count = fullText.split(/\s+/).filter(Boolean).length;
         this.wordCount.textContent = count + ' palavras';
 
-        // Mostra o resultado
         this.resultContainer.classList.remove('hidden');
-    }
-
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 
     async copy() {
         const fullText = Array.isArray(this.text) ? this.text.join('\n\n') : this.text;
 
         try {
-            await navigator.clipboard.writeText(fullText);
-            this.showToast();
+            await copyText(fullText);
+            showToast('Copiado!');
         } catch (error) {
+            showToast('Não foi possível copiar', { variant: 'error' });
             console.error('Erro ao copiar:', error);
         }
-    }
-
-    showToast() {
-        this.toast.classList.remove('translate-y-2', 'opacity-0');
-        this.toast.classList.add('translate-y-0', 'opacity-100');
-
-        setTimeout(() => {
-            this.toast.classList.remove('translate-y-0', 'opacity-100');
-            this.toast.classList.add('translate-y-2', 'opacity-0');
-        }, 2000);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new LoremGenerator();
+    const root = document.querySelector('[data-tool="lorem"]');
+    if (root) new LoremGenerator(root);
 });

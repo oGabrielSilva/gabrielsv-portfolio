@@ -5,7 +5,14 @@
 @section('description', 'Gere textos Lorem Ipsum para seus projetos de design e desenvolvimento')
 
 @section('content')
-    <div class="space-y-4 sm:space-y-6">
+    @php
+        $initialFullText = is_array($text) ? implode(' ', $text) : $text;
+        $initialWordCount = count(array_filter(preg_split('/\s+/', $initialFullText)));
+    @endphp
+    <div class="space-y-4 sm:space-y-6"
+        data-tool="lorem"
+        data-generate-url="{{ route('tools.lorem.generate') }}"
+        data-initial-type="{{ $type }}">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Lorem Ipsum Generator</h1>
@@ -71,7 +78,7 @@
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
                 <h2 class="text-lg font-semibold text-white">Resultado</h2>
                 <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500" id="word-count">0 palavras</span>
+                    <span class="text-sm text-gray-500" id="word-count">{{ $initialWordCount }} palavras</span>
                     <button type="button" id="copy-btn"
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
                         <i data-lucide="copy" class="w-4 h-4"></i>
@@ -94,26 +101,9 @@
             </div>
         </div>
 
-        {{-- Toast --}}
-        <div id="toast"
-            class="fixed bottom-4 right-4 py-3 px-4 bg-bulma-primary text-neutral-900 rounded-lg shadow-lg font-medium transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-none inline-flex items-center gap-2">
-            <i data-lucide="check" class="w-4 h-4"></i>
-            Copiado!
-        </div>
     </div>
 
     @push('scripts')
-        <script>
-            window.loremConfig = {
-                generateUrl: '{{ route('tools.lorem.generate') }}',
-                csrfToken: '{{ csrf_token() }}'
-            };
-
-            // Atualiza contagem de palavras inicial
-            const initialText = document.getElementById('text-result').textContent;
-            const wordCount = initialText.split(/\s+/).filter(w => w.trim()).length;
-            document.getElementById('word-count').textContent = wordCount + ' palavras';
-        </script>
         @vite(['resources/js/tools/lorem-generator.js'])
     @endpush
 @endsection

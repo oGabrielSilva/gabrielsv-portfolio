@@ -5,7 +5,10 @@
 @section('description', 'Gere ' . $typeInfo['label'] . ' online gratuitamente. ' . $typeInfo['description'])
 
 @section('content')
-    <div class="space-y-4 sm:space-y-6">
+    <div class="space-y-4 sm:space-y-6"
+        data-tool="uuid"
+        data-generate-url="{{ route('tools.uuid.generate') }}"
+        data-current-type="{{ $currentType }}">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">{{ $typeInfo['label'] }} Generator</h1>
@@ -97,22 +100,9 @@
             </div>
         </div>
 
-        {{-- Toast --}}
-        <div id="toast"
-            class="fixed bottom-4 right-4 py-3 px-4 bg-bulma-primary text-neutral-900 rounded-lg shadow-lg font-medium transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-none inline-flex items-center gap-2">
-            <i data-lucide="check" class="w-4 h-4"></i>
-            Copiado!
-        </div>
     </div>
 
     @push('scripts')
-        <script>
-            window.uuidConfig = {
-                generateUrl: '{{ route('tools.uuid.generate') }}',
-                csrfToken: '{{ csrf_token() }}',
-                currentType: '{{ $currentType }}'
-            };
-        </script>
         @vite(['resources/js/tools/uuid-generator.js'])
     @endpush
 @endsection
