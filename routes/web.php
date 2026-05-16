@@ -4,6 +4,7 @@ use App\Http\Controllers\BrandGuideController;
 use App\Http\Controllers\CardGeneratorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ToolsController;
+use App\Http\Controllers\WorldClockController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -48,6 +49,9 @@ Route::prefix('tools')->name('tools.')->group(function () {
 
     // Horário Mundial
     Route::get('/world-clock', [ToolsController::class, 'worldClock'])->name('world-clock');
+    Route::get('/world-clock/search', [WorldClockController::class, 'search'])
+        ->name('world-clock.search')
+        ->middleware('throttle:30,1');
 
     // Testador de Teclado
     Route::get('/keyboard-tester', [ToolsController::class, 'keyboardTester'])->name('keyboard-tester');

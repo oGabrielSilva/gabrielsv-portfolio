@@ -5,7 +5,9 @@
 @section('description', 'Veja o horário atual em diferentes fusos horários do mundo em tempo real')
 
 @section('content')
-    <div class="space-y-4 sm:space-y-6">
+    <div class="space-y-4 sm:space-y-6"
+        data-tool="world-clock"
+        data-search-url="{{ route('tools.world-clock.search') }}">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Horário Mundial</h1>

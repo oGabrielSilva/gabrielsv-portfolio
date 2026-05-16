@@ -125,4 +125,16 @@ return [
 
     'owner_blog_url' => env('OWNER_BLOG_URL'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact User-Agent
+    |--------------------------------------------------------------------------
+    |
+    | Identifies outbound HTTP requests to free services that require a
+    | contactable User-Agent (e.g. Nominatim). Should include a URL or email
+    | so the upstream operator can reach the maintainer if needed.
+    |
+    */
+    'contact_ua' => env('CONTACT_UA', 'gabrielsv-portfolio/1.0 (+https://gabrielsv.com)'),
+
 ];
