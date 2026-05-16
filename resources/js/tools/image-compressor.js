@@ -2,6 +2,12 @@ import 'preline/preline';
 import imageCompression from 'browser-image-compression';
 import JSZip from 'jszip';
 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text == null ? '' : String(text);
+    return div.innerHTML;
+}
+
 class ImageCompressor {
     constructor() {
         this.images = []; // { id, file, originalBlob, status, results: { format: { blob, size, url } } }
@@ -190,18 +196,19 @@ class ImageCompressor {
         card.className = 'bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-3 sm:p-4 overflow-hidden';
 
         const url = URL.createObjectURL(image.file);
+        const safeName = escapeHtml(image.file.name);
 
         card.innerHTML = `
             <div class="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-4">
                 <div class="shrink-0">
-                    <img src="${url}" alt="${image.file.name}"
+                    <img src="${url}" alt="${safeName}"
                         class="w-16 h-16 sm:w-24 sm:h-24 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                         data-image-id="${image.id}">
                 </div>
                 <div class="flex-1 min-w-0 w-full sm:w-auto">
                     <div class="flex flex-wrap gap-2 mb-2">
                         <div class="min-w-0 flex-1 basis-full sm:basis-auto">
-                            <h3 class="text-white text-sm sm:text-base font-medium break-all">${image.file.name}</h3>
+                            <h3 class="text-white text-sm sm:text-base font-medium break-all">${safeName}</h3>
                             <p class="text-xs sm:text-sm text-gray-500">
                                 Original: ${this.formatSize(image.file.size)}
                             </p>
