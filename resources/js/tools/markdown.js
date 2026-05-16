@@ -1,4 +1,16 @@
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+    if (node.tagName === 'A' && node.getAttribute('target') === '_blank') {
+        node.setAttribute('rel', 'noopener noreferrer');
+    }
+});
+
+const PURIFY_CONFIG = {
+    USE_PROFILES: { html: true },
+    ADD_ATTR: ['target', 'rel'],
+};
 
 class MarkdownPreview {
     constructor() {
@@ -46,9 +58,10 @@ class MarkdownPreview {
         }
 
         try {
-            this.mdPreview.innerHTML = marked.parse(md);
+            const dirty = marked.parse(md);
+            this.mdPreview.innerHTML = DOMPurify.sanitize(dirty, PURIFY_CONFIG);
         } catch (e) {
-            this.mdPreview.innerHTML = `<p class="text-red-400">Erro ao renderizar: ${e.message}</p>`;
+            this.mdPreview.textContent = `Erro ao renderizar: ${e.message}`;
         }
     }
 
@@ -74,7 +87,7 @@ class MarkdownPreview {
         if (!md) return;
 
         try {
-            const html = marked.parse(md);
+            const html = DOMPurify.sanitize(marked.parse(md), PURIFY_CONFIG);
             await navigator.clipboard.writeText(html);
             this.showToast('HTML copiado!');
         } catch (e) {
