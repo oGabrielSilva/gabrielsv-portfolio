@@ -1,5 +1,11 @@
 import { cnpj as CNPJ, cpf as CPF } from "cpf-cnpj-validator";
 
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text == null ? "" : String(text);
+    return div.innerHTML;
+}
+
 class CpfCnpjTool {
     constructor() {
         this.currentType = window.cpfCnpjConfig?.type || "cpf";
@@ -128,18 +134,19 @@ class CpfCnpjTool {
 
     renderResults(results) {
         this.elements.resultsList.innerHTML = results
-            .map(
-                (value) => `
+            .map((value) => {
+                const safe = escapeHtml(value);
+                return `
             <div class="flex items-center gap-2 group">
-                <code class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-xs sm:text-sm text-gray-300 font-mono break-all result-item">${value}</code>
+                <code class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-xs sm:text-sm text-gray-300 font-mono break-all result-item">${safe}</code>
                 <button type="button"
                     class="copy-btn p-2 text-gray-500 hover:text-bulma-primary transition-colors"
-                    data-value="${value}" title="Copiar">
+                    data-value="${safe}" title="Copiar">
                     <i data-lucide="copy" class="w-4 h-4"></i>
                 </button>
             </div>
-        `,
-            )
+        `;
+            })
             .join("");
 
         // Re-init Lucide icons
