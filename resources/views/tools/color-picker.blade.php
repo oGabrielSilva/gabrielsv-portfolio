@@ -101,13 +101,6 @@
         </div>
     </div>
 
-    {{-- Toast --}}
-    <div id="toast"
-        class="fixed bottom-4 right-4 py-3 px-4 bg-bulma-primary text-neutral-900 rounded-lg shadow-lg font-medium transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-none inline-flex items-center gap-2 z-50">
-        <i data-lucide="check" class="w-4 h-4"></i>
-        Copiado!
-    </div>
-
     @push('scripts')
         @vite(['resources/js/tools/color-picker.js'])
     @endpush

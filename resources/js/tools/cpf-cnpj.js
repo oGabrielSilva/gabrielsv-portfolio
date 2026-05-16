@@ -1,15 +1,17 @@
 import { cnpj as CNPJ, cpf as CPF } from "cpf-cnpj-validator";
-
-function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text == null ? "" : String(text);
-    return div.innerHTML;
-}
+import { escapeHtml, escapeAttr } from "../utils/dom.js";
+import { copyText } from "../utils/clipboard.js";
+import { showToast } from "../utils/toast.js";
+import { refreshIcons } from "../utils/lucide.js";
 
 class CpfCnpjTool {
-    constructor() {
-        this.currentType = window.cpfCnpjConfig?.type || "cpf";
-        this.urls = window.cpfCnpjConfig?.urls || {};
+    constructor(root) {
+        this.root = root;
+        this.currentType = root.dataset.type || "cpf";
+        this.urls = {
+            cpf: root.dataset.urlCpf,
+            cnpj: root.dataset.urlCnpj,
+        };
         this.elements = {};
     }
 
@@ -34,8 +36,6 @@ class CpfCnpjTool {
             validateBtn: document.getElementById("validate-btn"),
             validationResult: document.getElementById("validation-result"),
             validationMessage: document.getElementById("validation-message"),
-            toast: document.getElementById("toast"),
-            toastMessage: document.getElementById("toast-message"),
         };
     }
 
@@ -134,25 +134,19 @@ class CpfCnpjTool {
 
     renderResults(results) {
         this.elements.resultsList.innerHTML = results
-            .map((value) => {
-                const safe = escapeHtml(value);
-                return `
+            .map((value) => `
             <div class="flex items-center gap-2 group">
-                <code class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-xs sm:text-sm text-gray-300 font-mono break-all result-item">${safe}</code>
+                <code class="flex-1 py-2 px-3 bg-neutral-900 rounded-lg text-xs sm:text-sm text-gray-300 font-mono break-all result-item">${escapeHtml(value)}</code>
                 <button type="button"
                     class="copy-btn p-2 text-gray-500 hover:text-bulma-primary transition-colors"
-                    data-value="${safe}" title="Copiar">
+                    data-value="${escapeAttr(value)}" title="Copiar">
                     <i data-lucide="copy" class="w-4 h-4"></i>
                 </button>
             </div>
-        `;
-            })
+        `)
             .join("");
 
-        // Re-init Lucide icons
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
+        refreshIcons(this.elements.resultsList);
     }
 
     validate() {
@@ -174,14 +168,9 @@ class CpfCnpjTool {
             ? `${this.currentType.toUpperCase()} válido!`
             : `${this.currentType.toUpperCase()} inválido`;
 
-        this.elements.validationMessage.innerHTML = `
-            <i data-lucide="${icon}" class="w-4 h-4"></i>
-            ${message}
-        `;
-
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
+        this.elements.validationMessage.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i>`;
+        this.elements.validationMessage.appendChild(document.createTextNode(' ' + message));
+        refreshIcons(this.elements.validationMessage);
     }
 
     formatInput(e) {
@@ -223,45 +212,29 @@ class CpfCnpjTool {
 
     async copy(text) {
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast("Copiado!");
+            await copyText(text);
+            showToast("Copiado!");
         } catch (err) {
+            showToast("Não foi possível copiar", { variant: "error" });
             console.error("Erro ao copiar:", err);
         }
     }
 
     async copyAll() {
-        const items =
-            this.elements.resultsList.querySelectorAll(".result-item");
-        const values = Array.from(items)
-            .map((el) => el.textContent)
-            .join("\n");
+        const items = this.elements.resultsList.querySelectorAll(".result-item");
+        const values = Array.from(items).map((el) => el.textContent).join("\n");
 
         try {
-            await navigator.clipboard.writeText(values);
-            this.showToast("Todos copiados!");
+            await copyText(values);
+            showToast("Todos copiados!");
         } catch (err) {
+            showToast("Não foi possível copiar", { variant: "error" });
             console.error("Erro ao copiar:", err);
         }
     }
-
-    showToast(message) {
-        this.elements.toastMessage.textContent = message;
-        this.elements.toast.classList.remove("opacity-0", "translate-y-2");
-        this.elements.toast.classList.add("opacity-100", "translate-y-0");
-
-        setTimeout(() => {
-            this.elements.toast.classList.add("opacity-0", "translate-y-2");
-            this.elements.toast.classList.remove(
-                "opacity-100",
-                "translate-y-0",
-            );
-        }, 2000);
-    }
 }
 
-// Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-    const tool = new CpfCnpjTool();
-    tool.init();
+    const root = document.querySelector('[data-tool="cpf-cnpj"]');
+    if (root) new CpfCnpjTool(root).init();
 });

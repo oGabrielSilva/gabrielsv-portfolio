@@ -1,5 +1,7 @@
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import { copyText } from '../utils/clipboard.js';
+import { showToast } from '../utils/toast.js';
 
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     if (node.tagName === 'A' && node.getAttribute('target') === '_blank') {
@@ -20,8 +22,6 @@ class MarkdownPreview {
         this.copyMdBtn = document.getElementById('copy-md-btn');
         this.copyHtmlBtn = document.getElementById('copy-html-btn');
         this.exampleBtn = document.getElementById('example-btn');
-        this.toast = document.getElementById('toast');
-        this.toastText = document.getElementById('toast-text');
 
         this.debounceTimer = null;
 
@@ -75,9 +75,10 @@ class MarkdownPreview {
         if (!text) return;
 
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast('Markdown copiado!');
+            await copyText(text);
+            showToast('Markdown copiado!');
         } catch (e) {
+            showToast('Não foi possível copiar', { variant: 'error' });
             console.error('Erro ao copiar:', e);
         }
     }
@@ -88,9 +89,10 @@ class MarkdownPreview {
 
         try {
             const html = DOMPurify.sanitize(marked.parse(md), PURIFY_CONFIG);
-            await navigator.clipboard.writeText(html);
-            this.showToast('HTML copiado!');
+            await copyText(html);
+            showToast('HTML copiado!');
         } catch (e) {
+            showToast('Não foi possível copiar', { variant: 'error' });
             console.error('Erro ao copiar:', e);
         }
     }
@@ -151,16 +153,6 @@ function hello(name) {
 *Fim do exemplo*`;
         this.updateCharCount();
         this.render();
-    }
-
-    showToast(message) {
-        this.toastText.textContent = message;
-        this.toast.classList.remove('translate-y-2', 'opacity-0');
-        this.toast.classList.add('translate-y-0', 'opacity-100');
-        setTimeout(() => {
-            this.toast.classList.remove('translate-y-0', 'opacity-100');
-            this.toast.classList.add('translate-y-2', 'opacity-0');
-        }, 2000);
     }
 }
 

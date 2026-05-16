@@ -1,3 +1,8 @@
+import { copyText } from '../utils/clipboard.js';
+import { showToast } from '../utils/toast.js';
+
+const STATS_DEBOUNCE_MS = 200;
+
 class JsonFormatter {
     constructor() {
         this.jsonInput = document.getElementById('json-input');
@@ -13,7 +18,8 @@ class JsonFormatter {
         this.statKeys = document.getElementById('stat-keys');
         this.statArrays = document.getElementById('stat-arrays');
         this.statSize = document.getElementById('stat-size');
-        this.toast = document.getElementById('toast');
+
+        this.statsTimer = null;
 
         this.init();
     }
@@ -24,7 +30,7 @@ class JsonFormatter {
         this.validateBtn?.addEventListener('click', () => this.validate());
         this.copyBtn?.addEventListener('click', () => this.copy());
         this.clearBtn?.addEventListener('click', () => this.clear());
-        this.jsonInput?.addEventListener('input', () => this.updateStats());
+        this.jsonInput?.addEventListener('input', () => this.debouncedUpdateStats());
     }
 
     getIndent() {
@@ -74,14 +80,20 @@ class JsonFormatter {
     }
 
     parseError(e) {
-        const msg = e.message;
-        const posMatch = msg.match(/position (\d+)/i);
-        if (posMatch) {
-            const pos = parseInt(posMatch[1]);
+        const msg = e.message || 'erro desconhecido';
+        // Chrome / V8: "Unexpected token } in JSON at position 42 (line 3 column 5)"
+        // Firefox:    "JSON.parse: unexpected character at line 3 column 5 of the JSON data"
+        const v8 = msg.match(/position (\d+)/i);
+        if (v8) {
+            const pos = parseInt(v8[1], 10);
             const text = this.jsonInput.value.substring(0, pos);
             const line = (text.match(/\n/g) || []).length + 1;
             const col = pos - text.lastIndexOf('\n');
             return `Erro na linha ${line}, coluna ${col}: ${msg}`;
+        }
+        const ff = msg.match(/line (\d+) column (\d+)/i);
+        if (ff) {
+            return `Erro na linha ${ff[1]}, coluna ${ff[2]}: ${msg}`;
         }
         return `JSON inválido: ${msg}`;
     }
@@ -96,6 +108,13 @@ class JsonFormatter {
         }
 
         this.statusText.textContent = message;
+    }
+
+    debouncedUpdateStats() {
+        // Re-parsing a huge JSON on every keystroke froze the UI; defer until
+        // the user pauses typing for STATS_DEBOUNCE_MS.
+        clearTimeout(this.statsTimer);
+        this.statsTimer = setTimeout(() => this.updateStats(), STATS_DEBOUNCE_MS);
     }
 
     updateStats() {
@@ -144,9 +163,10 @@ class JsonFormatter {
         if (!text) return;
 
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast();
+            await copyText(text);
+            showToast('Copiado!');
         } catch (e) {
+            showToast('Não foi possível copiar', { variant: 'error' });
             console.error('Erro ao copiar:', e);
         }
     }
@@ -155,15 +175,6 @@ class JsonFormatter {
         this.jsonInput.value = '';
         this.statusBar.classList.add('hidden');
         this.updateStats();
-    }
-
-    showToast() {
-        this.toast.classList.remove('translate-y-2', 'opacity-0');
-        this.toast.classList.add('translate-y-0', 'opacity-100');
-        setTimeout(() => {
-            this.toast.classList.remove('translate-y-0', 'opacity-100');
-            this.toast.classList.add('translate-y-2', 'opacity-0');
-        }, 2000);
     }
 }
 

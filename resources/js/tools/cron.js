@@ -40,6 +40,22 @@ class CronExplainer {
             return;
         }
 
+        const FIELDS = [
+            { name: 'minuto', min: 0, max: 59 },
+            { name: 'hora', min: 0, max: 23 },
+            { name: 'dia do mês', min: 1, max: 31 },
+            { name: 'mês', min: 1, max: 12 },
+            { name: 'dia da semana', min: 0, max: 7 },
+        ];
+        for (let i = 0; i < 5; i++) {
+            const err = this.validateField(parts[i], FIELDS[i].min, FIELDS[i].max);
+            if (err) {
+                this.explanation.textContent = `Campo "${FIELDS[i].name}" inválido: ${err}`;
+                this.nextRuns.innerHTML = '';
+                return;
+            }
+        }
+
         const [minute, hour, dayOfMonth, month, dayOfWeek] = parts;
 
         try {
@@ -50,6 +66,47 @@ class CronExplainer {
             this.explanation.textContent = 'Erro ao interpretar: ' + e.message;
             this.nextRuns.innerHTML = '';
         }
+    }
+
+    validateField(field, min, max) {
+        if (field === '*') return null;
+
+        // List: each segment validated independently
+        if (field.includes(',')) {
+            for (const seg of field.split(',')) {
+                const err = this.validateField(seg.trim(), min, max);
+                if (err) return err;
+            }
+            return null;
+        }
+
+        // Step: range/step or */step
+        if (field.includes('/')) {
+            const [range, step] = field.split('/');
+            const stepNum = parseInt(step, 10);
+            if (!Number.isFinite(stepNum) || stepNum <= 0) return `step "${step}" deve ser maior que 0`;
+            if (stepNum > max) return `step "${step}" excede o máximo (${max})`;
+            if (range !== '*') {
+                const rangeErr = this.validateField(range, min, max);
+                if (rangeErr) return rangeErr;
+            }
+            return null;
+        }
+
+        // Range: a-b
+        if (field.includes('-')) {
+            const [s, e] = field.split('-').map(v => parseInt(v, 10));
+            if (!Number.isFinite(s) || !Number.isFinite(e)) return `range "${field}" mal formado`;
+            if (s < min || e > max) return `range "${field}" fora do intervalo permitido (${min}-${max})`;
+            if (s > e) return `range "${field}" invertido (início > fim)`;
+            return null;
+        }
+
+        // Exact value
+        const n = parseInt(field, 10);
+        if (!Number.isFinite(n)) return `"${field}" não é um número`;
+        if (n < min || n > max) return `${n} fora do intervalo (${min}-${max})`;
+        return null;
     }
 
     describe(minute, hour, dayOfMonth, month, dayOfWeek) {

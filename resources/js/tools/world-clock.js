@@ -1,3 +1,5 @@
+import { refreshIcons } from '../utils/lucide.js';
+
 class WorldClock {
     constructor() {
         this.localTime = document.getElementById('local-time');
@@ -155,7 +157,7 @@ class WorldClock {
         }).join('');
 
         // Re-init lucide icons for new elements
-        if (window.lucide) window.lucide.createIcons();
+        refreshIcons(this.clocksGrid);
 
         // Bind remove buttons
         this.clocksGrid.querySelectorAll('.remove-clock').forEach(btn => {

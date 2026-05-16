@@ -1,12 +1,8 @@
 import 'preline/preline';
 import imageCompression from 'browser-image-compression';
 import JSZip from 'jszip';
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text == null ? '' : String(text);
-    return div.innerHTML;
-}
+import { escapeHtml } from '../utils/dom.js';
+import { refreshIcons } from '../utils/lucide.js';
 
 class ImageCompressor {
     constructor() {
@@ -242,10 +238,7 @@ class ImageCompressor {
 
         this.imagesList.appendChild(card);
 
-        // Initialize Lucide icons in the new card
-        if (window.lucide) {
-            window.lucide.createIcons({ nodes: [card] });
-        }
+        refreshIcons(card);
 
         // Add event listeners
         card.querySelector('.compress-single-btn')?.addEventListener('click', () =>
@@ -374,10 +367,8 @@ class ImageCompressor {
                 `;
             }).join('');
 
-            // Initialize Lucide icons in the updated containers
-            if (window.lucide) {
-                window.lucide.createIcons({ nodes: [statusContainer, resultsContainer] });
-            }
+            refreshIcons(statusContainer);
+            refreshIcons(resultsContainer);
 
             // Add event listeners to result buttons
             resultsContainer.querySelectorAll('.preview-result-btn').forEach(btn => {
@@ -403,11 +394,7 @@ class ImageCompressor {
                 </span>
             `;
             compressBtn.disabled = false;
-
-            // Initialize Lucide icons
-            if (window.lucide) {
-                window.lucide.createIcons({ nodes: [statusContainer] });
-            }
+            refreshIcons(statusContainer);
         }
     }
 

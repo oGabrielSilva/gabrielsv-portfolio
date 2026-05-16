@@ -10,7 +10,11 @@
 @section('description', "Gere e valide {$label} online gratuitamente. Ferramenta para desenvolvedores e testes.")
 
 @section('content')
-    <div class="space-y-4 sm:space-y-6">
+    <div class="space-y-4 sm:space-y-6"
+        data-tool="cpf-cnpj"
+        data-type="{{ $type }}"
+        data-url-cpf="{{ route('tools.cpf') }}"
+        data-url-cnpj="{{ route('tools.cnpj') }}">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Gerador e Validador de CPF/CNPJ</h1>
@@ -135,24 +139,9 @@
             </p>
         </div>
 
-        {{-- Toast --}}
-        <div id="toast"
-            class="fixed bottom-4 right-4 py-3 px-4 bg-bulma-primary text-neutral-900 rounded-lg shadow-lg font-medium transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-none inline-flex items-center gap-2 z-50">
-            <i data-lucide="check" class="w-4 h-4"></i>
-            <span id="toast-message">Copiado!</span>
-        </div>
     </div>
 
     @push('scripts')
-        <script>
-            window.cpfCnpjConfig = {
-                type: '{{ $type }}',
-                urls: {
-                    cpf: '{{ route('tools.cpf') }}',
-                    cnpj: '{{ route('tools.cnpj') }}'
-                }
-            };
-        </script>
         @vite(['resources/js/tools/cpf-cnpj.js'])
     @endpush
 @endsection

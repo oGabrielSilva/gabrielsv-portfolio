@@ -1,3 +1,6 @@
+import { copyText } from '../utils/clipboard.js';
+import { showToast } from '../utils/toast.js';
+
 class SlugifyTool {
     constructor() {
         this.separator = "-";
@@ -24,8 +27,6 @@ class SlugifyTool {
             charCount: document.getElementById("char-count"),
             slugLength: document.getElementById("slug-length"),
             exampleBtns: document.querySelectorAll(".example-btn"),
-            toast: document.getElementById("toast"),
-            toastMessage: document.getElementById("toast-message"),
         };
     }
 
@@ -126,24 +127,13 @@ class SlugifyTool {
 
     async copy(text) {
         if (!text) return;
-
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast("Copiado!");
+            await copyText(text);
+            showToast("Copiado!");
         } catch (error) {
+            showToast("Não foi possível copiar", { variant: "error" });
             console.error("Erro ao copiar:", error);
         }
-    }
-
-    showToast(message) {
-        this.elements.toastMessage.textContent = message;
-        this.elements.toast.classList.remove("opacity-0", "translate-y-2");
-        this.elements.toast.classList.add("opacity-100", "translate-y-0");
-
-        setTimeout(() => {
-            this.elements.toast.classList.add("opacity-0", "translate-y-2");
-            this.elements.toast.classList.remove("opacity-100", "translate-y-0");
-        }, 2000);
     }
 }
 

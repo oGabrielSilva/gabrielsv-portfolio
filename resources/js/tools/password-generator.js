@@ -1,3 +1,7 @@
+import { escapeHtml, escapeAttr } from '../utils/dom.js';
+import { copyText } from '../utils/clipboard.js';
+import { showToast } from '../utils/toast.js';
+
 class PasswordGenerator {
     constructor() {
         this.passwordDisplay = document.getElementById('password-display');
@@ -15,7 +19,6 @@ class PasswordGenerator {
         this.generateMultiBtn = document.getElementById('generate-multi-btn');
         this.multiCount = document.getElementById('multi-count');
         this.multiList = document.getElementById('multi-list');
-        this.toast = document.getElementById('toast');
 
         this.UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         this.LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -69,6 +72,8 @@ class PasswordGenerator {
         if (!charset) {
             this.passwordDisplay.value = 'Selecione ao menos uma opção';
             this.updateStrength('');
+            this.setCopyEnabled(false);
+            this.generateMultiBtn && (this.generateMultiBtn.disabled = true);
             return;
         }
 
@@ -76,6 +81,15 @@ class PasswordGenerator {
         const password = this.generatePassword(charset, length);
         this.passwordDisplay.value = password;
         this.updateStrength(password);
+        this.setCopyEnabled(true);
+        this.generateMultiBtn && (this.generateMultiBtn.disabled = false);
+    }
+
+    setCopyEnabled(enabled) {
+        if (!this.copyBtn) return;
+        this.copyBtn.disabled = !enabled;
+        this.copyBtn.classList.toggle('opacity-50', !enabled);
+        this.copyBtn.classList.toggle('cursor-not-allowed', !enabled);
     }
 
     generatePassword(charset, length) {
@@ -139,8 +153,8 @@ class PasswordGenerator {
         this.multiList.innerHTML = passwords.map((pwd, i) =>
             `<div class="flex items-center gap-2 p-2 rounded-lg bg-neutral-900/50 border border-neutral-700/50 group">
                 <span class="text-xs text-gray-500 w-6">${i + 1}.</span>
-                <span class="flex-1 font-mono text-sm text-gray-300 truncate select-all">${this.escapeHtml(pwd)}</span>
-                <button class="copy-single opacity-0 group-hover:opacity-100 py-1 px-2 text-xs text-gray-400 hover:text-white rounded border border-neutral-600 hover:bg-neutral-700 transition-all" data-pwd="${this.escapeAttr(pwd)}">
+                <span class="flex-1 font-mono text-sm text-gray-300 truncate select-all">${escapeHtml(pwd)}</span>
+                <button class="copy-single opacity-0 group-hover:opacity-100 py-1 px-2 text-xs text-gray-400 hover:text-white rounded border border-neutral-600 hover:bg-neutral-700 transition-all" data-pwd="${escapeAttr(pwd)}">
                     Copiar
                 </button>
             </div>`
@@ -156,30 +170,12 @@ class PasswordGenerator {
     async copy(text) {
         if (!text) return;
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast();
+            await copyText(text);
+            showToast('Copiado!');
         } catch (e) {
+            showToast('Não foi possível copiar', { variant: 'error' });
             console.error('Erro ao copiar:', e);
         }
-    }
-
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    escapeAttr(text) {
-        return text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
-
-    showToast() {
-        this.toast.classList.remove('translate-y-2', 'opacity-0');
-        this.toast.classList.add('translate-y-0', 'opacity-100');
-        setTimeout(() => {
-            this.toast.classList.remove('translate-y-0', 'opacity-100');
-            this.toast.classList.add('translate-y-2', 'opacity-0');
-        }, 2000);
     }
 }
 

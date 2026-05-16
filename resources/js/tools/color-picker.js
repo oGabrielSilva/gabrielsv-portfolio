@@ -1,3 +1,8 @@
+import { copyText } from '../utils/clipboard.js';
+import { showToast } from '../utils/toast.js';
+
+const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
 class ColorPicker {
     constructor() {
         this.colorPicker = document.getElementById('color-picker');
@@ -11,7 +16,6 @@ class ColorPicker {
         this.palTriadic = document.getElementById('palette-triadic');
         this.palTetradic = document.getElementById('palette-tetradic');
         this.tintsShades = document.getElementById('tints-shades');
-        this.toast = document.getElementById('toast');
 
         // Current color in RGB
         this.r = 0; this.g = 209; this.b = 178;
@@ -34,9 +38,9 @@ class ColorPicker {
         this.rgbInput?.addEventListener('change', () => {
             const match = this.rgbInput.value.match(/(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
             if (match) {
-                this.r = parseInt(match[1]);
-                this.g = parseInt(match[2]);
-                this.b = parseInt(match[3]);
+                this.r = clamp(parseInt(match[1], 10), 0, 255);
+                this.g = clamp(parseInt(match[2], 10), 0, 255);
+                this.b = clamp(parseInt(match[3], 10), 0, 255);
                 this.updateAll();
             }
         });
@@ -44,7 +48,10 @@ class ColorPicker {
         this.hslInput?.addEventListener('change', () => {
             const match = this.hslInput.value.match(/(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?/);
             if (match) {
-                const [r, g, b] = this.hslToRgb(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]));
+                const h = clamp(parseInt(match[1], 10), 0, 360);
+                const s = clamp(parseInt(match[2], 10), 0, 100);
+                const l = clamp(parseInt(match[3], 10), 0, 100);
+                const [r, g, b] = this.hslToRgb(h, s, l);
                 this.r = r; this.g = g; this.b = b;
                 this.updateAll();
             }
@@ -228,20 +235,12 @@ class ColorPicker {
 
     async copy(text) {
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast();
+            await copyText(text);
+            showToast('Copiado!');
         } catch (e) {
+            showToast('Não foi possível copiar', { variant: 'error' });
             console.error('Erro ao copiar:', e);
         }
-    }
-
-    showToast() {
-        this.toast.classList.remove('translate-y-2', 'opacity-0');
-        this.toast.classList.add('translate-y-0', 'opacity-100');
-        setTimeout(() => {
-            this.toast.classList.remove('translate-y-0', 'opacity-100');
-            this.toast.classList.add('translate-y-2', 'opacity-0');
-        }, 2000);
     }
 }
 
