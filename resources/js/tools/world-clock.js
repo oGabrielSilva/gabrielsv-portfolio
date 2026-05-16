@@ -52,7 +52,18 @@ class WorldClock {
     init() {
         this.renderClocks();
         this.updateAll();
-        setInterval(() => this.updateAll(), 1000);
+        this.startTicking();
+
+        this.handleVisibility = () => {
+            if (document.visibilityState === 'hidden') {
+                this.stopTicking();
+            } else {
+                this.updateAll();
+                this.startTicking();
+            }
+        };
+        document.addEventListener('visibilitychange', this.handleVisibility);
+        window.addEventListener('beforeunload', () => this.destroy());
 
         this.citySearch?.addEventListener('input', () => this.search());
         this.citySearch?.addEventListener('focus', () => this.search());
@@ -61,6 +72,25 @@ class WorldClock {
                 this.searchResults.classList.add('hidden');
             }
         });
+    }
+
+    startTicking() {
+        if (this.intervalId) return;
+        this.intervalId = setInterval(() => this.updateAll(), 1000);
+    }
+
+    stopTicking() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+
+    destroy() {
+        this.stopTicking();
+        if (this.handleVisibility) {
+            document.removeEventListener('visibilitychange', this.handleVisibility);
+        }
     }
 
     updateAll() {
@@ -96,11 +126,7 @@ class WorldClock {
             const city = this.CITIES.find(c => c.tz === tz);
             if (!city) return '';
             const slug = this.slugify(tz);
-            const now = new Date();
-            const localOffset = now.getTimezoneOffset();
-            const targetOffset = this.getTimezoneOffset(tz);
-            const diffHours = (targetOffset + localOffset) / 60;
-            const diffStr = diffHours >= 0 ? `+${diffHours}h` : `${diffHours}h`;
+            const diffStr = this.formatOffsetDiff(tz);
 
             return `<div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 hover:border-emerald-500/30 transition-all group" id="clock-card-${slug}">
                 <div class="flex items-center justify-between mb-3">
@@ -139,11 +165,32 @@ class WorldClock {
         });
     }
 
-    getTimezoneOffset(tz) {
-        const now = new Date();
-        const utc = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
-        const target = new Date(now.toLocaleString('en-US', { timeZone: tz }));
-        return (target - utc) / 60000;
+    // Returns minutes from UTC for a given IANA tz at "now". Uses Intl so DST is
+    // applied correctly (the previous Date.toLocaleString trick lost DST around
+    // transitions and produced wrong diffs for the user's own tz too).
+    tzOffsetMinutes(tz) {
+        const parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: tz,
+            timeZoneName: 'shortOffset',
+        }).formatToParts(new Date());
+        const raw = parts.find(p => p.type === 'timeZoneName')?.value ?? 'GMT';
+        // raw is like "GMT", "GMT-3", "GMT+5:30", "GMT-03:00"
+        const m = raw.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/);
+        if (!m) return 0;
+        const sign = m[1] === '-' ? -1 : 1;
+        const hours = parseInt(m[2], 10);
+        const mins = m[3] ? parseInt(m[3], 10) : 0;
+        return sign * (hours * 60 + mins);
+    }
+
+    formatOffsetDiff(tz) {
+        const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const diffMinutes = this.tzOffsetMinutes(tz) - this.tzOffsetMinutes(localTz);
+        const sign = diffMinutes >= 0 ? '+' : '-';
+        const abs = Math.abs(diffMinutes);
+        const h = Math.floor(abs / 60);
+        const m = abs % 60;
+        return m === 0 ? `${sign}${h}h` : `${sign}${h}h${String(m).padStart(2, '0')}`;
     }
 
     search() {
