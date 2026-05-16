@@ -106,7 +106,26 @@ class LoremGenerator {
     }
 
     async copy() {
-        const fullText = Array.isArray(this.text) ? this.text.join('\n\n') : this.text;
+        // Prefer the in-memory text (set after a fresh generate() call).
+        // If empty (user lands on the page and copies the SSR-rendered
+        // text without regenerating), fall back to scraping the result
+        // container so we never copy an empty string.
+        let fullText = '';
+        if (Array.isArray(this.text) && this.text.length > 0) {
+            fullText = this.text.join('\n\n');
+        } else if (typeof this.text === 'string' && this.text.length > 0) {
+            fullText = this.text;
+        } else if (this.textResult) {
+            const paragraphs = this.textResult.querySelectorAll('p');
+            fullText = paragraphs.length
+                ? Array.from(paragraphs).map(p => p.textContent.trim()).join('\n\n')
+                : this.textResult.textContent.trim();
+        }
+
+        if (!fullText) {
+            showToast('Nada para copiar', { variant: 'error' });
+            return;
+        }
 
         try {
             await copyText(fullText);
