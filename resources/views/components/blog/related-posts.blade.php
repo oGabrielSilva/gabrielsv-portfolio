@@ -33,7 +33,6 @@
                             <x-blog.chip
                                 :label="$primaryCategory->name"
                                 :slug="$primaryCategory->slug"
-                                :href="route('blog.category', $primaryCategory)"
                             />
                         @endif
 

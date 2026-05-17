@@ -31,7 +31,12 @@ Route::get('/blog/buscar', [BlogController::class, 'search'])
 Route::get('/blog/categoria/{category:slug}', [BlogController::class, 'byCategory'])->name('blog.category');
 Route::get('/blog/tag/{tag:slug}', [BlogController::class, 'byTag'])->name('blog.tag');
 Route::get('/blog/serie/{slug}', [BlogController::class, 'bySeries'])->name('blog.series');
-Route::get('/b/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/{post:slug}', [BlogController::class, 'show'])
+    ->where('post', '^(?!categoria|tag|serie|buscar).+')
+    ->name('blog.show');
+
+// Compat: URLs antigas /b/{slug} → 301 para /blog/{slug}
+Route::get('/b/{slug}', fn (string $slug) => redirect()->route('blog.show', $slug, 301));
 
 // OG image dinâmica
 Route::get('/og/post/{post:slug}.png', [OgImageController::class, 'post'])->name('og.post');

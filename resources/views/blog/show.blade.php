@@ -66,12 +66,6 @@
                 {{ $post->title }}
             </h1>
 
-            @if($post->excerpt)
-                <p class="text-lg leading-relaxed text-gray-400 sm:text-xl">
-                    {{ $post->excerpt }}
-                </p>
-            @endif
-
             <x-blog.author-meta :post="$post" />
         </header>
 

@@ -308,19 +308,8 @@ body {
 .callout--danger .callout__body { color: #fecaca; }
 
 /* ==========================================================================
-   Post content: drop cap + tipografia (Lote 4)
+   Post content: tipografia
    ========================================================================== */
-.post-content > p:first-of-type::first-letter {
-    float: left;
-    font-family: "Google Sans Flex", serif;
-    font-size: 3.5rem;
-    line-height: 0.85;
-    font-weight: 700;
-    color: var(--color-bulma-primary);
-    padding: 0.25rem 0.5rem 0 0;
-    margin-top: 0.25rem;
-}
-
 .post-content h2, .post-content h3 {
     scroll-margin-top: 6rem;
 }

@@ -18,4 +18,13 @@ class Category extends Model
     {
         return $this->belongsToMany(Post::class);
     }
+
+    protected static function booted(): void
+    {
+        $invalidate = function (): void {
+            \Illuminate\Support\Facades\Cache::forget('site.stats.top_categories.5');
+        };
+        static::saved($invalidate);
+        static::deleted($invalidate);
+    }
 }

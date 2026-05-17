@@ -44,6 +44,17 @@ class Post extends Model implements Feedable, HasMedia
         'series_order' => 'integer',
     ];
 
+    protected static function booted(): void
+    {
+        $invalidate = function (): void {
+            \Illuminate\Support\Facades\Cache::forget('site.stats.quick');
+            \Illuminate\Support\Facades\Cache::forget('site.stats.full');
+            \Illuminate\Support\Facades\Cache::forget('site.stats.top_categories.5');
+        };
+        static::saved($invalidate);
+        static::deleted($invalidate);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';
