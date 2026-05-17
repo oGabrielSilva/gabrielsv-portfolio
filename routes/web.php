@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\OgImageController;
+use App\Http\Controllers\SitePageController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\ToolsController;
@@ -41,9 +42,14 @@ Route::get('/b/{slug}', fn (string $slug) => redirect()->route('blog.show', $slu
 // OG image dinâmica
 Route::get('/og/post/{post:slug}.png', [OgImageController::class, 'post'])->name('og.post');
 
-// Páginas-mosaico
-Route::view('/uses', 'pages.uses')->name('uses');
-Route::view('/now', 'pages.now')->name('now');
+// Páginas-mosaico editáveis no console (SitePage)
+Route::get('/uses', fn () => app(SitePageController::class)->show(
+    \App\Models\SitePage::where('slug', 'uses')->firstOrFail()
+))->name('uses');
+Route::get('/now', fn () => app(SitePageController::class)->show(
+    \App\Models\SitePage::where('slug', 'now')->firstOrFail()
+))->name('now');
+
 Route::view('/sobre', 'pages.about')->name('about');
 Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
