@@ -54,17 +54,20 @@ class PasswordGenerator {
     }
 
     getCharset() {
-        let charset = '';
-        if (this.optUpper.checked) charset += this.UPPER;
-        if (this.optLower.checked) charset += this.LOWER;
-        if (this.optNumbers.checked) charset += this.NUMBERS;
-        if (this.optSymbols.checked) charset += this.SYMBOLS;
+        return this.getActiveCategories().join('');
+    }
 
-        if (this.optExcludeAmbiguous.checked) {
-            charset = charset.split('').filter(c => !this.AMBIGUOUS.includes(c)).join('');
-        }
+    getActiveCategories() {
+        const filter = (chars) => this.optExcludeAmbiguous.checked
+            ? chars.split('').filter(c => !this.AMBIGUOUS.includes(c)).join('')
+            : chars;
 
-        return charset;
+        const cats = [];
+        if (this.optUpper.checked) cats.push(filter(this.UPPER));
+        if (this.optLower.checked) cats.push(filter(this.LOWER));
+        if (this.optNumbers.checked) cats.push(filter(this.NUMBERS));
+        if (this.optSymbols.checked) cats.push(filter(this.SYMBOLS));
+        return cats.filter(c => c.length > 0);
     }
 
     generate() {
@@ -93,9 +96,45 @@ class PasswordGenerator {
     }
 
     generatePassword(charset, length) {
-        const array = new Uint32Array(length);
+        // Garante pelo menos 1 char de cada categoria selecionada, depois
+        // completa o resto a partir do charset combinado e embaralha tudo.
+        const categories = this.getActiveCategories();
+        if (categories.length === 0 || length === 0) return '';
+        if (length < categories.length) {
+            return this.randomFromCharset(charset, length);
+        }
+
+        const chars = categories.map(cat => this.pickRandom(cat));
+        const remaining = length - chars.length;
+        for (const c of this.randomFromCharset(charset, remaining)) {
+            chars.push(c);
+        }
+        return this.shuffle(chars).join('');
+    }
+
+    randomFromCharset(charset, count) {
+        if (count <= 0) return '';
+        const array = new Uint32Array(count);
         crypto.getRandomValues(array);
         return Array.from(array, n => charset[n % charset.length]).join('');
+    }
+
+    pickRandom(charset) {
+        const array = new Uint32Array(1);
+        crypto.getRandomValues(array);
+        return charset[array[0] % charset.length];
+    }
+
+    // Fisher-Yates com aleatoriedade criptográfica.
+    shuffle(arr) {
+        const a = arr.slice();
+        const rand = new Uint32Array(a.length);
+        crypto.getRandomValues(rand);
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = rand[i] % (i + 1);
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
     }
 
     updateStrength(password) {

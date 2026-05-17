@@ -1,8 +1,8 @@
 @extends('layouts.tools')
 
-@section('title', 'Lorem Ipsum Generator - Gerador Online')
+@section('title', 'Lorem Ipsum Gerador Online (palavras, parágrafos e frases)')
 @section('tool_name', 'Lorem Ipsum')
-@section('description', 'Gere textos Lorem Ipsum para seus projetos de design e desenvolvimento')
+@section('description', 'Texto de preenchimento para mockup, wireframe, Figma ou layout que ainda não tem conteúdo real. Escolhe a quantidade e copia.')
 
 @section('content')
     @php
@@ -16,7 +16,7 @@
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Lorem Ipsum Generator</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Gere textos placeholder para seus projetos</p>
+            <p class="text-gray-400 text-sm sm:text-base">Texto de preenchimento para mockup, wireframe e protótipo no Figma. Escolhe a quantidade, copia e cola.</p>
         </div>
 
         {{-- Configurações --}}

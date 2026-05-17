@@ -11,7 +11,9 @@ class JsonFormatter {
         this.validateBtn = document.getElementById('validate-btn');
         this.copyBtn = document.getElementById('copy-btn');
         this.clearBtn = document.getElementById('clear-btn');
-        this.indentSize = document.getElementById('indent-size');
+        this.indentDropdown = document.querySelector('[data-indent-value]');
+        this.indentLabel = document.getElementById('indent-label');
+        this.indentOptions = document.querySelectorAll('.indent-option');
         this.statusBar = document.getElementById('status-bar');
         this.statusIcon = document.getElementById('status-icon');
         this.statusText = document.getElementById('status-text');
@@ -31,16 +33,40 @@ class JsonFormatter {
         this.copyBtn?.addEventListener('click', () => this.copy());
         this.clearBtn?.addEventListener('click', () => this.clear());
         this.jsonInput?.addEventListener('input', () => this.debouncedUpdateStats());
+
+        this.indentOptions.forEach((opt) => {
+            opt.addEventListener('click', () => this.selectIndent(opt));
+        });
+    }
+
+    selectIndent(opt) {
+        const value = opt.dataset.indentOption;
+        this.indentDropdown.dataset.indentValue = value;
+        this.indentLabel.textContent = opt.textContent.trim();
+
+        this.indentOptions.forEach((o) => {
+            const active = o === opt;
+            o.classList.toggle('text-bulma-primary', active);
+            o.classList.toggle('bg-bulma-primary/10', active);
+            o.classList.toggle('text-gray-300', !active);
+            o.classList.toggle('hover:text-white', !active);
+        });
     }
 
     getIndent() {
-        const val = this.indentSize.value;
+        const val = this.indentDropdown.dataset.indentValue;
         if (val === 'tab') return '\t';
         return parseInt(val);
     }
 
+    // Arquivos exportados pelo Windows às vezes começam com BOM UTF-8 (U+FEFF),
+    // que faz JSON.parse falhar com "Unexpected token". Removemos antes do parse.
+    stripBom(text) {
+        return text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text;
+    }
+
     format() {
-        const raw = this.jsonInput.value.trim();
+        const raw = this.stripBom(this.jsonInput.value).trim();
         if (!raw) return this.showStatus('error', 'Cole um JSON para formatar');
 
         try {
@@ -54,7 +80,7 @@ class JsonFormatter {
     }
 
     minify() {
-        const raw = this.jsonInput.value.trim();
+        const raw = this.stripBom(this.jsonInput.value).trim();
         if (!raw) return this.showStatus('error', 'Cole um JSON para minificar');
 
         try {
@@ -68,7 +94,7 @@ class JsonFormatter {
     }
 
     validate() {
-        const raw = this.jsonInput.value.trim();
+        const raw = this.stripBom(this.jsonInput.value).trim();
         if (!raw) return this.showStatus('error', 'Cole um JSON para validar');
 
         try {
@@ -123,7 +149,7 @@ class JsonFormatter {
         this.statSize.textContent = this.formatBytes(size);
 
         try {
-            const parsed = JSON.parse(raw);
+            const parsed = JSON.parse(this.stripBom(raw));
             const stats = this.countStats(parsed);
             this.statKeys.textContent = stats.keys + ' chaves';
             this.statArrays.textContent = stats.arrays + ' arrays';

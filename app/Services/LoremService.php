@@ -53,13 +53,14 @@ class LoremService
     private function generateWords(int $count, bool $startWithLorem): array
     {
         $words = [];
+        $remaining = $count;
 
-        if ($startWithLorem) {
+        if ($startWithLorem && $count >= 2) {
             $words = ['Lorem', 'ipsum'];
-            $count -= 2;
+            $remaining = $count - 2;
         }
 
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $remaining; $i++) {
             $words[] = self::LOREM_WORDS[array_rand(self::LOREM_WORDS)];
         }
 

@@ -21,17 +21,20 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     if (btn && menu) {
+        const OPEN_CLASS = "max-h-[80vh]";
+        const CLOSED_CLASS = "max-h-0";
+
         const toggleMenu = (forceClose = false) => {
-            const isClosed = menu.classList.contains("max-h-0");
+            const isClosed = menu.classList.contains(CLOSED_CLASS);
 
             if (forceClose && isClosed) return;
 
-            menu.classList.toggle("max-h-0");
+            menu.classList.toggle(CLOSED_CLASS);
+            menu.classList.toggle(OPEN_CLASS);
             menu.classList.toggle("opacity-0");
-            // menu.classList.toggle("max-h-96");
             menu.classList.toggle("opacity-100");
 
-            const isOpen = !menu.classList.contains("max-h-0");
+            const isOpen = !menu.classList.contains(CLOSED_CLASS);
             btn.setAttribute("aria-expanded", isOpen);
 
             if (iconPath) {

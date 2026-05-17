@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'JSON Formatter & Validator - Formatador JSON Online')
+@section('title', 'JSON Formatter e Validador Online: aponta erro com linha e coluna')
 @section('tool_name', 'JSON Formatter')
-@section('description', 'Formate, minifique e valide JSON online gratuitamente. Identifique erros com linha e coluna.')
+@section('description', 'Formata, minifica e valida JSON. Quando dá erro, mostra a linha e coluna exatas. Para quando o JSON da API veio quebrado.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">JSON Formatter & Validator</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Formate, minifique e valide seu JSON com facilidade</p>
+            <p class="text-gray-400 text-sm sm:text-base">Formata, minifica e valida. Quando dá erro, mostra a linha e coluna exatas.</p>
         </div>
 
         {{-- Toolbar --}}
@@ -42,13 +42,31 @@
 
             {{-- Indentação --}}
             <div class="ml-auto flex items-center gap-2">
-                <label for="indent-size" class="text-sm text-gray-400">Indentação:</label>
-                <select id="indent-size"
-                    class="py-2 px-3 text-sm rounded-lg border border-neutral-600 bg-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-bulma-primary">
-                    <option value="2" selected>2 espaços</option>
-                    <option value="4">4 espaços</option>
-                    <option value="tab">Tab</option>
-                </select>
+                <span class="text-sm text-gray-400">Indentação:</span>
+                <div class="hs-dropdown relative [--strategy:absolute] [--adaptive:none]" data-indent-value="2">
+                    <button id="indent-dropdown" type="button"
+                        class="hs-dropdown-toggle py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-white hover:bg-neutral-600 transition-all"
+                        aria-haspopup="menu" aria-expanded="false">
+                        <span id="indent-label">2 espaços</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform"></i>
+                    </button>
+                    <div
+                        class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-[10rem] bg-neutral-800 shadow-md rounded-lg p-2 mt-2 border border-neutral-700 z-50"
+                        role="menu" aria-labelledby="indent-dropdown">
+                        <button type="button" data-indent-option="2"
+                            class="indent-option w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-bulma-primary bg-bulma-primary/10 hover:bg-neutral-700">
+                            <span>2 espaços</span>
+                        </button>
+                        <button type="button" data-indent-option="4"
+                            class="indent-option w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-300 hover:bg-neutral-700 hover:text-white">
+                            <span>4 espaços</span>
+                        </button>
+                        <button type="button" data-indent-option="tab"
+                            class="indent-option w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-300 hover:bg-neutral-700 hover:text-white">
+                            <span>Tab</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 

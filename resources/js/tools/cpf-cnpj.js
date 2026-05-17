@@ -82,14 +82,7 @@ class CpfCnpjTool {
 
         this.currentType = type;
 
-        // Update tab styles
-        this.elements.tabs.forEach((tab) => {
-            const isActive = tab.dataset.tab === type;
-            tab.classList.toggle("border-bulma-primary", isActive);
-            tab.classList.toggle("text-bulma-primary", isActive);
-            tab.classList.toggle("border-transparent", !isActive);
-            tab.classList.toggle("text-gray-400", !isActive);
-        });
+        // Estado visual das abas é controlado pelo Preline via hs-tab-active.
 
         // Update labels
         const label = type.toUpperCase();

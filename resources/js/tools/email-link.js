@@ -3,8 +3,8 @@ import { showToast } from '../utils/toast.js';
 
 // RFC 5322-lite check. Tighter than strict spec but covers everything
 // a real user will paste; the goal here is to catch typos, not to
-// reject valid-but-weird addresses.
-const EMAIL_RE = /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/;
+// reject valid-but-weird addresses. TLDs reais têm 2+ chars (.io, .br, .com).
+const EMAIL_RE = /^[^\s@,;]+@[^\s@,;.]+(?:\.[^\s@,;.]+)*\.[^\s@,;.]{2,}$/;
 
 function splitAddresses(raw) {
     if (!raw) return [];

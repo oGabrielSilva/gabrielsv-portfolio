@@ -5,9 +5,9 @@
     $label = $isCpf ? 'CPF' : 'CNPJ';
 @endphp
 
-@section('title', "Gerador e Validador de {$label} Online")
+@section('title', "Gerador e Validador de {$label} para Testes")
 @section('tool_name', $label)
-@section('description', "Gere e valide {$label} online gratuitamente. Ferramenta para desenvolvedores e testes.")
+@section('description', "{$label} válido para preencher formulário em ambiente de teste, homologação ou QA. Também valida número existente. Documentos fictícios, matematicamente corretos.")
 
 @section('content')
     <div class="space-y-4 sm:space-y-6"
@@ -18,25 +18,30 @@
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Gerador e Validador de CPF/CNPJ</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Gere documentos válidos para testes ou valide números existentes
-            </p>
+            <p class="text-gray-400 text-sm sm:text-base">Para preencher formulário em teste, homologação ou QA. Números fictícios, matematicamente válidos.</p>
         </div>
 
         {{-- Tabs --}}
         <div class="border-b border-neutral-700">
-            <nav class="flex gap-x-1" aria-label="Tabs" role="tablist">
+            <nav class="flex gap-x-1" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
                 <button type="button"
-                    class="tab-btn py-3 px-4 text-sm font-medium border-b-2 transition-colors {{ $isCpf ? 'border-bulma-primary text-bulma-primary' : 'border-transparent text-gray-400 hover:text-gray-300' }}"
-                    data-tab="cpf" role="tab">
+                    class="hs-tab-active:border-bulma-primary hs-tab-active:text-bulma-primary tab-btn py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-300 transition-colors {{ $isCpf ? 'active' : '' }}"
+                    id="docs-tab-cpf" data-tab="cpf" aria-selected="{{ $isCpf ? 'true' : 'false' }}"
+                    data-hs-tab="#docs-panel-cpf" aria-controls="docs-panel-cpf" role="tab">
                     CPF
                 </button>
                 <button type="button"
-                    class="tab-btn py-3 px-4 text-sm font-medium border-b-2 transition-colors {{ !$isCpf ? 'border-bulma-primary text-bulma-primary' : 'border-transparent text-gray-400 hover:text-gray-300' }}"
-                    data-tab="cnpj" role="tab">
+                    class="hs-tab-active:border-bulma-primary hs-tab-active:text-bulma-primary tab-btn py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-300 transition-colors {{ !$isCpf ? 'active' : '' }}"
+                    id="docs-tab-cnpj" data-tab="cnpj" aria-selected="{{ !$isCpf ? 'true' : 'false' }}"
+                    data-hs-tab="#docs-panel-cnpj" aria-controls="docs-panel-cnpj" role="tab">
                     CNPJ
                 </button>
             </nav>
         </div>
+
+        {{-- Painéis vazios apenas para satisfazer o contrato hs-tab (aria-controls). Conteúdo principal segue abaixo. --}}
+        <div id="docs-panel-cpf" role="tabpanel" aria-labelledby="docs-tab-cpf" class="{{ $isCpf ? '' : 'hidden' }}"></div>
+        <div id="docs-panel-cnpj" role="tabpanel" aria-labelledby="docs-tab-cnpj" class="{{ !$isCpf ? '' : 'hidden' }}"></div>
 
         {{-- Gerador --}}
         <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
@@ -46,8 +51,26 @@
                 {{-- Quantidade --}}
                 <div>
                     <label for="quantity" class="block text-sm font-medium text-gray-300 mb-2">Quantidade</label>
-                    <input type="number" id="quantity" value="5" min="1" max="50"
-                        class="w-full py-3 px-4 rounded-lg border border-neutral-600 bg-neutral-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-bulma-primary focus:border-transparent transition-all">
+                    <div class="py-2 px-3 rounded-lg border border-neutral-600 bg-neutral-700"
+                        data-hs-input-number='{"min": 1, "max": 50}'>
+                        <div class="w-full flex justify-between items-center gap-x-3">
+                            <input id="quantity" type="number" value="5"
+                                class="w-full p-0 bg-transparent border-0 text-white placeholder-gray-400 focus:ring-0 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                style="-moz-appearance: textfield;"
+                                aria-roledescription="Number field"
+                                data-hs-input-number-input>
+                            <div class="flex items-center gap-x-1.5">
+                                <button type="button" tabindex="-1" aria-label="Diminuir" data-hs-input-number-decrement
+                                    class="size-7 inline-flex justify-center items-center rounded-md border border-neutral-600 bg-neutral-800 text-gray-300 hover:bg-neutral-600 hover:text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                                    <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button type="button" tabindex="-1" aria-label="Aumentar" data-hs-input-number-increment
+                                    class="size-7 inline-flex justify-center items-center rounded-md border border-neutral-600 bg-neutral-800 text-gray-300 hover:bg-neutral-600 hover:text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- Formatação --}}

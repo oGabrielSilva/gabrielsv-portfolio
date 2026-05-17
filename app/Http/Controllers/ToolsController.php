@@ -173,11 +173,6 @@ class ToolsController extends Controller
         return view('tools.text-counter');
     }
 
-    public function caseConverter()
-    {
-        return view('tools.case-converter');
-    }
-
     public function removeDuplicates()
     {
         return view('tools.remove-duplicates');
@@ -186,11 +181,6 @@ class ToolsController extends Controller
     public function unitConverter()
     {
         return view('tools.unit-converter');
-    }
-
-    public function urlValidator()
-    {
-        return view('tools.url-validator');
     }
 
     public function whatsappLink()

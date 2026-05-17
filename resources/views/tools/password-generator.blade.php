@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Gerador de Senhas Fortes - Password Generator Online')
+@section('title', 'Gerador de Senhas Fortes Online (gerado no seu navegador)')
 @section('tool_name', 'Gerador de Senhas')
-@section('description', 'Gere senhas fortes e seguras com opções customizáveis de comprimento e caracteres')
+@section('description', 'Senha forte gerada localmente no seu navegador, nunca enviada para nenhum servidor. Você escolhe o tamanho, se inclui número, símbolo e maiúscula.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Gerador de Senhas Fortes</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Gere senhas seguras usando aleatoriedade criptográfica</p>
+            <p class="text-gray-400 text-sm sm:text-base">Gerada no seu navegador, nunca enviada para servidor. Você decide o tamanho e o que incluir.</p>
         </div>
 
         {{-- Senha gerada --}}

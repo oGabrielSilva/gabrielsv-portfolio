@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Gerador de Slug Online')
+@section('title', 'Slugify Online: gera slug de URL a partir de texto em português')
 @section('tool_name', 'Slugify')
-@section('description', 'Converta texto para slug URL-friendly. Ferramenta gratuita para desenvolvedores.')
+@section('description', 'Transforma título em slug para URL. Tira acento (ç, ã, é), troca espaço por hífen e remove símbolos, sem quebrar palavra em português.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Gerador de Slug</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Converta texto para slug URL-friendly</p>
+            <p class="text-gray-400 text-sm sm:text-base">Transforma título em slug para URL. Tira acento e símbolo sem quebrar palavra em português.</p>
         </div>
 
         {{-- Generator --}}

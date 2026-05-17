@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Calculadora de Porcentagem - Online Grátis')
+@section('title', 'Calculadora de Porcentagem (desconto, aumento, variação)')
 @section('tool_name', 'Calculadora %')
-@section('description', 'Calcule porcentagens, aumentos, descontos e variações percentuais online')
+@section('description', 'Quanto é X% de Y, qual a variação entre dois valores, e qual o valor original antes do desconto. Três cálculos numa página só.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Calculadora de Porcentagem</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Calcule porcentagens de forma rápida e fácil</p>
+            <p class="text-gray-400 text-sm sm:text-base">Quanto é X% de Y, qual a variação entre dois valores e qual o valor antes do desconto.</p>
         </div>
 
         {{-- Calculadoras --}}

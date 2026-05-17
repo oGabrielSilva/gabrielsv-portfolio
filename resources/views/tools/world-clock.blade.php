@@ -1,8 +1,8 @@
 @extends('layouts.tools')
 
-@section('title', 'Horário Mundial - Relógio de Fusos Horários Online')
+@section('title', 'Horário Mundial: que horas são em São Paulo, Lisboa, NY e Tóquio')
 @section('tool_name', 'Horário Mundial')
-@section('description', 'Veja o horário atual em diferentes fusos horários do mundo em tempo real')
+@section('description', 'Para quem trabalha com time remoto ou agenda call com cliente fora do Brasil. Horários ao vivo nos principais fusos do mundo.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6"
@@ -11,7 +11,7 @@
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Horário Mundial</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Horários em tempo real nos principais fusos horários</p>
+            <p class="text-gray-400 text-sm sm:text-base">Para quem trabalha com time remoto ou agenda call com cliente fora do Brasil.</p>
         </div>
 
         {{-- Relógio local --}}

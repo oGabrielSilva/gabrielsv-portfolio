@@ -12,7 +12,7 @@
         </div>
 
         {{-- Grid de ferramentas --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             @foreach($tools as $tool)
                 <a href="{{ route('tools.' . $tool['slug']) }}"
                     class="group block p-4 sm:p-6 bg-neutral-800/50 border border-neutral-700/50 rounded-xl hover:border-{{ $tool['color'] }}/50 hover:bg-neutral-800 transition-all duration-300">

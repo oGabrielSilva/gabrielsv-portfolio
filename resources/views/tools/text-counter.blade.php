@@ -1,14 +1,14 @@
 @extends('layouts.tools')
 
-@section('title', 'Contador de Caracteres e Palavras Online')
+@section('title', 'Contador de Caracteres e Palavras Online (com limite de SEO e Twitter)')
 @section('tool_name', 'Contador de Caracteres')
-@section('description', 'Conte caracteres, palavras, linhas, parágrafos e tempo de leitura. Indicadores de limite para SEO (title, description) e Twitter.')
+@section('description', 'Conta caracteres, palavras e tempo de leitura, com alerta de limite para title (60), meta description (160) e tweet (280). Para quem escreve para web.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6" data-tool="text-counter">
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Contador de Caracteres e Palavras</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Estatísticas em tempo real do seu texto, com limites de SEO e redes sociais.</p>
+            <p class="text-gray-400 text-sm sm:text-base">Caracteres, palavras e tempo de leitura, com alerta de limite para title, meta description e tweet.</p>
         </div>
 
         <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">

@@ -1,14 +1,14 @@
 @extends('layouts.tools')
 
-@section('title', 'Remover Linhas Duplicadas Online')
+@section('title', 'Remover Linhas Duplicadas Online: limpa lista de e-mails, leads e IDs')
 @section('tool_name', 'Remover Duplicadas')
-@section('description', 'Remova linhas duplicadas de qualquer texto. Opções para preservar ordem, ordenar alfabeticamente e ignorar case.')
+@section('description', 'Cola uma lista (e-mails, leads, IDs, qualquer coisa em linhas) e a página devolve sem repetição. Opção para ignorar case e ordenar alfabeticamente.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6" data-tool="remove-duplicates">
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Remover Linhas Duplicadas</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Cole sua lista e veja o resultado sem repetições.</p>
+            <p class="text-gray-400 text-sm sm:text-base">Cola uma lista (e-mails, leads, IDs) e a página devolve sem repetição.</p>
         </div>
 
         <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6 space-y-4">

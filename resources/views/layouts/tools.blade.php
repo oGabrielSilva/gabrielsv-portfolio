@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.544.0"></script>
     @include('partials.head')
     @stack('styles')
 
@@ -93,7 +93,7 @@
 
             {{-- Mobile menu --}}
             <div id="mobile-menu"
-                class="absolute top-full left-0 w-full max-w-dvh bg-neutral-800 border-b border-neutral-700 overflow-y-auto transition-all duration-300 ease-in-out opacity-0 md:hidden h-dvh sm:h-auto max-h-0">
+                class="absolute top-full left-0 w-full bg-neutral-800 border-b border-neutral-700 overflow-y-auto transition-all duration-300 ease-in-out opacity-0 md:hidden max-h-0">
                 <div class="px-4 py-4 space-y-4">
                     {{-- Navigation links --}}
                     <div class="flex flex-col gap-2">
@@ -139,7 +139,7 @@
 
     <div class="flex pt-14 sm:pt-16 min-h-screen">
         {{-- Sidebar (desktop only) --}}
-        <aside class="hidden relative lg:block bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
+        <aside class="hidden relative lg:block lg:w-64 lg:shrink-0 bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
             <nav class="p-4">
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Ferramentas</h3>
                 <ul class="space-y-1">

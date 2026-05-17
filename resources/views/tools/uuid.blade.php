@@ -1,8 +1,8 @@
 @extends('layouts.tools')
 
-@section('title', $typeInfo['label'] . ' Generator - Gerador Online')
+@section('title', 'Gerador de ' . $typeInfo['label'] . ' Online (v1, v4, v6, v7, CUID, NanoID)')
 @section('tool_name', $typeInfo['label'] . ' Generator')
-@section('description', 'Gere ' . $typeInfo['label'] . ' online gratuitamente. ' . $typeInfo['description'])
+@section('description', $typeInfo['description'] . ' Gere em massa, copie um a um ou troque entre versões na mesma página.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6"

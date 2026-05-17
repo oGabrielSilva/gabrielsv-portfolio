@@ -3,7 +3,6 @@ import { showToast } from '../utils/toast.js';
 
 class Base64Tool {
     constructor() {
-        this.currentTab = 'encode';
         this.elements = {};
     }
 
@@ -14,9 +13,6 @@ class Base64Tool {
 
     cacheElements() {
         this.elements = {
-            tabs: document.querySelectorAll('.tab-btn'),
-            encodeSection: document.getElementById('encode-section'),
-            decodeSection: document.getElementById('decode-section'),
             encodeInput: document.getElementById('encode-input'),
             encodeOutput: document.getElementById('encode-output'),
             encodeBtn: document.getElementById('encode-btn'),
@@ -31,10 +27,6 @@ class Base64Tool {
     }
 
     bindEvents() {
-        this.elements.tabs.forEach((tab) => {
-            tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
-        });
-
         this.elements.encodeBtn.addEventListener('click', () => this.encode());
         this.elements.encodeInput.addEventListener('input', () => this.encode());
         this.elements.copyEncodeBtn.addEventListener('click', () =>
@@ -46,22 +38,6 @@ class Base64Tool {
         this.elements.copyDecodeBtn.addEventListener('click', () =>
             this.copy(this.elements.decodeOutput.value),
         );
-    }
-
-    switchTab(tab) {
-        if (tab === this.currentTab) return;
-        this.currentTab = tab;
-
-        this.elements.tabs.forEach((t) => {
-            const isActive = t.dataset.tab === tab;
-            t.classList.toggle('border-bulma-primary', isActive);
-            t.classList.toggle('text-bulma-primary', isActive);
-            t.classList.toggle('border-transparent', !isActive);
-            t.classList.toggle('text-gray-400', !isActive);
-        });
-
-        this.elements.encodeSection.classList.toggle('hidden', tab !== 'encode');
-        this.elements.decodeSection.classList.toggle('hidden', tab !== 'decode');
     }
 
     encode() {

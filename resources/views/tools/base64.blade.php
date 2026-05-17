@@ -2,34 +2,34 @@
 
 @section('title', 'Codificador e Decodificador Base64 Online')
 @section('tool_name', 'Base64')
-@section('description', 'Codifique e decodifique texto em Base64 online gratuitamente. Ferramenta para desenvolvedores.')
+@section('description', 'Codifica e decodifica texto em Base64. Útil para inspecionar JWT, data URI em CSS, payload de API e tokens.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Codificador e Decodificador Base64</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Converta texto para Base64 ou decodifique Base64 para texto</p>
+            <p class="text-gray-400 text-sm sm:text-base">Para inspecionar JWT, data URI, payload de API ou só converter texto. Cola de um lado, copia do outro.</p>
         </div>
 
         {{-- Tabs --}}
         <div class="border-b border-neutral-700">
-            <nav class="flex gap-x-1" aria-label="Tabs" role="tablist">
+            <nav class="flex gap-x-1" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
                 <button type="button"
-                    class="tab-btn py-3 px-4 text-sm font-medium border-b-2 transition-colors border-bulma-primary text-bulma-primary"
-                    data-tab="encode" role="tab">
+                    class="hs-tab-active:border-bulma-primary hs-tab-active:text-bulma-primary py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-300 transition-colors active"
+                    id="base64-tab-encode" aria-selected="true" data-hs-tab="#encode-section" aria-controls="encode-section" role="tab">
                     Encode
                 </button>
                 <button type="button"
-                    class="tab-btn py-3 px-4 text-sm font-medium border-b-2 transition-colors border-transparent text-gray-400 hover:text-gray-300"
-                    data-tab="decode" role="tab">
+                    class="hs-tab-active:border-bulma-primary hs-tab-active:text-bulma-primary py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-300 transition-colors"
+                    id="base64-tab-decode" aria-selected="false" data-hs-tab="#decode-section" aria-controls="decode-section" role="tab">
                     Decode
                 </button>
             </nav>
         </div>
 
         {{-- Encode Section --}}
-        <div id="encode-section" class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
+        <div id="encode-section" role="tabpanel" aria-labelledby="base64-tab-encode" class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
             <h2 class="text-lg font-semibold text-white mb-4">Texto para Base64</h2>
 
             <div class="space-y-4">
@@ -63,7 +63,7 @@
         </div>
 
         {{-- Decode Section --}}
-        <div id="decode-section" class="hidden bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
+        <div id="decode-section" role="tabpanel" aria-labelledby="base64-tab-decode" class="hidden bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
             <h2 class="text-lg font-semibold text-white mb-4">Base64 para Texto</h2>
 
             <div class="space-y-4">

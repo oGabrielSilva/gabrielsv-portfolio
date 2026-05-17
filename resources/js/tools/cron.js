@@ -45,6 +45,7 @@ class CronExplainer {
             { name: 'hora', min: 0, max: 23 },
             { name: 'dia do mês', min: 1, max: 31 },
             { name: 'mês', min: 1, max: 12 },
+            // Cron tradicional aceita 0 e 7 como domingo; normalizamos 7 → 0 antes do match.
             { name: 'dia da semana', min: 0, max: 7 },
         ];
         for (let i = 0; i < 5; i++) {
@@ -162,13 +163,13 @@ class CronExplainer {
         // Day of week
         if (dayOfWeek !== '*') {
             if (dayOfWeek.includes(',')) {
-                const names = dayOfWeek.split(',').map(d => this.DAYS[parseInt(d)] || d);
+                const names = dayOfWeek.split(',').map(d => this.dayName(d));
                 parts.push(`(${names.join(', ')})`);
             } else if (dayOfWeek.includes('-')) {
                 const [s, e] = dayOfWeek.split('-');
-                parts.push(`(de ${this.DAYS[parseInt(s)] || s} a ${this.DAYS[parseInt(e)] || e})`);
+                parts.push(`(de ${this.dayName(s)} a ${this.dayName(e)})`);
             } else {
-                parts.push(`(${this.DAYS[parseInt(dayOfWeek)] || dayOfWeek})`);
+                parts.push(`(${this.dayName(dayOfWeek)})`);
             }
         }
 
@@ -210,7 +211,17 @@ class CronExplainer {
                this.matchField(date.getHours(), hour, 0, 23) &&
                this.matchField(date.getDate(), dayOfMonth, 1, 31) &&
                this.matchField(date.getMonth() + 1, month, 1, 12) &&
-               this.matchField(date.getDay(), dayOfWeek, 0, 6);
+               this.matchField(date.getDay(), this.normalizeDayOfWeek(dayOfWeek), 0, 6);
+    }
+
+    normalizeDayOfWeek(field) {
+        return field.replace(/\b7\b/g, '0');
+    }
+
+    dayName(token) {
+        const n = parseInt(token, 10);
+        if (n === 7) return this.DAYS[0];
+        return this.DAYS[n] ?? token;
     }
 
     matchField(value, field, min, max) {

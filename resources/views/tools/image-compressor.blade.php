@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Compressor de Imagem - Online Grátis')
+@section('title', 'Compressor de Imagem em Massa (JPEG, WebP, PNG)')
 @section('tool_name', 'Compressor')
-@section('description', 'Comprima múltiplas imagens em PNG, JPG e WebP mantendo a qualidade. Baixe tudo em ZIP.')
+@section('description', 'Várias imagens de uma vez, exporta JPEG, WebP e PNG no mesmo passo, baixa tudo em ZIP. Processado no navegador, sem upload para servidor.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Compressor de Imagem</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Comprima múltiplas imagens em diferentes formatos</p>
+            <p class="text-gray-400 text-sm sm:text-base">Várias imagens de uma vez, exporta JPEG, WebP e PNG no mesmo passo. Tudo no navegador, sem upload.</p>
         </div>
 
         {{-- Upload area --}}
@@ -154,17 +154,21 @@
     </div>
 
     {{-- Preview Modal --}}
-    <div id="preview-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="relative max-w-7xl w-full max-h-[90vh] bg-neutral-800 rounded-xl overflow-hidden">
-            <div class="flex justify-between items-center p-3 sm:p-4 border-b border-neutral-700">
-                <h3 class="text-base sm:text-lg font-semibold text-white truncate pr-4" id="modal-title">Preview</h3>
-                <button type="button" id="close-modal-btn"
-                    class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-700 transition-all shrink-0">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="p-4 overflow-auto max-h-[calc(90vh-80px)]">
-                <img id="modal-image" src="" class="max-w-full h-auto mx-auto rounded-lg">
+    <div id="preview-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+        role="dialog" tabindex="-1" aria-labelledby="modal-title">
+        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all max-w-7xl w-full m-3 sm:mx-auto">
+            <div class="flex flex-col bg-neutral-800 border border-neutral-700 rounded-xl pointer-events-auto max-h-[90vh] overflow-hidden">
+                <div class="flex justify-between items-center p-3 sm:p-4 border-b border-neutral-700">
+                    <h3 class="text-base sm:text-lg font-semibold text-white truncate pr-4" id="modal-title">Preview</h3>
+                    <button type="button"
+                        class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-700 transition-all shrink-0"
+                        aria-label="Fechar" data-hs-overlay="#preview-modal">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-4 overflow-auto">
+                    <img id="modal-image" src="" alt="" class="max-w-full h-auto mx-auto rounded-lg">
+                </div>
             </div>
         </div>
     </div>

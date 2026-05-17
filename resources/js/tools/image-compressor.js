@@ -41,7 +41,6 @@ class ImageCompressor {
         this.previewModal = document.getElementById('preview-modal');
         this.modalTitle = document.getElementById('modal-title');
         this.modalImage = document.getElementById('modal-image');
-        this.closeModalBtn = document.getElementById('close-modal-btn');
 
         this.init();
     }
@@ -99,10 +98,10 @@ class ImageCompressor {
         this.downloadAllBtn?.addEventListener('click', () => this.downloadAll());
         this.clearAllBtn?.addEventListener('click', () => this.clearAll());
 
-        // Modal
-        this.closeModalBtn?.addEventListener('click', () => this.closeModal());
-        this.previewModal?.addEventListener('click', (e) => {
-            if (e.target === this.previewModal) this.closeModal();
+        // Modal — abertura/fechamento e click-outside são tratados pelo Preline (hs-overlay).
+        // Apenas limpa o src ao fechar para liberar o blob.
+        this.previewModal?.addEventListener('close.hs.overlay', () => {
+            this.modalImage.src = '';
         });
 
         // Initialize Preline
@@ -191,7 +190,9 @@ class ImageCompressor {
         card.id = `image-${image.id}`;
         card.className = 'bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-3 sm:p-4 overflow-hidden';
 
-        const url = URL.createObjectURL(image.file);
+        // Guarda em image.thumbUrl para revogar quando a imagem for removida ou tudo for limpo.
+        image.thumbUrl = URL.createObjectURL(image.file);
+        const url = image.thumbUrl;
         const safeName = escapeHtml(image.file.name);
 
         card.innerHTML = `
@@ -398,18 +399,22 @@ class ImageCompressor {
         }
     }
 
-    removeImage(imageId) {
-        const index = this.images.findIndex(img => img.id === imageId);
-        if (index === -1) return;
-
-        const image = this.images[index];
-
-        // Revoke object URLs
+    revokeImageUrls(image) {
+        if (image.thumbUrl) URL.revokeObjectURL(image.thumbUrl);
+        if (image.previewUrl) URL.revokeObjectURL(image.previewUrl);
         if (image.results) {
             Object.values(image.results).forEach(result => {
                 if (result.url) URL.revokeObjectURL(result.url);
             });
         }
+    }
+
+    removeImage(imageId) {
+        const index = this.images.findIndex(img => img.id === imageId);
+        if (index === -1) return;
+
+        const image = this.images[index];
+        this.revokeImageUrls(image);
 
         // Remove from array
         this.images.splice(index, 1);
@@ -422,15 +427,7 @@ class ImageCompressor {
     }
 
     clearAll() {
-        // Revoke all object URLs
-        this.images.forEach(image => {
-            if (image.results) {
-                Object.values(image.results).forEach(result => {
-                    if (result.url) URL.revokeObjectURL(result.url);
-                });
-            }
-        });
-
+        this.images.forEach(image => this.revokeImageUrls(image));
         this.images = [];
         this.imagesList.innerHTML = '';
         this.updateUI();
@@ -471,7 +468,10 @@ class ImageCompressor {
         let title;
 
         if (format === 'original') {
-            url = URL.createObjectURL(image.originalBlob);
+            // Revoga preview anterior do mesmo image antes de criar outro.
+            if (image.previewUrl) URL.revokeObjectURL(image.previewUrl);
+            image.previewUrl = URL.createObjectURL(image.originalBlob);
+            url = image.previewUrl;
             title = `${image.file.name} (Original)`;
         } else {
             const result = image.results[format];
@@ -482,12 +482,11 @@ class ImageCompressor {
 
         this.modalImage.src = url;
         this.modalTitle.textContent = title;
-        this.previewModal.classList.remove('hidden');
+        window.HSOverlay?.open(this.previewModal);
     }
 
     closeModal() {
-        this.previewModal.classList.add('hidden');
-        this.modalImage.src = '';
+        window.HSOverlay?.close(this.previewModal);
     }
 
     downloadBlob(blob, filename) {

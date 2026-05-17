@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Cron Expression Explainer - Explicador de Cron Online')
+@section('title', 'Cron Explainer Online: traduz expressão cron e mostra próximas execuções')
 @section('tool_name', 'Cron Explainer')
-@section('description', 'Entenda expressões cron e veja as próximas execuções agendadas')
+@section('description', 'Cola uma expressão cron (ex: */15 * * * *) e a página explica em português, com as próximas datas de execução. Para montar agendamento sem chutar.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Cron Expression Explainer</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Cole uma expressão cron e veja a explicação em português</p>
+            <p class="text-gray-400 text-sm sm:text-base">Cola a expressão e a página explica em português, com as próximas datas que ela vai rodar.</p>
         </div>
 
         {{-- Input --}}

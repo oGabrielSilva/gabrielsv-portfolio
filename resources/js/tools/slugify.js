@@ -98,6 +98,10 @@ class SlugifyTool {
             .replace(/[\s_-]+/g, " ")
             // Remove special characters except alphanumeric and space
             .replace(/[^a-zA-Z0-9\s]/g, "")
+            // Insere espaço entre letra e dígito para o separador aparecer no boundary
+            // ("Artigo 2024" continua "artigo-2024" e "v2tool" vira "v-2-tool")
+            .replace(/([a-zA-Z])(\d)/g, "$1 $2")
+            .replace(/(\d)([a-zA-Z])/g, "$1 $2")
             // Trim spaces
             .trim();
 

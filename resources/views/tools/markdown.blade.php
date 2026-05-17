@@ -1,8 +1,8 @@
 @extends('layouts.tools')
 
-@section('title', 'Markdown Preview - Editor e Previewer Online')
+@section('title', 'Markdown Preview Online: editor com pré-visualização lado a lado')
 @section('tool_name', 'Markdown Preview')
-@section('description', 'Edite e visualize Markdown em tempo real com preview renderizado')
+@section('description', 'Escreve do lado esquerdo, vê o resultado renderizado do lado direito. Para README do GitHub, documentação e post de blog.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
@@ -10,7 +10,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h1 class="text-xl sm:text-2xl font-bold text-white mb-1">Markdown Preview</h1>
-                <p class="text-gray-400 text-sm sm:text-base">Edite e visualize Markdown em tempo real</p>
+                <p class="text-gray-400 text-sm sm:text-base">Escreve do lado esquerdo, vê o resultado do lado direito. Para README, doc e post.</p>
             </div>
             <div class="flex items-center gap-2">
                 <button type="button" id="copy-md-btn"

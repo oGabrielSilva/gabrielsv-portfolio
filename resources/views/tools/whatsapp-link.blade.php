@@ -1,16 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Gerador de Link de WhatsApp (wa.me) Online')
+@section('title', 'Gerador de Link de WhatsApp (wa.me) com Mensagem Pré-preenchida')
 @section('tool_name', 'Link WhatsApp')
-@section('description', 'Crie links wa.me ou api.whatsapp.com prontos para usar, com número, DDI e mensagem pré-preenchida. Ideal para botões de contato e biolinks.')
+@section('description', 'Cria link wa.me com número, DDI e mensagem pronta. Para botão de contato no site, link da bio do Instagram e campanha de marketing.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6" data-tool="whatsapp-link">
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Gerador de Link de WhatsApp</h1>
             <p class="text-gray-400 text-sm sm:text-base">
-                Digite o número e a mensagem — o link <code class="text-bulma-primary">wa.me</code>
-                aparece pronto para copiar e abrir uma conversa.
+                Para botão de contato no site, link da bio e campanha. Coloca número e mensagem, o link <code class="text-bulma-primary">wa.me</code> aparece pronto.
             </p>
         </div>
 

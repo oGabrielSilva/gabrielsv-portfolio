@@ -1,16 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Gerador de Link mailto: Online')
+@section('title', 'Gerador de Link mailto: com CC, BCC, Assunto e Corpo')
 @section('tool_name', 'Link de E-mail')
-@section('description', 'Monte links mailto: com destinatário, CC, BCC, assunto e corpo já preenchidos. Útil para botões de contato e assinaturas.')
+@section('description', 'Monta link mailto: que abre o cliente de e-mail já com destinatário, CC, BCC, assunto e corpo preenchidos. Para botão de contato, assinatura e suporte.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6" data-tool="email-link">
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Gerador de Link de E-mail</h1>
             <p class="text-gray-400 text-sm sm:text-base">
-                Crie links <code class="text-bulma-primary">mailto:</code> que abrem o cliente de e-mail
-                já com destinatários, assunto e corpo preenchidos.
+                Link <code class="text-bulma-primary">mailto:</code> com CC, BCC, assunto e corpo prontos. Para botão de contato, assinatura e suporte.
             </p>
         </div>
 

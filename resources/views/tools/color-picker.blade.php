@@ -1,15 +1,15 @@
 @extends('layouts.tools')
 
-@section('title', 'Seletor de Cores - Color Picker Online')
+@section('title', 'Seletor de Cores Online: HEX, RGB, HSL e paletas (complementar, análoga, triádica)')
 @section('tool_name', 'Seletor de Cores')
-@section('description', 'Converta cores entre HEX, RGB e HSL. Gere paletas complementares, análogas e triádicas.')
+@section('description', 'Escolhe uma cor e recebe HEX, RGB e HSL prontos para copiar, com paletas complementar, análoga e triádica geradas em cima dela.')
 
 @section('content')
     <div class="space-y-4 sm:space-y-6">
         {{-- Header --}}
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-white mb-2">Seletor de Cores</h1>
-            <p class="text-gray-400 text-sm sm:text-base">Converta cores e gere paletas harmônicas</p>
+            <p class="text-gray-400 text-sm sm:text-base">Escolhe uma cor e recebe HEX, RGB, HSL e paletas complementar, análoga e triádica.</p>
         </div>
 
         {{-- Color preview + picker --}}
@@ -99,7 +99,27 @@
             <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Tons (Tints & Shades)</h3>
             <div id="tints-shades" class="flex gap-1 h-16 rounded-lg overflow-hidden"></div>
         </div>
+
+        {{-- Aviso de saturação 0 --}}
+        <p id="palette-warning" class="hidden text-xs text-amber-400">
+            ⚠️ Cores sem saturação (cinzas) geram paletas monocromáticas idênticas.
+        </p>
     </div>
+
+    @push('styles')
+        <style>
+            #color-picker::-webkit-color-swatch { border: none; padding: 0; }
+            #color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+            #color-picker::-moz-color-swatch { border: none; padding: 0; }
+            .palette-swatch {
+                appearance: none;
+                -webkit-appearance: none;
+                background-color: transparent;
+                padding: 0;
+                font: inherit;
+            }
+        </style>
+    @endpush
 
     @push('scripts')
         @vite(['resources/js/tools/color-picker.js'])

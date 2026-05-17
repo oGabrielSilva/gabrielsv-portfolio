@@ -68,10 +68,8 @@ Route::prefix('tools')->name('tools.')->group(function () {
 
     // Quick wins
     Route::get('/text-counter', [ToolsController::class, 'textCounter'])->name('text-counter');
-    Route::get('/case-converter', [ToolsController::class, 'caseConverter'])->name('case-converter');
     Route::get('/remove-duplicates', [ToolsController::class, 'removeDuplicates'])->name('remove-duplicates');
     Route::get('/unit-converter', [ToolsController::class, 'unitConverter'])->name('unit-converter');
-    Route::get('/url-validator', [ToolsController::class, 'urlValidator'])->name('url-validator');
     Route::get('/whatsapp-link', [ToolsController::class, 'whatsappLink'])->name('whatsapp-link');
     Route::get('/email-link', [ToolsController::class, 'emailLink'])->name('email-link');
 });

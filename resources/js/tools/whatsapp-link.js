@@ -1,11 +1,12 @@
 import { copyText } from '../utils/clipboard.js';
 import { showToast } from '../utils/toast.js';
 
-// Brazilian mobile numbers must include the leading 9 after the DDD,
-// so a full BR phone is 10 or 11 digits (DDD + 8 or 9 digit number).
-// Generic floor for international numbers is 8 digits.
-const MIN_NATIONAL_DIGITS = 8;
-const MAX_NATIONAL_DIGITS = 15;
+// E.164: o número internacional inteiro (DDI + número nacional) tem no
+// máximo 15 dígitos, sem o sinal de +. O mínimo prático para conseguir
+// rotear é 8 dígitos no total. DDI começa com 1-9 (sem zero à esquerda).
+const E164_MIN_TOTAL = 8;
+const E164_MAX_TOTAL = 15;
+const DDI_RE = /^[1-9]\d{0,2}$/;
 
 class WhatsappLink {
     constructor(root) {
@@ -44,18 +45,35 @@ class WhatsappLink {
         if (!ddi || !national) {
             return { error: 'Informe DDI e número.' };
         }
-        if (national.length < MIN_NATIONAL_DIGITS || national.length > MAX_NATIONAL_DIGITS) {
-            return { error: `Número deve ter entre ${MIN_NATIONAL_DIGITS} e ${MAX_NATIONAL_DIGITS} dígitos.` };
+        if (!DDI_RE.test(ddi)) {
+            return { error: 'DDI inválido. Use 1 a 3 dígitos sem zero à esquerda (ex: 55, 1, 351).' };
         }
-        // Brazilian mobiles: 11 digits (2 DDD + 9 number). If DDI is 55 and
-        // we only got 10 digits, the leading 9 is probably missing.
-        if (ddi === '55' && national.length === 10) {
-            return {
-                ok: true,
-                warn: 'Celulares brasileiros precisam do 9 depois do DDD. Verifique se este é um fixo.',
-                phone: ddi + national,
-            };
+
+        const total = ddi.length + national.length;
+        if (total < E164_MIN_TOTAL || total > E164_MAX_TOTAL) {
+            return { error: `O número completo (DDI + número) deve ter entre ${E164_MIN_TOTAL} e ${E164_MAX_TOTAL} dígitos. Você tem ${total}.` };
         }
+
+        // Regras específicas do Brasil (DDI 55): DDD com 2 dígitos (11-99) e
+        // celular precisa do 9 depois do DDD. Apenas avisamos, não bloqueamos,
+        // porque o usuário pode estar gerando link para um fixo legítimo.
+        if (ddi === '55') {
+            if (national.length < 10) {
+                return { error: 'Números brasileiros precisam de DDD (2 dígitos) + número (8 ou 9 dígitos).' };
+            }
+            const ddd = parseInt(national.slice(0, 2), 10);
+            if (ddd < 11 || ddd > 99) {
+                return { error: 'DDD brasileiro inválido (use 11-99).' };
+            }
+            if (national.length === 10) {
+                return {
+                    ok: true,
+                    warn: 'Celulares brasileiros precisam do 9 depois do DDD. Verifique se este é um fixo.',
+                    phone: ddi + national,
+                };
+            }
+        }
+
         return { ok: true, phone: ddi + national };
     }
 
