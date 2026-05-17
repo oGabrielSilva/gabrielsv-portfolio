@@ -117,7 +117,6 @@
                     <li><a href="{{ route('legal.show', 'privacidade') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Privacidade</a></li>
                     <li><a href="{{ route('legal.show', 'termos') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Termos</a></li>
                     <li><a href="{{ route('legal.show', 'cookies') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Cookies</a></li>
-                    <li><a href="{{ route('changelog') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Changelog</a></li>
                     <li><a href="{{ route('stats') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Stats</a></li>
                 </ul>
             </div>

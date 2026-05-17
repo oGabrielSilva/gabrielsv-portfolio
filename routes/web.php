@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\OgImageController;
@@ -41,7 +40,6 @@ Route::get('/og/post/{post:slug}.png', [OgImageController::class, 'post'])->name
 Route::view('/uses', 'pages.uses')->name('uses');
 Route::view('/now', 'pages.now')->name('now');
 Route::view('/sobre', 'pages.about')->name('about');
-Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog');
 Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
 // Páginas legais

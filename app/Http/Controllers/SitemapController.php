@@ -38,7 +38,6 @@ class SitemapController extends Controller
             ['loc' => route('uses'), 'priority' => '0.6', 'changefreq' => 'monthly', 'lastmod' => $now],
             ['loc' => route('now'), 'priority' => '0.6', 'changefreq' => 'monthly', 'lastmod' => $now],
             ['loc' => route('stats'), 'priority' => '0.4', 'changefreq' => 'daily', 'lastmod' => $now],
-            ['loc' => route('changelog'), 'priority' => '0.4', 'changefreq' => 'weekly', 'lastmod' => $now],
             ['loc' => route('brand-guide'), 'priority' => '0.4', 'changefreq' => 'monthly', 'lastmod' => $now],
             ['loc' => route('card-generator'), 'priority' => '0.4', 'changefreq' => 'monthly', 'lastmod' => $now],
         ]);

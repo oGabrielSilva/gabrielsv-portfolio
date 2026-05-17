@@ -3,6 +3,7 @@
 
 <head>
     <script src="https://kit.fontawesome.com/78b3364728.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/lucide@0.544.0"></script>
     @include('partials.head')
 
     @push('jsonld')
@@ -18,7 +19,7 @@
 <body class="antialiased text-gray-300 max-w-dvw overflow-x-hidden w-dvw">
 
     <header>
-        <nav class="w-dvw py-4 sm:py-6 fixed top-0 z-50 bg-[#1a1a1a]/90 backdrop-blur-md border-b border-white/5">
+        <nav class="w-dvw py-4 sm:py-6 fixed top-0 z-50 bg-neutral-900/90 backdrop-blur-md border-b border-white/5">
             <div class="max-w-full mx-auto px-4 sm:px-6 flex justify-between items-center">
                 <a href="{{ url('/') }}"
                     class="text-xl font-bold text-white tracking-tight hover:text-bulma-primary transition-colors">
@@ -83,6 +84,10 @@
     @include('partials.footer')
 
     @include('partials.command-palette')
+
+    <script>
+        if (window.lucide) lucide.createIcons();
+    </script>
 </body>
 
 </html>
