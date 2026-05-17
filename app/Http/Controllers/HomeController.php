@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Utils\BlogHelper;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
+use App\Models\Post;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $posts = Cache::remember('_gabrielsv_blog_posts', 60 * 60 * 12, function () {
-            try {
-                $response = Http::timeout(10)->get(BlogHelper::getOwnerBlogURL('/wp-json/wp/v2/posts?per_page=6&_embed'));
-                return $response->successful() ? $response->json() : [];
-            } catch (\Exception $e) {
-                return [];
-            }
-        });
+        $posts = Post::published()
+            ->with('media')
+            ->orderByDesc('published_at')
+            ->take(6)
+            ->get();
 
         $services = [
             [
@@ -54,12 +49,12 @@ class HomeController extends Controller
                 'description' => 'Melhore a pontuação do seu sistema no Google. Otimização técnica, melhoria de tempo de carregamento e boas práticas de SEO aplicadas diretamente no código.',
                 'color' => 'emerald-400',
                 'delay' => 500,
-            ]
+            ],
         ];
 
         return view('index', [
             'posts' => $posts,
-            'services' => $services
+            'services' => $services,
         ]);
     }
 }

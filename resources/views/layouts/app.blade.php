@@ -13,10 +13,9 @@
             'name' => 'Gabriel Henrique da Silva',
             'jobTitle' => 'Desenvolvedor Full Stack',
             'url' => url('/'),
-            'sameAs' => array_values(array_filter([
-                config('app.owner_blog_url'),
+            'sameAs' => [
                 'https://github.com/gabrielsv-com',
-            ])),
+            ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
         <script type="application/ld+json">
@@ -50,7 +49,7 @@
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
                     <a href="{{ route('tools.index') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Ferramentas</a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}" target="_blank"
+                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
                         Blog <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
                     </a>

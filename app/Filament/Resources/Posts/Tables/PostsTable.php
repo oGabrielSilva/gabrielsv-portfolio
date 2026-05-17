@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Filament\Resources\Posts\Tables;
+
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+
+class PostsTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('title')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(60),
+                TextColumn::make('status')
+                    ->badge()
+                    ->colors([
+                        'gray' => 'draft',
+                        'success' => 'published',
+                    ]),
+                TextColumn::make('published_at')
+                    ->label('Publicado em')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable()
+                    ->placeholder('—'),
+                TextColumn::make('categories.name')
+                    ->label('Categorias')
+                    ->badge()
+                    ->separator(',')
+                    ->limit(40),
+                TextColumn::make('tags.name')
+                    ->label('Tags')
+                    ->badge()
+                    ->color('gray')
+                    ->separator(',')
+                    ->limit(40)
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('author.name')
+                    ->label('Autor')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->defaultSort('published_at', 'desc')
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(['draft' => 'Rascunho', 'published' => 'Publicado']),
+                SelectFilter::make('categories')
+                    ->relationship('categories', 'name')
+                    ->multiple()
+                    ->preload(),
+                SelectFilter::make('tags')
+                    ->relationship('tags', 'name')
+                    ->multiple()
+                    ->preload(),
+                TrashedFilter::make(),
+            ])
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
+                ]),
+            ]);
+    }
+}

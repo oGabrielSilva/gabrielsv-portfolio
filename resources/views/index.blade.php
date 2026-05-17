@@ -25,10 +25,10 @@
         </p>
 
         <div class="flex flex-wrap gap-4">
-            <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
+            <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}"
                 class="bg-bulma-primary hover:bg-opacity-90 text-neutral-900 font-bold py-3 px-6 rounded transition-all inline-flex items-center gap-2 transform hover:-translate-y-1">
                 Acessar meus Artigos
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <i class="fa-solid fa-arrow-right"></i>
             </a>
             <a href="mailto:help@rota42.com"
                 class="border border-neutral-700 hover:border-gray-500 text-white font-medium py-3 px-6 rounded transition-all bg-neutral-800 transform hover:-translate-y-1">
@@ -102,10 +102,9 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4" data-aos="fade-up">
             <div>
                 <h2 class="text-3xl font-bold text-white mb-2">Últimos Artigos</h2>
-                <p class="text-gray-400 text-sm">Direto de <span class="text-bulma-primary">eu.gabrielsv.com</span>
-                </p>
+                <p class="text-gray-400 text-sm">Direto do blog</p>
             </div>
-            <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
+            <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}"
                 class="text-sm font-bold text-bulma-primary hover:text-white transition-colors">
                 Ver todos os posts <i class="fa-solid fa-arrow-right ml-1"></i>
             </a>
@@ -117,7 +116,7 @@
             @empty
                 <div class="col-span-full text-center py-8">
                     <p class="text-gray-400 mb-4">Acesse o blog para conferir o conteúdo completo.</p>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}" target="_blank"
+                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL()}}"
                         class="inline-block px-6 py-2 border border-bulma-primary text-bulma-primary rounded hover:bg-bulma-primary hover:text-neutral-900 transition-colors">
                         Acessar Blog
                     </a>

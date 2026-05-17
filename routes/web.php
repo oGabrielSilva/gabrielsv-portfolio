@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\WorldClockController;
@@ -10,6 +12,15 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::view('/card-generator', 'card-generator')->name('card-generator');
 Route::view('/brand-guide', 'brand-guide')->name('brand-guide');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// Blog
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/categoria/{category:slug}', [BlogController::class, 'byCategory'])->name('blog.category');
+Route::get('/blog/tag/{tag:slug}', [BlogController::class, 'byTag'])->name('blog.tag');
+Route::get('/b/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+
+// Páginas legais
+Route::get('/legal/{page:slug}', [LegalController::class, 'show'])->name('legal.show');
 
 // Tools routes
 Route::prefix('tools')->name('tools.')->group(function () {

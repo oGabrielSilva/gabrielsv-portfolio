@@ -74,7 +74,7 @@
                         <i data-lucide="home" class="w-4 h-4"></i>
                         <span>Início</span>
                     </a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}" target="_blank"
+                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors inline-flex items-center gap-1.5">
                         <span>Blog</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
