@@ -44,6 +44,14 @@
 <meta name="apple-mobile-web-app-title" content="{{ $appName }}" />
 <link rel="manifest" href="/site.webmanifest" />
 
+{{-- Feeds --}}
+<link rel="alternate" type="application/rss+xml" title="{{ $appName }} — RSS" href="{{ url('/feed.xml') }}" />
+<link rel="alternate" type="application/atom+xml" title="{{ $appName }} — Atom" href="{{ url('/atom.xml') }}" />
+<link rel="alternate" type="application/json" title="{{ $appName }} — JSON Feed" href="{{ url('/feed.json') }}" />
+
+{{-- View Transitions --}}
+<meta name="view-transition" content="same-origin" />
+
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @stack('scripts')
 @stack('jsonld')

@@ -2,6 +2,12 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "preline";
 import "./bootstrap";
+import "./spotlight";
+import "./reading-progress";
+import "./toc-spy";
+import "./code-copy";
+import "./share-copy";
+import "./back-to-top";
 
 document.addEventListener("DOMContentLoaded", () => {
     AOS.init({

@@ -199,5 +199,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // Compartilha a lista de ferramentas com todas as views
         View::share('toolsList', self::TOOLS);
+        View::share('site', config('site'));
     }
 }

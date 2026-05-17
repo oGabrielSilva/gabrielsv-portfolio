@@ -8,13 +8,7 @@
 
     @push('jsonld')
         <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'WebSite',
-            'name' => config('app.name', 'Gabriel') . ' — Ferramentas',
-            'url' => route('tools.index'),
-            'inLanguage' => 'pt-BR',
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        {!! json_encode(app(\App\Services\JsonLdBuilder::class)->forWebsite(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
 
         @php
@@ -74,11 +68,18 @@
                         <i data-lucide="home" class="w-4 h-4"></i>
                         <span>Início</span>
                     </a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
+                    <a href="{{ route('blog.index') }}"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors inline-flex items-center gap-1.5">
                         <span>Blog</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </a>
+                    <button type="button" data-command-palette-open
+                        class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
+                        aria-label="Abrir busca">
+                        <i data-lucide="search" class="size-3"></i>
+                        <span class="hidden lg:inline">Buscar</span>
+                        <kbd class="hidden font-mono text-[10px] text-gray-600 lg:inline">⌘K</kbd>
+                    </button>
                 </div>
 
                 {{-- Mobile menu button --}}
@@ -126,7 +127,7 @@
 
                     {{-- Blog link --}}
                     <div class="border-t border-neutral-700 pt-4">
-                        <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
+                        <a href="{{ route('blog.index') }}"
                             class="text-bulma-primary font-medium py-2 inline-flex items-center gap-2">
                             <span>Ir para o Blog</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -137,7 +138,7 @@
         </nav>
     </header>
 
-    <div class="flex pt-14 sm:pt-16 min-h-screen">
+    <div id="top" class="flex pt-14 sm:pt-16 min-h-screen">
         {{-- Sidebar (desktop only) --}}
         <aside class="hidden relative lg:block lg:w-64 lg:shrink-0 bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
             <nav class="p-4">
@@ -169,9 +170,10 @@
 
     @include('partials.footer')
 
+    @include('partials.command-palette')
+
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     </script>
 </body>
 

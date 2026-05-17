@@ -7,8 +7,10 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -22,12 +24,36 @@ class PostsTable
                     ->searchable()
                     ->sortable()
                     ->limit(60),
+                TextColumn::make('kind')
+                    ->label('Formato')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'essay' => 'Ensaio',
+                        'note' => 'Nota',
+                        'craft' => 'Craft',
+                        default => $state,
+                    })
+                    ->colors([
+                        'primary' => 'essay',
+                        'info' => 'note',
+                        'warning' => 'craft',
+                    ]),
+                IconColumn::make('featured')
+                    ->label('Destaque')
+                    ->boolean()
+                    ->trueIcon('heroicon-s-star')
+                    ->falseIcon('heroicon-o-star'),
                 TextColumn::make('status')
                     ->badge()
                     ->colors([
                         'gray' => 'draft',
                         'success' => 'published',
                     ]),
+                TextColumn::make('reading_time')
+                    ->label('Min')
+                    ->suffix(' min')
+                    ->alignCenter()
+                    ->toggleable(),
                 TextColumn::make('published_at')
                     ->label('Publicado em')
                     ->dateTime('d/m/Y H:i')
@@ -57,6 +83,11 @@ class PostsTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(['draft' => 'Rascunho', 'published' => 'Publicado']),
+                SelectFilter::make('kind')
+                    ->label('Formato')
+                    ->options(['essay' => 'Ensaio', 'note' => 'Nota', 'craft' => 'Craft']),
+                TernaryFilter::make('featured')
+                    ->label('Destaque'),
                 SelectFilter::make('categories')
                     ->relationship('categories', 'name')
                     ->multiple()

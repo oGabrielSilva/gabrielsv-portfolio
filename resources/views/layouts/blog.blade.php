@@ -8,13 +8,7 @@
 
     @push('jsonld')
         <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'Blog',
-            'name' => config('app.name', 'Gabriel') . ' — Blog',
-            'url' => route('blog.index'),
-            'inLanguage' => 'pt-BR',
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        {!! json_encode(app(\App\Services\JsonLdBuilder::class)->forWebsite(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
     @endpush
 </head>
@@ -52,6 +46,13 @@
                         <i data-lucide="wrench" class="w-4 h-4"></i>
                         <span>Ferramentas</span>
                     </a>
+                    <button type="button" data-command-palette-open
+                        class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
+                        aria-label="Abrir busca">
+                        <i data-lucide="search" class="size-3"></i>
+                        <span class="hidden lg:inline">Buscar</span>
+                        <kbd class="hidden font-mono text-[10px] text-gray-600 lg:inline">⌘K</kbd>
+                    </button>
                 </div>
 
                 {{-- Mobile menu button --}}
@@ -88,16 +89,18 @@
         </nav>
     </header>
 
-    <main class="pt-14 sm:pt-16 min-h-screen">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <main id="top" class="pt-14 sm:pt-16 min-h-screen">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
             @yield('content')
         </div>
     </main>
 
     @include('partials.footer')
 
+    @include('partials.command-palette')
+
     <script>
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
     </script>
 </body>
 

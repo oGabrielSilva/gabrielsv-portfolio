@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\StatsController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\WorldClockController;
 use Illuminate\Support\Facades\Route;
@@ -11,13 +14,35 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::view('/card-generator', 'card-generator')->name('card-generator');
 Route::view('/brand-guide', 'brand-guide')->name('brand-guide');
+// RSS/Atom/JSON feeds (registrado pelo spatie/laravel-feed)
+Route::feeds();
+
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap-pages.xml', [SitemapController::class, 'pages'])->name('sitemap.pages');
+Route::get('/sitemap-posts.xml', [SitemapController::class, 'posts'])->name('sitemap.posts');
+Route::get('/sitemap-tools.xml', [SitemapController::class, 'tools'])->name('sitemap.tools');
+Route::get('/sitemap-categories.xml', [SitemapController::class, 'categories'])->name('sitemap.categories');
+Route::get('/sitemap-tags.xml', [SitemapController::class, 'tags'])->name('sitemap.tags');
 
 // Blog
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/buscar', [BlogController::class, 'search'])
+    ->name('blog.search')
+    ->middleware('throttle:60,1');
 Route::get('/blog/categoria/{category:slug}', [BlogController::class, 'byCategory'])->name('blog.category');
 Route::get('/blog/tag/{tag:slug}', [BlogController::class, 'byTag'])->name('blog.tag');
+Route::get('/blog/serie/{slug}', [BlogController::class, 'bySeries'])->name('blog.series');
 Route::get('/b/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
+
+// OG image dinâmica
+Route::get('/og/post/{post:slug}.png', [OgImageController::class, 'post'])->name('og.post');
+
+// Páginas-mosaico
+Route::view('/uses', 'pages.uses')->name('uses');
+Route::view('/now', 'pages.now')->name('now');
+Route::view('/sobre', 'pages.about')->name('about');
+Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog');
+Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
 // Páginas legais
 Route::get('/legal/{page:slug}', [LegalController::class, 'show'])->name('legal.show');

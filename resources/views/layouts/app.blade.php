@@ -7,25 +7,10 @@
 
     @push('jsonld')
         <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'Person',
-            'name' => 'Gabriel Henrique da Silva',
-            'jobTitle' => 'Desenvolvedor Full Stack',
-            'url' => url('/'),
-            'sameAs' => [
-                'https://github.com/gabrielsv-com',
-            ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        {!! json_encode(app(\App\Services\JsonLdBuilder::class)->forPerson(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
         <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'WebSite',
-            'name' => config('app.name', 'Gabriel'),
-            'url' => url('/'),
-            'inLanguage' => 'pt-BR',
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        {!! json_encode(app(\App\Services\JsonLdBuilder::class)->forWebsite(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
     @endpush
 </head>
@@ -49,10 +34,17 @@
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
                     <a href="{{ route('tools.index') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Ferramentas</a>
-                    <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
+                    <a href="{{ route('blog.index') }}"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
                         Blog <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
                     </a>
+                    <button type="button" data-command-palette-open
+                        class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
+                        aria-label="Abrir busca">
+                        <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                        <span class="hidden lg:inline">Buscar</span>
+                        <kbd class="hidden font-mono text-[10px] text-gray-600 lg:inline">⌘K</kbd>
+                    </button>
                 </div>
 
                 <button id="mobile-menu-btn" type="button"
@@ -76,7 +68,7 @@
                     <a href="{{ route('tools.index') }}"
                         class="text-gray-300 hover:text-white transition-colors block py-1">Ferramentas</a>
                     <div class="border-t border-neutral-700 pt-3 mt-1">
-                        <a href="{{ \App\Utils\BlogHelper::getOwnerBlogURL() }}"
+                        <a href="{{ route('blog.index') }}"
                             class="text-bulma-primary font-medium block py-1">Ir para o Blog</a>
                     </div>
                 </div>
@@ -84,11 +76,13 @@
         </nav>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-32">
+    <main id="top" class="max-w-5xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-32">
         @yield('content')
     </main>
 
     @include('partials.footer')
+
+    @include('partials.command-palette')
 </body>
 
 </html>

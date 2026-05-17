@@ -1,0 +1,1 @@
+function t(e){const n=document.createElement("div");return n.textContent=e==null?"":String(e),n.innerHTML}function r(e){return e==null?"":String(e).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}export{r as a,t as e};

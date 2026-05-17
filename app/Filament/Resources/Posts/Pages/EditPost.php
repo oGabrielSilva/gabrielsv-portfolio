@@ -21,6 +21,7 @@ class EditPost extends EditRecord
             PostModalSchemas::publication(),
             PostModalSchemas::cover(),
             PostModalSchemas::taxonomy(),
+            PostModalSchemas::series(),
             PostModalSchemas::seo(),
             Action::make('view')
                 ->label('Ver no site')

@@ -9,6 +9,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 
@@ -28,6 +29,8 @@ class PostModalSchemas
             ->fillForm(fn (Post $record): array => [
                 'slug' => $record->slug,
                 'status' => $record->status,
+                'kind' => $record->kind ?? 'essay',
+                'featured' => (bool) $record->featured,
                 'published_at' => $record->published_at,
                 'author_id' => $record->author_id,
             ])
@@ -37,6 +40,19 @@ class PostModalSchemas
                     ->maxLength(255)
                     ->helperText('Aparece em /b/{slug}.')
                     ->unique(table: 'posts', column: 'slug', ignorable: fn (Post $record) => $record),
+                Select::make('kind')
+                    ->label('Formato')
+                    ->options([
+                        'essay' => 'Ensaio (post longo)',
+                        'note' => 'Nota / TIL',
+                        'craft' => 'Craft / estudo visual',
+                    ])
+                    ->required()
+                    ->native(false)
+                    ->helperText('Define em qual tab aparece em /blog.'),
+                Toggle::make('featured')
+                    ->label('Destacar')
+                    ->helperText('Aparece no card grande no topo da listagem.'),
                 Select::make('status')
                     ->options(['draft' => 'Rascunho', 'published' => 'Publicado'])
                     ->required()
@@ -165,6 +181,41 @@ class PostModalSchemas
             ])
             ->action(function (array $data, Post $record): void {
                 $record->update($data);
+            });
+    }
+
+    /**
+     * Action que abre modal de Série (agrupa posts em sequência).
+     */
+    public static function series(): Action
+    {
+        return Action::make('series')
+            ->label('Série')
+            ->icon(Heroicon::OutlinedQueueList)
+            ->modalHeading('Série de posts')
+            ->modalWidth('md')
+            ->modalSubmitActionLabel('Salvar')
+            ->fillForm(fn (Post $record): array => [
+                'series_slug' => $record->series_slug,
+                'series_order' => $record->series_order,
+            ])
+            ->schema([
+                TextInput::make('series_slug')
+                    ->label('Slug da série')
+                    ->placeholder('laravel-12-deep-dive')
+                    ->maxLength(100)
+                    ->helperText('Posts com o mesmo slug viram uma série. Deixe em branco se não pertence a nenhuma.'),
+                TextInput::make('series_order')
+                    ->label('Ordem na série')
+                    ->numeric()
+                    ->minValue(1)
+                    ->helperText('Posição deste post dentro da série (1, 2, 3...).'),
+            ])
+            ->action(function (array $data, Post $record): void {
+                $record->update([
+                    'series_slug' => $data['series_slug'] ?: null,
+                    'series_order' => $data['series_order'] ?: null,
+                ]);
             });
     }
 }
