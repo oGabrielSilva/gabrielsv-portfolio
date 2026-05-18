@@ -7,13 +7,6 @@
             ? 'Categoria: '.$currentTaxonomy['name']
             : 'Tag: '.$currentTaxonomy['name'])
         : 'Blog';
-    $kinds = [
-        null => 'Tudo',
-        'essay' => 'Ensaios',
-        'note' => 'Notas',
-        'craft' => 'Craft',
-    ];
-    $currentKindLocal = $currentKind ?? null;
 @endphp
 
 @section('title', $pageTitle)
@@ -93,40 +86,17 @@
             </a>
         @endif
 
-        {{-- Filtros: tabs por kind + chips de categoria --}}
-        @if(! $isFiltered)
-            <nav aria-label="Filtros do blog" class="space-y-4">
-                <div class="flex flex-wrap items-center gap-2 border-b border-neutral-800 pb-3">
-                    @foreach($kinds as $key => $label)
-                        @php
-                            $isActive = $currentKindLocal === $key || ($key === null && $currentKindLocal === null);
-                            $href = $key === null ? route('blog.index') : route('blog.index', ['kind' => $key]);
-                        @endphp
-                        <a
-                            href="{{ $href }}"
-                            @class([
-                                'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
-                                'bg-bulma-primary/20 text-bulma-primary' => $isActive,
-                                'text-gray-400 hover:bg-neutral-800 hover:text-gray-200' => ! $isActive,
-                            ])
-                        >
-                            {{ $label }}
-                        </a>
-                    @endforeach
-                </div>
-
-                @if($categories->isNotEmpty())
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="text-xs uppercase tracking-wide text-gray-500">Categorias:</span>
-                        @foreach($categories as $cat)
-                            <x-blog.chip
-                                :label="$cat->name"
-                                :slug="$cat->slug"
-                                :href="route('blog.category', $cat)"
-                            />
-                        @endforeach
-                    </div>
-                @endif
+        {{-- Filtros: chips de categoria --}}
+        @if(! $isFiltered && $categories->isNotEmpty())
+            <nav aria-label="Filtros do blog" class="flex flex-wrap items-center gap-2">
+                <span class="text-xs uppercase tracking-wide text-gray-500">Categorias:</span>
+                @foreach($categories as $cat)
+                    <x-blog.chip
+                        :label="$cat->name"
+                        :slug="$cat->slug"
+                        :href="route('blog.category', $cat)"
+                    />
+                @endforeach
             </nav>
         @endif
 
