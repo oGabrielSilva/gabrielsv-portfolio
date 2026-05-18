@@ -15,7 +15,6 @@ class SitePageForm
         return $schema
             ->components([
                 Section::make('Identidade')
-                    ->columns(2)
                     ->components([
                         TextInput::make('title')
                             ->label('Título')
@@ -32,7 +31,6 @@ class SitePageForm
                         TextInput::make('subtitle')
                             ->label('Subtítulo')
                             ->maxLength(255)
-                            ->columnSpanFull()
                             ->helperText('Aparece logo abaixo do título em texto cinza.'),
                     ]),
 
@@ -43,8 +41,7 @@ class SitePageForm
                             ->placeholder('Comece a escrever...')
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('site-pages/attachments')
-                            ->fileAttachmentsVisibility('public')
-                            ->columnSpanFull(),
+                            ->fileAttachmentsVisibility('public'),
                     ]),
 
                 Section::make('SEO')

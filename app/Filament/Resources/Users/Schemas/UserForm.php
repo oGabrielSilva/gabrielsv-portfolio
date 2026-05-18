@@ -17,7 +17,6 @@ class UserForm
         return $schema
             ->components([
                 Section::make('Identidade')
-                    ->columns(2)
                     ->components([
                         SpatieMediaLibraryFileUpload::make('avatar')
                             ->label('Avatar')
@@ -25,8 +24,7 @@ class UserForm
                             ->image()
                             ->avatar()
                             ->imageEditor()
-                            ->circleCropper()
-                            ->columnSpanFull(),
+                            ->circleCropper(),
 
                         TextInput::make('name')
                             ->label('Nome')
@@ -44,12 +42,10 @@ class UserForm
                             ->label('Bio')
                             ->maxLength(500)
                             ->rows(3)
-                            ->helperText('Aparece no rodapé dos seus posts.')
-                            ->columnSpanFull(),
+                            ->helperText('Aparece no rodapé dos seus posts.'),
                     ]),
 
                 Section::make('Acesso')
-                    ->columns(2)
                     ->components([
                         TextInput::make('password')
                             ->label('Senha')

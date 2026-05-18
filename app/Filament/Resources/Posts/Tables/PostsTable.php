@@ -24,20 +24,6 @@ class PostsTable
                     ->searchable()
                     ->sortable()
                     ->limit(60),
-                TextColumn::make('kind')
-                    ->label('Formato')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'essay' => 'Ensaio',
-                        'note' => 'Nota',
-                        'craft' => 'Craft',
-                        default => $state,
-                    })
-                    ->colors([
-                        'primary' => 'essay',
-                        'info' => 'note',
-                        'warning' => 'craft',
-                    ]),
                 IconColumn::make('featured')
                     ->label('Destaque')
                     ->boolean()
@@ -83,9 +69,6 @@ class PostsTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(['draft' => 'Rascunho', 'published' => 'Publicado']),
-                SelectFilter::make('kind')
-                    ->label('Formato')
-                    ->options(['essay' => 'Ensaio', 'note' => 'Nota', 'craft' => 'Craft']),
                 TernaryFilter::make('featured')
                     ->label('Destaque'),
                 SelectFilter::make('categories')

@@ -29,7 +29,6 @@ class PostModalSchemas
             ->fillForm(fn (Post $record): array => [
                 'slug' => $record->slug,
                 'status' => $record->status,
-                'kind' => $record->kind ?? 'essay',
                 'featured' => (bool) $record->featured,
                 'published_at' => $record->published_at,
                 'author_id' => $record->author_id,
@@ -38,18 +37,8 @@ class PostModalSchemas
                 TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
-                    ->helperText('Aparece em /b/{slug}.')
+                    ->helperText('Aparece em /blog/{slug}.')
                     ->unique(table: 'posts', column: 'slug', ignorable: fn (Post $record) => $record),
-                Select::make('kind')
-                    ->label('Formato')
-                    ->options([
-                        'essay' => 'Ensaio (post longo)',
-                        'note' => 'Nota / TIL',
-                        'craft' => 'Craft / estudo visual',
-                    ])
-                    ->required()
-                    ->native(false)
-                    ->helperText('Define em qual tab aparece em /blog.'),
                 Toggle::make('featured')
                     ->label('Destacar')
                     ->helperText('Aparece no card grande no topo da listagem.'),
