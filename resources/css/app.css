@@ -196,6 +196,7 @@ body {
    ========================================================================== */
 .code-block {
     margin: 1.5rem 0;
+    max-width: 100%;
     border-radius: 0.75rem;
     overflow: hidden;
     border: 1px solid var(--color-neutral-700);
@@ -310,8 +311,29 @@ body {
 /* ==========================================================================
    Post content: tipografia
    ========================================================================== */
+.post-content {
+    min-width: 0;
+}
 .post-content h2, .post-content h3 {
     scroll-margin-top: 6rem;
+}
+.post-content pre,
+.post-content .wp-block-kevinbatdorf-code-block-pro,
+.post-content .wp-block-code,
+.post-content figure,
+.post-content table,
+.post-content img,
+.post-content iframe {
+    max-width: 100%;
+}
+.post-content pre,
+.post-content .wp-block-kevinbatdorf-code-block-pro,
+.post-content .wp-block-code {
+    overflow-x: auto;
+}
+.post-content table {
+    display: block;
+    overflow-x: auto;
 }
 
 /* ==========================================================================
