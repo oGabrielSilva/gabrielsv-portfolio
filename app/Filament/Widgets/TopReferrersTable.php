@@ -7,6 +7,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class TopReferrersTable extends TableWidget
@@ -41,5 +42,10 @@ class TopReferrersTable extends TableWidget
                     ->numeric()
                     ->alignEnd(),
             ]);
+    }
+
+    public function getTableRecordKey(Model|array $record): string
+    {
+        return is_array($record) ? ($record['referrer_host'] ?? '') : (string) $record->referrer_host;
     }
 }
