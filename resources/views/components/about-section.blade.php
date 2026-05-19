@@ -41,8 +41,17 @@
 
             <div class="w-64 h-64 md:w-80 md:h-80 overflow-hidden relative z-10 bg-neutral-800 transition-all duration-500 ease-in-out hover:scale-105"
                 style="border-radius: 56% 44% 71% 29% / 46% 56% 44% 54%; box-shadow: 0 0 0 8px rgba(26, 26, 26, 0.5);">
-                <img src="/IMG_20241226_184124563.jpg" alt="Imagem de Gabriel Silva"
-                    class="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-400">
+                <picture>
+                    <source
+                        type="image/webp"
+                        srcset="/img/hero-512.webp 1x, /img/hero-1024.webp 2x">
+                    <img src="/img/hero-512.jpg"
+                        srcset="/img/hero-512.jpg 1x, /img/hero-1024.jpg 2x"
+                        alt="Imagem de Gabriel Silva"
+                        width="512" height="683"
+                        loading="lazy" decoding="async"
+                        class="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-400">
+                </picture>
             </div>
         </div>
     </div>

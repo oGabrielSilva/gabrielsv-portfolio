@@ -9,6 +9,7 @@ import "./code-copy";
 import "./share-copy";
 import "./back-to-top";
 import "./card-link";
+import { renderIcons } from "./lucide-icons";
 
 document.addEventListener("DOMContentLoaded", () => {
     AOS.init({
@@ -17,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
         duration: 800,
         easing: "ease-out-cubic",
     });
+
+    renderIcons();
 
     const btn = document.getElementById("mobile-menu-btn");
     const menu = document.getElementById("mobile-menu");

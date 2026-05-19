@@ -7,9 +7,9 @@
 ])
     data-aos="fade-up" data-aos-delay="{{ $delay }}">
 
-    <div class="service-card__icon w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6 text-2xl
+    <div class="service-card__icon w-12 h-12 bg-neutral-900/80 rounded-lg flex items-center justify-center mb-6
         group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">
-        <i class="fa-solid {{ $icon }}"></i>
+        <i data-lucide="{{ $icon }}" class="w-6 h-6"></i>
     </div>
     <h3 class="service-card__title text-xl font-bold text-white mb-3 transition-colors duration-300">
         {!! $title !!}

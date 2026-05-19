@@ -16,35 +16,35 @@ class HomeController extends Controller
 
         $services = [
             [
-                'icon' => 'fa-layer-group',
+                'icon' => 'layers',
                 'title' => 'Front-end',
                 'description' => 'Desenvolvimento de interfaces reativas utilizando os frameworks modernos. Foco total em usabilidade e responsividade.',
                 'color' => 'bulma-primary',
                 'delay' => 0,
             ],
             [
-                'icon' => 'fa-server',
+                'icon' => 'server',
                 'title' => 'Backend & API',
                 'description' => 'Arquitetura sólida com Laravel, Node.js ou a plataforma de sua escolha. Criação de APIs RESTful seguras, integrações complexas e modelagem de bancos de dados.',
                 'color' => 'blue-500',
                 'delay' => 100,
             ],
             [
-                'icon' => 'fa-brands fa-wordpress',
+                'icon' => 'globe',
                 'title' => 'Soluções WordPress',
                 'description' => 'Desenvolvimento de temas personalizados e plugins. Transformo o CMS mais usado do mundo em plataformas robustas e performáticas.',
                 'color' => 'sky-400',
                 'delay' => 200,
             ],
             [
-                'icon' => 'fa-regular fa-envelope-open',
+                'icon' => 'mail-open',
                 'title' => 'Email Development',
                 'description' => 'Desenvolvimento de e-mails compatíveis com os principais clientes de e-mail.',
                 'color' => 'orange-400',
                 'delay' => 300,
             ],
             [
-                'icon' => 'fa-solid fa-gauge-high',
+                'icon' => 'gauge',
                 'title' => 'Performance & SEO',
                 'description' => 'Melhore a pontuação do seu sistema no Google. Otimização técnica, melhoria de tempo de carregamento e boas práticas de SEO aplicadas diretamente no código.',
                 'color' => 'emerald-400',

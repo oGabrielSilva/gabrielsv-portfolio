@@ -91,7 +91,7 @@
                     @if(!empty($social['github']))
                         <li>
                             <a href="{{ $social['github'] }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-gray-400 transition-colors hover:text-bulma-primary">
-                                <i data-lucide="github" class="size-3.5"></i>
+                                <x-icon-brand name="github" class="size-3.5" />
                                 GitHub
                             </a>
                         </li>
@@ -99,7 +99,7 @@
                     @if(!empty($social['linkedin']))
                         <li>
                             <a href="{{ $social['linkedin'] }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-gray-400 transition-colors hover:text-bulma-link">
-                                <i data-lucide="linkedin" class="size-3.5"></i>
+                                <x-icon-brand name="linkedin" class="size-3.5" />
                                 LinkedIn
                             </a>
                         </li>

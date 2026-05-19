@@ -2,8 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth overflow-x-hidden">
 
 <head>
-    <script src="https://kit.fontawesome.com/78b3364728.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/lucide@0.544.0"></script>
     @include('partials.head')
 
     @push('jsonld')
@@ -23,7 +21,7 @@
             <div class="max-w-full mx-auto px-4 sm:px-6 flex justify-between items-center">
                 <a href="{{ url('/') }}"
                     class="text-xl font-bold text-white tracking-tight hover:text-bulma-primary transition-colors">
-                    <img src="/favicon.svg" alt="Logo" class="w-8 h-8 inline-block">
+                    <img src="/favicon.svg" alt="Logo" class="w-8 h-8 inline-block" width="32" height="32" fetchpriority="high">
                 </a>
 
                 <div class="hidden md:flex items-center gap-6 lg:gap-8">
@@ -36,13 +34,14 @@
                     <a href="{{ route('tools.index') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Ferramentas</a>
                     <a href="{{ route('blog.index') }}"
-                        class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors">
-                        Blog <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
+                        class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors inline-flex items-center gap-1.5">
+                        <span>Blog</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
                     <button type="button" data-command-palette-open
                         class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
                         aria-label="Abrir busca">
-                        <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                        <i data-lucide="search" class="size-3"></i>
                         <span class="hidden lg:inline">Buscar</span>
                         <kbd class="hidden font-mono text-[10px] text-gray-600 lg:inline">⌘K</kbd>
                     </button>
@@ -84,10 +83,6 @@
     @include('partials.footer')
 
     @include('partials.command-palette')
-
-    <script>
-        if (window.lucide) lucide.createIcons();
-    </script>
 </body>
 
 </html>

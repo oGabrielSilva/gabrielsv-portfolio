@@ -58,12 +58,12 @@
             <ul class="space-y-2 text-gray-300">
                 <li>
                     <a href="{{ config('site.social.github') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-bulma-primary hover:underline">
-                        <i data-lucide="github" class="size-4"></i> {{ config('site.social_handles.github') }}
+                        <x-icon-brand name="github" class="size-4" /> {{ config('site.social_handles.github') }}
                     </a>
                 </li>
                 <li>
                     <a href="{{ config('site.social.linkedin') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-bulma-link hover:underline">
-                        <i data-lucide="linkedin" class="size-4"></i> {{ config('site.social_handles.linkedin') }}
+                        <x-icon-brand name="linkedin" class="size-4" /> {{ config('site.social_handles.linkedin') }}
                     </a>
                 </li>
                 <li>

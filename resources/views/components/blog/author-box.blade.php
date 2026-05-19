@@ -30,12 +30,12 @@
             <div class="flex flex-wrap items-center gap-3 pt-2">
                 @if($github)
                     <a href="{{ $github }}" target="_blank" rel="noopener" class="text-gray-500 transition-colors hover:text-bulma-primary" aria-label="GitHub">
-                        <i data-lucide="github" class="size-4"></i>
+                        <x-icon-brand name="github" class="size-4" />
                     </a>
                 @endif
                 @if($linkedin)
                     <a href="{{ $linkedin }}" target="_blank" rel="noopener" class="text-gray-500 transition-colors hover:text-bulma-link" aria-label="LinkedIn">
-                        <i data-lucide="linkedin" class="size-4"></i>
+                        <x-icon-brand name="linkedin" class="size-4" />
                     </a>
                 @endif
             </div>

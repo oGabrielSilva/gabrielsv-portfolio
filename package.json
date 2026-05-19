@@ -21,6 +21,7 @@
         "cpf-cnpj-validator": "^1.0.3",
         "dompurify": "^3.4.3",
         "jszip": "^3.10.1",
+        "lucide": "^1.16.0",
         "marked": "^18.0.3",
         "preline": "^3.2.3",
         "tz-lookup": "^6.1.25"

@@ -28,7 +28,7 @@
             <a href="#blog"
                 class="bg-bulma-primary hover:bg-opacity-90 text-neutral-900 font-bold py-3 px-6 rounded transition-all inline-flex items-center gap-2 transform hover:-translate-y-1">
                 Ver últimos artigos
-                <i class="fa-solid fa-arrow-down"></i>
+                <i data-lucide="arrow-down" class="w-4 h-4"></i>
             </a>
             <a href="mailto:help@rota42.com"
                 class="border border-neutral-700 hover:border-gray-500 text-white font-medium py-3 px-6 rounded transition-all bg-neutral-800 transform hover:-translate-y-1">
@@ -105,8 +105,9 @@
                 <p class="text-gray-400 text-sm">Direto do blog</p>
             </div>
             <a href="{{ route('blog.index') }}"
-                class="text-sm font-bold text-bulma-primary hover:text-white transition-colors">
-                Ver todos os posts <i class="fa-solid fa-arrow-right ml-1"></i>
+                class="text-sm font-bold text-bulma-primary hover:text-white transition-colors inline-flex items-center gap-1.5">
+                <span>Ver todos os posts</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
             </a>
         </div>
 
