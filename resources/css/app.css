@@ -8,6 +8,16 @@
 @source '../**/*.js';
 @source '../../node_modules/preline/dist/*.js';
 
+/* Google Sans Flex (self-hosted, variable: wght + opsz, latin+latin-ext) */
+/* Licensed under SIL Open Font License 1.1 — see public/fonts/OFL.txt */
+@font-face {
+    font-family: "Google Sans Flex";
+    font-style: normal;
+    font-weight: 100 1000;
+    font-display: swap;
+    src: url("/fonts/google-sans-flex.woff2") format("woff2-variations");
+}
+
 /* Adds pointer cursor to buttons */
 @layer base {
     button:not(:disabled),
