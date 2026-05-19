@@ -21,7 +21,7 @@
             <div class="max-w-full mx-auto px-4 sm:px-6 flex justify-between items-center">
                 <a href="{{ url('/') }}"
                     class="text-xl font-bold text-white tracking-tight hover:text-bulma-primary transition-colors">
-                    <img src="/favicon.svg" alt="Logo" class="w-8 h-8 inline-block" width="32" height="32" fetchpriority="high">
+                    <x-site-logo class="w-8 h-8 inline-block" />
                 </a>
 
                 <div class="hidden md:flex items-center gap-6 lg:gap-8">

@@ -47,7 +47,7 @@
                 <div class="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
                     <a href="{{ url('/') }}"
                         class="shrink-0 text-xl font-bold text-white tracking-tight hover:text-bulma-primary transition-colors">
-                        <img src="/favicon.svg" alt="Logo" class="w-7 h-7 sm:w-8 sm:h-8 inline-block" width="32" height="32" fetchpriority="high">
+                        <x-site-logo class="w-7 h-7 sm:w-8 sm:h-8 inline-block" />
                     </a>
                     <span class="text-gray-600 hidden sm:inline">/</span>
                     <a href="{{ route('tools.index') }}"
