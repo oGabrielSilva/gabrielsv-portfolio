@@ -26,9 +26,94 @@ class MarkupRenderer
             return (string) $html;
         }
 
+        $html = $this->normalizeWordPressCodeBlocks($html);
         $html = $this->highlightCodeBlocks($html);
 
         return $this->renderCallouts($html);
+    }
+
+    /**
+     * Posts importados do WordPress vêm com wrapper <div class="wp-block-kevinbatdorf-code-block-pro">
+     * contendo um <span> com a label de linguagem (com style inline) e o <pre><code>. Achatar para
+     * <pre data-language="X"> para depois passar pelo pipeline padrão.
+     */
+    private function normalizeWordPressCodeBlocks(string $html): string
+    {
+        if (! str_contains($html, 'wp-block-kevinbatdorf-code-block-pro')) {
+            return $html;
+        }
+
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8"><div id="__root">'.$html.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $xpath = new DOMXPath($dom);
+        $wrappers = $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " wp-block-kevinbatdorf-code-block-pro ")]');
+
+        if ($wrappers === false || $wrappers->length === 0) {
+            return $html;
+        }
+
+        foreach ($wrappers as $wrapper) {
+            if (! $wrapper instanceof DOMElement) {
+                continue;
+            }
+
+            $pre = null;
+            foreach ($xpath->query('.//pre', $wrapper) as $candidate) {
+                if ($candidate instanceof DOMElement) {
+                    $pre = $candidate;
+                    break;
+                }
+            }
+
+            if (! $pre) {
+                continue;
+            }
+
+            $language = null;
+            foreach ($xpath->query('./span', $wrapper) as $label) {
+                if (! $label instanceof DOMElement) {
+                    continue;
+                }
+                $text = trim($label->textContent);
+                if ($text !== '' && mb_strlen($text) <= 20) {
+                    $language = strtolower($text);
+                    break;
+                }
+            }
+
+            $newPre = $dom->createElement('pre');
+            $codeEl = null;
+            foreach ($pre->childNodes as $child) {
+                if ($child instanceof DOMElement && $child->nodeName === 'code') {
+                    $codeEl = $child;
+                    break;
+                }
+            }
+            $rawCode = $codeEl ? $codeEl->textContent : $pre->textContent;
+            $newCode = $dom->createElement('code', htmlspecialchars($rawCode, ENT_QUOTES, 'UTF-8'));
+            if ($language) {
+                $newCode->setAttribute('class', 'language-'.$language);
+                $newPre->setAttribute('data-language', $language);
+            }
+            $newPre->appendChild($newCode);
+
+            $wrapper->parentNode->replaceChild($newPre, $wrapper);
+        }
+
+        $root = $dom->getElementById('__root');
+        if (! $root) {
+            return $html;
+        }
+
+        $out = '';
+        foreach ($root->childNodes as $child) {
+            $out .= $dom->saveHTML($child);
+        }
+
+        return $out;
     }
 
     private function highlightCodeBlocks(string $html): string
@@ -71,12 +156,20 @@ class MarkupRenderer
             $wrapper = $dom->createElement('div');
             $wrapper->setAttribute('class', 'code-block'.($language ? ' code-block--'.$language : ''));
 
-            if ($filename !== '') {
+            if ($filename !== '' || $language) {
                 $header = $dom->createElement('div');
                 $header->setAttribute('class', 'code-block__header');
-                $name = $dom->createElement('span', htmlspecialchars($filename, ENT_QUOTES, 'UTF-8'));
-                $name->setAttribute('class', 'code-block__filename');
-                $header->appendChild($name);
+                if ($filename !== '') {
+                    $name = $dom->createElement('span', htmlspecialchars($filename, ENT_QUOTES, 'UTF-8'));
+                    $name->setAttribute('class', 'code-block__filename');
+                    $header->appendChild($name);
+                } else {
+                    // espaçador para empurrar o lang à direita quando não há filename
+                    $spacer = $dom->createElement('span', '');
+                    $spacer->setAttribute('class', 'code-block__filename');
+                    $spacer->setAttribute('aria-hidden', 'true');
+                    $header->appendChild($spacer);
+                }
                 if ($language) {
                     $lang = $dom->createElement('span', strtoupper($language));
                     $lang->setAttribute('class', 'code-block__lang');

@@ -202,6 +202,17 @@ body {
     border: 1px solid var(--color-neutral-700);
     background: #0a0a0a;
 }
+/* Esconde resíduos WP Code Block Pro caso algum post escape do normalizador (defesa em camadas) */
+.post-content .wp-block-kevinbatdorf-code-block-pro > span:first-child {
+    display: none !important;
+}
+.post-content .wp-block-kevinbatdorf-code-block-pro {
+    font-family: ui-monospace, "JetBrains Mono", "Fira Code", monospace;
+    background: #0a0a0a;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-neutral-700);
+    overflow: hidden;
+}
 .code-block__header {
     display: flex;
     align-items: center;

@@ -9,28 +9,39 @@
     {{-- Strip alive --}}
     <div class="border-b border-neutral-800/60 bg-neutral-900/40">
         <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-6 gap-y-1 px-4 py-2.5 text-[11px] text-gray-500 sm:px-6">
-            <span class="flex items-center gap-1.5">
+            <a href="{{ route('stats') }}" class="flex items-center gap-1.5 transition-colors hover:text-bulma-primary" title="Ver estatísticas do site">
                 <span class="relative flex size-2">
                     <span class="absolute inline-flex size-full animate-ping rounded-full bg-bulma-primary opacity-60"></span>
                     <span class="relative inline-flex size-2 rounded-full bg-bulma-primary"></span>
                 </span>
                 Online
-            </span>
+            </a>
             @if($quickStats['last_post_at'])
                 <span aria-hidden="true" class="text-neutral-700">·</span>
-                <span>
-                    Último post
-                    @if($quickStats['last_post_days_ago'] !== null && $quickStats['last_post_days_ago'] < 1)
-                        hoje
-                    @else
-                        há {{ (int) $quickStats['last_post_days_ago'] }} {{ (int) $quickStats['last_post_days_ago'] === 1 ? 'dia' : 'dias' }}
-                    @endif
-                </span>
+                @if(!empty($quickStats['last_post_slug']))
+                    <a href="{{ route('blog.show', $quickStats['last_post_slug']) }}" class="transition-colors hover:text-bulma-primary">
+                        Último post
+                        @if($quickStats['last_post_days_ago'] !== null && $quickStats['last_post_days_ago'] < 1)
+                            hoje
+                        @else
+                            há {{ (int) $quickStats['last_post_days_ago'] }} {{ (int) $quickStats['last_post_days_ago'] === 1 ? 'dia' : 'dias' }}
+                        @endif
+                    </a>
+                @else
+                    <span>
+                        Último post
+                        @if($quickStats['last_post_days_ago'] !== null && $quickStats['last_post_days_ago'] < 1)
+                            hoje
+                        @else
+                            há {{ (int) $quickStats['last_post_days_ago'] }} {{ (int) $quickStats['last_post_days_ago'] === 1 ? 'dia' : 'dias' }}
+                        @endif
+                    </span>
+                @endif
             @endif
             <span aria-hidden="true" class="text-neutral-700">·</span>
-            <span>{{ $quickStats['posts_total'] }} {{ $quickStats['posts_total'] === 1 ? 'post' : 'posts' }}</span>
+            <a href="{{ route('blog.index') }}" class="transition-colors hover:text-bulma-primary">{{ $quickStats['posts_total'] }} {{ $quickStats['posts_total'] === 1 ? 'post' : 'posts' }}</a>
             <span aria-hidden="true" class="text-neutral-700">·</span>
-            <span>{{ $quickStats['tools_total'] }} ferramentas</span>
+            <a href="{{ route('tools.index') }}" class="transition-colors hover:text-bulma-primary">{{ $quickStats['tools_total'] }} ferramentas</a>
         </div>
     </div>
 

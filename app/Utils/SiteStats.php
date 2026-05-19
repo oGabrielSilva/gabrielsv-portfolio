@@ -13,18 +13,19 @@ class SiteStats
     /**
      * Métricas rápidas usadas no footer/strip "alive".
      *
-     * @return array{posts_total: int, tools_total: int, last_post_at: ?\Illuminate\Support\Carbon, last_post_days_ago: ?int}
+     * @return array{posts_total: int, tools_total: int, last_post_at: ?\Illuminate\Support\Carbon, last_post_days_ago: ?int, last_post_slug: ?string}
      */
     public static function quickStats(): array
     {
         return Cache::remember('site.stats.quick', now()->addHour(), function (): array {
-            $lastPost = Post::published()->orderByDesc('published_at')->first(['published_at']);
+            $lastPost = Post::published()->orderByDesc('published_at')->first(['slug', 'published_at']);
 
             return [
                 'posts_total' => Post::published()->count(),
                 'tools_total' => count(AppServiceProvider::TOOLS),
                 'last_post_at' => $lastPost?->published_at,
                 'last_post_days_ago' => $lastPost?->published_at?->diffInDays(now()),
+                'last_post_slug' => $lastPost?->slug,
             ];
         });
     }
