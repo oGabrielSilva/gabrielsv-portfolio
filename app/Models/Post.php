@@ -145,8 +145,8 @@ class Post extends Model implements Feedable, HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('cover')->singleFile();
-        $this->addMediaCollection('content');
+        $this->addMediaCollection('cover')->useDisk('public')->singleFile();
+        $this->addMediaCollection('content')->useDisk('public');
     }
 
     public function toFeedItem(): FeedItem
