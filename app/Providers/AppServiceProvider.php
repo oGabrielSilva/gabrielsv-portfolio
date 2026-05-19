@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -200,5 +202,15 @@ class AppServiceProvider extends ServiceProvider
         // Compartilha a lista de ferramentas com todas as views
         View::share('toolsList', self::TOOLS);
         View::share('site', config('site'));
+
+        // Define onde o AdSense pode aparecer: homepage, blog e tools.
+        // Páginas estáticas (brand-guide, card-generator, /uses, /now, /sobre, /stats, /legal/*) ficam de fora.
+        View::composer('partials.adsense', function ($view) {
+            $route = Route::currentRouteName() ?? '';
+            $showAds = $route === 'index'
+                || Str::startsWith($route, 'blog.')
+                || Str::startsWith($route, 'tools.');
+            $view->with('showAds', $showAds);
+        });
     }
 }

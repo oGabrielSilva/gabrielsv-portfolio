@@ -1,20 +1,5 @@
 @extends('layouts.app')
 
-@push('scripts')
-    @if (config('services.google_ads.client_id'))
-        {{-- AdSense só carrega após o page load pra não competir com FCP/LCP/TBT --}}
-        <script>
-            window.addEventListener('load', () => {
-                const s = document.createElement('script');
-                s.async = true;
-                s.crossOrigin = 'anonymous';
-                s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('services.google_ads.client_id') }}';
-                document.head.appendChild(s);
-            });
-        </script>
-    @endif
-@endpush
-
 @section('content')
     <div class="py-12" data-aos="fade-up" data-aos-delay="200">
         <span class="text-bulma-primary font-medium tracking-wide text-sm mb-4 block uppercase">DESENVOLVEDOR
