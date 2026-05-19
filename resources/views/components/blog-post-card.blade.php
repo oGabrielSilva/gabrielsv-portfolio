@@ -11,14 +11,10 @@
 @endphp
 
 <article
-    class="spotlight group relative flex flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/40 transition-colors hover:border-bulma-primary/40 focus-within:border-bulma-primary/60"
+    class="spotlight group flex flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/40 transition-colors hover:cursor-pointer hover:border-bulma-primary/40 focus-within:border-bulma-primary/60"
+    data-card-link="{{ $link }}"
     data-aos="fade-up"
 >
-    {{-- Link stretched cobre o card inteiro; elementos com z-10 (chip de categoria) continuam clicáveis --}}
-    <a href="{{ $link }}" class="absolute inset-0 z-0" aria-label="{{ $post->title }}">
-        <span class="sr-only">{{ $post->title }}</span>
-    </a>
-
     <div class="block aspect-video overflow-hidden bg-neutral-800">
         @if($cover)
             <img
@@ -35,9 +31,9 @@
         @endif
     </div>
 
-    <div class="relative z-10 flex flex-1 flex-col gap-3 p-5 pointer-events-none">
+    <div class="flex flex-1 flex-col gap-3 p-5">
         @if($primaryCategory)
-            <div class="pointer-events-auto">
+            <div>
                 <x-blog.chip
                     :label="$primaryCategory->name"
                     :slug="$primaryCategory->slug"
@@ -47,7 +43,9 @@
         @endif
 
         <h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-bulma-primary">
-            {{ $post->title }}
+            <a href="{{ $link }}">
+                {{ $post->title }}
+            </a>
         </h3>
 
         <p class="text-sm leading-relaxed text-gray-400 line-clamp-2">

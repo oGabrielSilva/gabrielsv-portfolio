@@ -8,6 +8,7 @@ import "./toc-spy";
 import "./code-copy";
 import "./share-copy";
 import "./back-to-top";
+import "./card-link";
 
 document.addEventListener("DOMContentLoaded", () => {
     AOS.init({
