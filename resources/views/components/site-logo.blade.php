@@ -2,5 +2,5 @@
 
 <picture>
     <source type="image/webp" srcset="/img/logo-64.webp">
-    <img src="/img/logo-64.png" alt="Logo" {{ $attributes->merge(['class' => $class]) }} width="32" height="32" fetchpriority="high" decoding="async">
+    <img src="/img/logo-64.png" alt="Logo" {{ $attributes->merge(['class' => $class . ' rounded-xl']) }} width="32" height="32" fetchpriority="high" decoding="async">
 </picture>
