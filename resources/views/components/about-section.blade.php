@@ -44,9 +44,11 @@
                 <picture>
                     <source
                         type="image/webp"
-                        srcset="/img/hero-512.webp 1x, /img/hero-1024.webp 2x">
+                        srcset="/img/hero-512.webp 512w, /img/hero-896.webp 896w, /img/hero-1024.webp 1024w"
+                        sizes="(min-width: 768px) 320px, 256px">
                     <img src="/img/hero-512.jpg"
-                        srcset="/img/hero-512.jpg 1x, /img/hero-1024.jpg 2x"
+                        srcset="/img/hero-512.jpg 512w, /img/hero-896.jpg 896w, /img/hero-1024.jpg 1024w"
+                        sizes="(min-width: 768px) 320px, 256px"
                         alt="Imagem de Gabriel Silva"
                         width="512" height="683"
                         loading="lazy" decoding="async"

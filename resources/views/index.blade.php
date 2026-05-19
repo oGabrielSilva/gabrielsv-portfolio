@@ -2,9 +2,16 @@
 
 @push('scripts')
     @if (config('services.google_ads.client_id'))
-        <script async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('services.google_ads.client_id') }}"
-            crossorigin="anonymous"></script>
+        {{-- AdSense só carrega após o page load pra não competir com FCP/LCP/TBT --}}
+        <script>
+            window.addEventListener('load', () => {
+                const s = document.createElement('script');
+                s.async = true;
+                s.crossOrigin = 'anonymous';
+                s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('services.google_ads.client_id') }}';
+                document.head.appendChild(s);
+            });
+        </script>
     @endif
 @endpush
 

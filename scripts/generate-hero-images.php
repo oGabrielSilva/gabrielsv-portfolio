@@ -38,6 +38,7 @@ echo "Rotacionado -90° (compensa EXIF). Novas dims: {$srcW}×{$srcH}\n";
 
 $variants = [
     ['width' => 512, 'webpQuality' => 82, 'jpgQuality' => 80],
+    ['width' => 896, 'webpQuality' => 80, 'jpgQuality' => 78],
     ['width' => 1024, 'webpQuality' => 78, 'jpgQuality' => 78],
 ];
 
