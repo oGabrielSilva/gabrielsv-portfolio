@@ -140,33 +140,22 @@ class PostModalSchemas
                     ])
                     ->createOptionUsing(fn (array $data) => Category::create($data)->getKey()),
                 Select::make('tags')
-                    ->label('Tags')
+                    ->label('Tags existentes')
                     ->multiple()
                     ->options(fn () => Tag::orderBy('name')->pluck('name', 'id')->toArray())
                     ->searchable()
                     ->createOptionForm([
                         TextInput::make('name')
-                            ->label('Nome (ou lista separada por vírgula)')
                             ->required()
-                            ->helperText('Pra criar várias de uma vez, separe por vírgula. Ex: laravel, php, api'),
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('slug')->required()->unique(table: 'tags', column: 'slug'),
                     ])
-                    ->createOptionUsing(function (array $data): int {
-                        $names = collect(explode(',', $data['name']))
-                            ->map(fn ($n) => trim($n))
-                            ->filter()
-                            ->unique();
-
-                        $lastId = null;
-                        foreach ($names as $name) {
-                            $tag = Tag::firstOrCreate(
-                                ['slug' => Str::slug($name)],
-                                ['name' => $name]
-                            );
-                            $lastId = $tag->getKey();
-                        }
-
-                        return (int) $lastId;
-                    }),
+                    ->createOptionUsing(fn (array $data) => Tag::create($data)->getKey()),
+                TextInput::make('new_tags')
+                    ->label('Criar várias tags de uma vez')
+                    ->placeholder('laravel, php, api, redis')
+                    ->helperText('Separe por vírgula. As novas serão criadas e anexadas ao post junto com as selecionadas acima.'),
             ])
             ->action(function (array $data, Post $record): void {
                 $categoryIds = collect($data['categories'] ?? [])
@@ -176,11 +165,22 @@ class PostModalSchemas
                     ->all();
                 $record->categories()->sync($categoryIds);
 
-                $tagIds = collect($data['tags'] ?? [])
+                // IDs do Select (tags existentes selecionadas)
+                $selectedTagIds = collect($data['tags'] ?? [])
                     ->filter()
-                    ->map(fn ($id) => (int) $id)
-                    ->values()
-                    ->all();
+                    ->map(fn ($id) => (int) $id);
+
+                // IDs das tags criadas via campo "new_tags" (firstOrCreate por slug)
+                $newTagIds = collect(explode(',', (string) ($data['new_tags'] ?? '')))
+                    ->map(fn ($n) => trim($n))
+                    ->filter()
+                    ->unique()
+                    ->map(fn (string $name) => Tag::firstOrCreate(
+                        ['slug' => Str::slug($name)],
+                        ['name' => $name]
+                    )->getKey());
+
+                $tagIds = $selectedTagIds->merge($newTagIds)->unique()->values()->all();
                 $record->tags()->sync($tagIds);
             });
     }
