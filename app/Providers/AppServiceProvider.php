@@ -212,5 +212,12 @@ class AppServiceProvider extends ServiceProvider
                 || Str::startsWith($route, 'tools.');
             $view->with('showAds', $showAds);
         });
+
+        // GA4: roda em todo o site público; bloqueia no /console (Filament admin).
+        View::composer('partials.google-analytics', function ($view) {
+            $route = Route::currentRouteName() ?? '';
+            $showAnalytics = ! Str::startsWith($route, 'filament.');
+            $view->with('showAnalytics', $showAnalytics);
+        });
     }
 }

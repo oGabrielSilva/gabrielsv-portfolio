@@ -53,3 +53,5 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @stack('scripts')
 @stack('jsonld')
+
+@include('partials.google-analytics')

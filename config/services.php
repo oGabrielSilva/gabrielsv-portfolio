@@ -39,4 +39,8 @@ return [
         'client_id' => env('GOOGLE_ADS_CLIENT_ID'),
     ],
 
+    'google_analytics' => [
+        'measurement_id' => env('GA_MEASUREMENT_ID'),
+    ],
+
 ];
