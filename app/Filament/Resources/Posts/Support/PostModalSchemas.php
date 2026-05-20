@@ -9,7 +9,6 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -105,12 +104,14 @@ class PostModalSchemas
     /**
      * Action que abre modal de Taxonomia (categorias e tags).
      *
-     * Categorias: Select::options() carregadas explicitamente (sem ->relationship())
+     * Os dois Selects usam ->options() carregadas explicitamente (sem ->relationship())
      * porque dentro de uma Action o auto-sync do relationship pode bater de frente
      * com o action() callback e gravar array vazio.
      *
-     * Tags: TagsInput aceita digitação livre (vírgula/Enter) e a gente resolve
-     * pra Tag::firstOrCreate por nome no action().
+     * O createOptionForm das tags aceita "nome ou lista separada por vírgula"
+     * pra criar várias de uma vez. Retorna o id da última criada (limitação do
+     * Filament: createOptionUsing devolve um id) e as outras já viram entradas
+     * do Select via reload do options() na próxima abertura da modal.
      */
     public static function taxonomy(): Action
     {
@@ -122,7 +123,7 @@ class PostModalSchemas
             ->modalSubmitActionLabel('Salvar')
             ->fillForm(fn (Post $record): array => [
                 'categories' => $record->categories->pluck('id')->map(fn ($id) => (string) $id)->toArray(),
-                'tags' => $record->tags->pluck('name')->toArray(),
+                'tags' => $record->tags->pluck('id')->map(fn ($id) => (string) $id)->toArray(),
             ])
             ->schema([
                 Select::make('categories')
@@ -138,12 +139,34 @@ class PostModalSchemas
                         TextInput::make('slug')->required()->unique(table: 'categories', column: 'slug'),
                     ])
                     ->createOptionUsing(fn (array $data) => Category::create($data)->getKey()),
-                TagsInput::make('tags')
+                Select::make('tags')
                     ->label('Tags')
-                    ->placeholder('Digite e pressione vírgula ou Enter')
-                    ->separator(',')
-                    ->suggestions(fn () => Tag::orderBy('name')->pluck('name')->toArray())
-                    ->helperText('Cria várias de uma vez. Tags novas viram entradas no banco automaticamente.'),
+                    ->multiple()
+                    ->options(fn () => Tag::orderBy('name')->pluck('name', 'id')->toArray())
+                    ->searchable()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Nome (ou lista separada por vírgula)')
+                            ->required()
+                            ->helperText('Pra criar várias de uma vez, separe por vírgula. Ex: laravel, php, api'),
+                    ])
+                    ->createOptionUsing(function (array $data): int {
+                        $names = collect(explode(',', $data['name']))
+                            ->map(fn ($n) => trim($n))
+                            ->filter()
+                            ->unique();
+
+                        $lastId = null;
+                        foreach ($names as $name) {
+                            $tag = Tag::firstOrCreate(
+                                ['slug' => Str::slug($name)],
+                                ['name' => $name]
+                            );
+                            $lastId = $tag->getKey();
+                        }
+
+                        return (int) $lastId;
+                    }),
             ])
             ->action(function (array $data, Post $record): void {
                 $categoryIds = collect($data['categories'] ?? [])
@@ -154,15 +177,8 @@ class PostModalSchemas
                 $record->categories()->sync($categoryIds);
 
                 $tagIds = collect($data['tags'] ?? [])
-                    ->map(fn ($name) => trim((string) $name))
                     ->filter()
-                    ->unique()
-                    ->map(function (string $name) {
-                        return Tag::firstOrCreate(
-                            ['slug' => Str::slug($name)],
-                            ['name' => $name]
-                        )->getKey();
-                    })
+                    ->map(fn ($id) => (int) $id)
                     ->values()
                     ->all();
                 $record->tags()->sync($tagIds);
