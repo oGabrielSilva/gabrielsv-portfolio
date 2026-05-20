@@ -42,7 +42,7 @@
                         aria-label="{{ $meta['label'] }}"
                         title="{{ $meta['label'] }}"
                     >
-                        <x-icon-brand :name="$key" class="size-5" />
+                        <x-icon-brand :name="$key" class="size-4.5" />
                     </a>
                 @endforeach
             </div>

@@ -71,7 +71,7 @@
                                 class="inline-flex items-center gap-2 text-gray-400 transition-colors {{ $meta['hover'] }}"
                                 aria-label="{{ $meta['label'] }}"
                             >
-                                <x-icon-brand :name="$key" class="size-5" />
+                                <x-icon-brand :name="$key" class="size-4.5" />
                                 <span>{{ $meta['handle'] ?? $meta['label'] }}</span>
                             </a>
                         </li>

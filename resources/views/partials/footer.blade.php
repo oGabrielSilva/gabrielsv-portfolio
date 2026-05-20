@@ -105,7 +105,7 @@
                                 class="inline-flex items-center gap-1.5 text-gray-400 transition-colors {{ $meta['hover'] }}"
                                 aria-label="{{ $meta['label'] }}"
                             >
-                                <x-icon-brand :name="$key" class="size-4" />
+                                <x-icon-brand :name="$key" class="size-4.5" />
                                 {{ $meta['label'] }}
                             </a>
                         </li>
