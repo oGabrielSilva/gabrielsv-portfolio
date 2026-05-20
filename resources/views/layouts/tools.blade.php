@@ -180,8 +180,6 @@
     @include('partials.footer')
 
     @include('partials.command-palette')
-
-    @include('partials.adsense')
 </body>
 
 </html>

@@ -55,3 +55,4 @@
 @stack('jsonld')
 
 @include('partials.google-analytics')
+@include('partials.adsense')
