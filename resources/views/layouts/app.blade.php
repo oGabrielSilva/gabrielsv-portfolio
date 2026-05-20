@@ -33,6 +33,8 @@
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Artigos</a>
                     <a href="{{ route('tools.index') }}"
                         class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Ferramentas</a>
+                    <a href="{{ route('contact') }}"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Contato</a>
                     <a href="{{ route('blog.index') }}"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors inline-flex items-center gap-1.5">
                         <span>Blog</span>
@@ -67,6 +69,8 @@
                         class="text-gray-300 hover:text-white transition-colors block py-1">Artigos</a>
                     <a href="{{ route('tools.index') }}"
                         class="text-gray-300 hover:text-white transition-colors block py-1">Ferramentas</a>
+                    <a href="{{ route('contact') }}"
+                        class="text-gray-300 hover:text-white transition-colors block py-1">Contato</a>
                     <div class="border-t border-neutral-700 pt-3 mt-1">
                         <a href="{{ route('blog.index') }}"
                             class="text-bulma-primary font-medium block py-1">Ir para o Blog</a>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\OgImageController;
@@ -52,6 +53,12 @@ Route::get('/now', fn () => app(SitePageController::class)->show(
 Route::get('/sobre', fn () => app(SitePageController::class)->show(
     \App\Models\SitePage::where('slug', 'sobre')->firstOrFail()
 ))->name('about');
+Route::get('/contato', fn () => app(SitePageController::class)->show(
+    \App\Models\SitePage::where('slug', 'contato')->firstOrFail()
+))->name('contact');
+Route::post('/contato', [ContactController::class, 'store'])
+    ->middleware('throttle:5,60')
+    ->name('contact.store');
 Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
 // Páginas legais

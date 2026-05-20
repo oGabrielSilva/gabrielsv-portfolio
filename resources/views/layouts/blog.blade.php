@@ -50,6 +50,11 @@
                         <i data-lucide="user" class="w-4 h-4"></i>
                         <span>Sobre</span>
                     </a>
+                    <a href="{{ route('contact') }}"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1.5">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        <span>Contato</span>
+                    </a>
                     <button type="button" data-command-palette-open
                         class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
                         aria-label="Abrir busca">
@@ -92,6 +97,11 @@
                         class="text-gray-300 hover:text-white transition-colors py-2 inline-flex items-center gap-2">
                         <i data-lucide="user" class="w-4 h-4"></i>
                         Sobre
+                    </a>
+                    <a href="{{ route('contact') }}"
+                        class="text-gray-300 hover:text-white transition-colors py-2 inline-flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        Contato
                     </a>
                 </div>
             </div>

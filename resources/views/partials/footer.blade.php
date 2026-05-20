@@ -65,6 +65,7 @@
                     <li><a href="{{ route('blog.index') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Blog</a></li>
                     <li><a href="{{ route('tools.index') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Ferramentas</a></li>
                     <li><a href="{{ route('about') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Sobre</a></li>
+                    <li><a href="{{ route('contact') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">Contato</a></li>
                     <li><a href="{{ route('now') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">/now</a></li>
                     <li><a href="{{ route('uses') }}" class="text-gray-400 transition-colors hover:text-bulma-primary">/uses</a></li>
                 </ul>

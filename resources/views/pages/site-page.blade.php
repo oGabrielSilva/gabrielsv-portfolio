@@ -4,8 +4,10 @@
     $metaTitle = $page->title;
     $metaDescription = $page->meta_description ?: ($page->subtitle ?: $page->title);
 
+    $isContact = $page->slug === 'contato';
+
     // Páginas que recebem o bloco automático de redes sociais (icon-only).
-    $showSocialBlock = $page->slug === 'sobre';
+    $showSocialBlock = in_array($page->slug, ['sobre', 'contato'], true);
     if ($showSocialBlock) {
         $social = config('site.social', []);
         $handles = config('site.social_handles', []);
@@ -31,6 +33,12 @@
     </script>
 @endpush
 
+@if($isContact && config('services.turnstile.site_key'))
+    @push('extra_head')
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endpush
+@endif
+
 @section('content')
     <article class="space-y-8">
         <x-blog.breadcrumbs :items="[
@@ -40,7 +48,7 @@
 
         <header class="space-y-3">
             <h1 class="text-4xl font-bold leading-tight text-white sm:text-5xl">
-                {{ $page->slug === 'sobre' ? $page->title : '/'.$page->slug }}
+                {{ in_array($page->slug, ['sobre', 'contato'], true) ? $page->title : '/'.$page->slug }}
             </h1>
             @if($page->subtitle)
                 <p class="text-lg leading-relaxed text-gray-400 sm:text-xl">
@@ -58,6 +66,23 @@
                     prose-img:rounded-xl prose-img:border prose-img:border-neutral-800">
             {!! $page->body_html !!}
         </div>
+
+        @if($isContact)
+            <section class="space-y-4 border-t border-neutral-800 pt-8">
+                <h2 class="text-sm font-semibold uppercase tracking-wide text-bulma-primary">Envie uma mensagem</h2>
+                <x-contact-form />
+            </section>
+
+            @if($page->address)
+                <section class="space-y-2 border-t border-neutral-800 pt-8">
+                    <h2 class="text-sm font-semibold uppercase tracking-wide text-bulma-primary">Localização</h2>
+                    <p class="inline-flex items-center gap-2 text-sm text-gray-300">
+                        <i data-lucide="map-pin" class="size-4 text-bulma-primary"></i>
+                        {{ $page->address }}
+                    </p>
+                </section>
+            @endif
+        @endif
 
         @if($showSocialBlock && $aboutSocials->isNotEmpty())
             <section class="space-y-4 border-t border-neutral-800 pt-8">

@@ -15,7 +15,7 @@ class SitePageForm
      * Slugs reservados: têm rota nomeada hardcoded em routes/web.php.
      * Trocar quebra a URL e o link em todo o site.
      */
-    private const RESERVED_SLUGS = ['sobre', 'uses', 'now'];
+    private const RESERVED_SLUGS = ['sobre', 'uses', 'now', 'contato'];
 
     public static function configure(Schema $schema): Schema
     {
@@ -44,6 +44,13 @@ class SitePageForm
                             ->label('Subtítulo')
                             ->maxLength(255)
                             ->helperText('Aparece logo abaixo do título em texto cinza.'),
+
+                        TextInput::make('address')
+                            ->label('Localização')
+                            ->maxLength(255)
+                            ->placeholder('Ex.: São Paulo, SP, Brasil')
+                            ->helperText('Aparece na página /contato como bloco "Localização". Deixe em branco para esconder.')
+                            ->visible(fn (?SitePage $record) => $record && $record->slug === 'contato'),
                     ]),
 
                 Section::make('Conteúdo')

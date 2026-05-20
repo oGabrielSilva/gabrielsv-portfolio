@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SitePage extends Model
 {
-    protected $fillable = ['slug', 'title', 'subtitle', 'body_html', 'meta_description'];
+    protected $fillable = ['slug', 'title', 'subtitle', 'address', 'body_html', 'meta_description'];
 
     public function getRouteKeyName(): string
     {

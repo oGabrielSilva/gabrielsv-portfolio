@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+class ContactMessage extends Model
+{
+    protected $fillable = [
+        'name',
+        'email',
+        'subject',
+        'message',
+        'ip',
+        'user_agent',
+        'read_at',
+    ];
+
+    protected $casts = [
+        'read_at' => 'datetime',
+    ];
+
+    public function scopeUnread(Builder $query): Builder
+    {
+        return $query->whereNull('read_at');
+    }
+
+    public function markAsRead(): void
+    {
+        if ($this->read_at === null) {
+            $this->forceFill(['read_at' => now()])->save();
+        }
+    }
+
+    public function markAsUnread(): void
+    {
+        $this->forceFill(['read_at' => null])->save();
+    }
+}

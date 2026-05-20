@@ -11,6 +11,14 @@ class SitePagesSeeder extends Seeder
     {
         $pages = [
             [
+                'slug' => 'contato',
+                'title' => 'Contato',
+                'subtitle' => 'Envie uma mensagem ou me encontre nas redes.',
+                'meta_description' => 'Entre em contato com Gabriel Henrique da Silva por formulário, e-mail ou redes sociais.',
+                'address' => null,
+                'body_html' => '<p>Tem um projeto, dúvida ou só quer trocar uma ideia? Manda mensagem abaixo ou use os canais sociais.</p>',
+            ],
+            [
                 'slug' => 'sobre',
                 'title' => 'Sobre',
                 'subtitle' => 'Dev fullstack focado em Laravel, performance e SEO. Escrevo sobre o que aprendo.',

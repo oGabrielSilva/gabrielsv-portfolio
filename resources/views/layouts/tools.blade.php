@@ -72,6 +72,11 @@
                         <i data-lucide="user" class="w-4 h-4"></i>
                         <span>Sobre</span>
                     </a>
+                    <a href="{{ route('contact') }}"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1.5">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        <span>Contato</span>
+                    </a>
                     <a href="{{ route('blog.index') }}"
                         class="text-sm font-medium text-bulma-primary hover:text-bulma-primary/80 transition-colors inline-flex items-center gap-1.5">
                         <span>Blog</span>
@@ -116,6 +121,11 @@
                             class="text-gray-300 hover:text-white transition-colors py-2 inline-flex items-center gap-2">
                             <i data-lucide="user" class="w-4 h-4"></i>
                             Sobre
+                        </a>
+                        <a href="{{ route('contact') }}"
+                            class="text-gray-300 hover:text-white transition-colors py-2 inline-flex items-center gap-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            Contato
                         </a>
                     </div>
 
