@@ -11,6 +11,22 @@ class SitePagesSeeder extends Seeder
     {
         $pages = [
             [
+                'slug' => 'sobre',
+                'title' => 'Sobre',
+                'subtitle' => 'Dev fullstack focado em Laravel, performance e SEO. Escrevo sobre o que aprendo.',
+                'meta_description' => 'Sobre Gabriel Henrique da Silva. Dev fullstack focado em Laravel, performance e SEO.',
+                'body_html' => <<<'HTML'
+<h2>O que faço</h2>
+<p>Desenvolvo aplicações web de ponta a ponta. Back-end em <strong>Laravel</strong>, front-end em <strong>Blade + Tailwind + JS vanilla</strong>, infra em Docker. Foco em produto enxuto, performance e SEO técnico.</p>
+
+<h2>Sobre este site</h2>
+<p>Este site é meu portfolio, blog e suíte de ferramentas online. Tudo open-source, sem trackers, sem cookies de terceiros. Você pode ver <a href="/legal/privacidade">a política de privacidade</a> ou <a href="/stats">as estatísticas em tempo real</a>.</p>
+
+<h2>Como me encontrar</h2>
+<p>Os links das minhas redes ficam logo abaixo desta página. Clique em qualquer ícone para abrir.</p>
+HTML,
+            ],
+            [
                 'slug' => 'uses',
                 'title' => 'Setup',
                 'subtitle' => 'Editor, terminal, hardware e libs que uso para escrever código todo dia. Atualizado quando troco alguma peça.',
@@ -18,7 +34,7 @@ class SitePagesSeeder extends Seeder
                 'body_html' => <<<'HTML'
 <h2>Editor & terminal</h2>
 <ul>
-    <li><strong>VS Code</strong> — extensions essenciais: PHP Intelephense, Laravel Blade, Tailwind IntelliSense, GitLens, Error Lens, ESLint.</li>
+    <li><strong>VS Code</strong> com extensions essenciais: PHP Intelephense, Laravel Blade, Tailwind IntelliSense, GitLens, Error Lens, ESLint.</li>
     <li><strong>Tema:</strong> One Dark Pro / Catppuccin Mocha. Fonte: <a href="https://github.com/tonsky/FiraCode" rel="noopener" target="_blank">Fira Code</a> com ligatures.</li>
     <li><strong>Terminal:</strong> Windows Terminal + PowerShell 7. Bash via WSL2 (Ubuntu) para tudo Docker.</li>
     <li><strong>Atalhos VSCode preferidos:</strong> Ctrl+P, Ctrl+Shift+P, Ctrl+. (quickfix), Alt+Click (multi-cursor).</li>
@@ -26,9 +42,9 @@ class SitePagesSeeder extends Seeder
 
 <h2>Stack que respeito</h2>
 <ul>
-    <li><strong>Laravel</strong> — minha casa. PHP 8.3+, Eloquent, Blade, Filament para admin.</li>
-    <li><strong>Tailwind CSS v4</strong> — design tokens via <code>@theme</code>, zero JS config.</li>
-    <li><strong>Vanilla JS</strong> — para componentes simples; <strong>Alpine.js</strong> quando precisa de reatividade leve.</li>
+    <li><strong>Laravel</strong>, minha casa. PHP 8.3+, Eloquent, Blade, Filament para admin.</li>
+    <li><strong>Tailwind CSS v4</strong> com design tokens via <code>@theme</code>, zero JS config.</li>
+    <li><strong>Vanilla JS</strong> para componentes simples; <strong>Alpine.js</strong> quando precisa de reatividade leve.</li>
     <li><strong>MySQL</strong> em produção, <strong>SQLite</strong> em dev local.</li>
     <li><strong>Redis</strong> para cache e sessões.</li>
 </ul>
@@ -53,25 +69,25 @@ HTML,
             [
                 'slug' => 'now',
                 'title' => 'Agora',
-                'subtitle' => 'Inspirado pelo /now movement do Derek Sivers. O que estou fazendo neste momento — atualizado quando muda algo importante.',
+                'subtitle' => 'Inspirado pelo /now movement do Derek Sivers. O que estou fazendo neste momento, atualizado quando muda algo importante.',
                 'meta_description' => 'O que estou fazendo, lendo, construindo e aprendendo neste momento.',
                 'body_html' => <<<'HTML'
 <h2>Construindo</h2>
 <ul>
-    <li>Migrando o blog do WordPress para Laravel + Filament — adicionando série de posts, busca, OG dinâmico, dashboard de stats.</li>
+    <li>Migrando o blog do WordPress para Laravel + Filament. Série de posts, busca, OG dinâmico, dashboard de stats.</li>
     <li>Expandindo a suíte de <a href="/tools">ferramentas online</a> para devs brasileiros.</li>
 </ul>
 
 <h2>Aprendendo</h2>
 <ul>
-    <li>Filament 5 em profundidade — workflows de admin, custom actions, widgets.</li>
-    <li>SEO técnico aplicado a sites pequenos — schema.org, OG dinâmico, sitemaps segmentados.</li>
+    <li>Filament 5 em profundidade. Workflows de admin, custom actions, widgets.</li>
+    <li>SEO técnico aplicado a sites pequenos: schema.org, OG dinâmico, sitemaps segmentados.</li>
 </ul>
 
 <h2>Lendo / consumindo</h2>
 <ul>
-    <li>Newsletters de devs brasileiros e internacionais — Laravel News, Front-end Focus.</li>
-    <li>Estudos de craft em UI — Rauno Freiberg, Josh Comeau, Linear blog.</li>
+    <li>Newsletters de devs brasileiros e internacionais (Laravel News, Front-end Focus).</li>
+    <li>Estudos de craft em UI: Rauno Freiberg, Josh Comeau, Linear blog.</li>
 </ul>
 HTML,
             ],

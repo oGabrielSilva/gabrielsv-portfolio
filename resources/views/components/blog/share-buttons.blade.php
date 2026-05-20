@@ -38,7 +38,7 @@
             class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
             aria-label="Compartilhar no Twitter/X"
         >
-            <x-icon-brand name="twitter" class="size-3.5" />
+            <x-icon-brand name="x" class="size-4" />
             <span>X</span>
         </a>
 
@@ -49,7 +49,7 @@
             class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:border-bulma-link/40 hover:text-bulma-link"
             aria-label="Compartilhar no LinkedIn"
         >
-            <x-icon-brand name="linkedin" class="size-3.5" />
+            <x-icon-brand name="linkedin" class="size-4" />
             <span>LinkedIn</span>
         </a>
     </div>

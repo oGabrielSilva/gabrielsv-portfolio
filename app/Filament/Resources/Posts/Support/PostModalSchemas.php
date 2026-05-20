@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Posts\Support;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -64,7 +67,7 @@ class PostModalSchemas
     }
 
     /**
-     * Action que abre modal de Capa (cover image).
+     * Action que abre modal de Capa (cover image + texto alternativo).
      */
     public static function cover(): Action
     {
@@ -76,23 +79,38 @@ class PostModalSchemas
             ->modalSubmitActionLabel('Salvar')
             ->schema([
                 SpatieMediaLibraryFileUpload::make('cover')
-                    ->label('')
+                    ->label('Imagem')
                     ->collection('cover')
                     ->image()
                     ->imageEditor()
-                    ->imageEditorAspectRatios(['16:9', '4:3', '1:1']),
+                    ->imageEditorAspectRatioOptions(['16:9', '4:3', '1:1']),
+                TextInput::make('cover_alt')
+                    ->label('Texto alternativo (alt)')
+                    ->maxLength(255)
+                    ->helperText('Descreve a imagem pra leitores de tela e SEO. Em branco usa o título do post.'),
             ])
             ->fillForm(fn (Post $record): array => [
                 'cover' => $record->getFirstMedia('cover')?->uuid,
+                'cover_alt' => $record->getFirstMedia('cover')?->getCustomProperty('alt'),
             ])
             ->action(function (array $data, Post $record): void {
-                // Spatie já lida com o upload via livewire; só forçamos um save.
-                $record->save();
+                $media = $record->getFirstMedia('cover');
+                if ($media) {
+                    $media->setCustomProperty('alt', $data['cover_alt'] ?? null);
+                    $media->save();
+                }
             });
     }
 
     /**
      * Action que abre modal de Taxonomia (categorias e tags).
+     *
+     * Categorias: Select::options() carregadas explicitamente (sem ->relationship())
+     * porque dentro de uma Action o auto-sync do relationship pode bater de frente
+     * com o action() callback e gravar array vazio.
+     *
+     * Tags: TagsInput aceita digitação livre (vírgula/Enter) e a gente resolve
+     * pra Tag::firstOrCreate por nome no action().
      */
     public static function taxonomy(): Action
     {
@@ -103,38 +121,51 @@ class PostModalSchemas
             ->modalWidth('lg')
             ->modalSubmitActionLabel('Salvar')
             ->fillForm(fn (Post $record): array => [
-                'categories' => $record->categories->pluck('id')->toArray(),
-                'tags' => $record->tags->pluck('id')->toArray(),
+                'categories' => $record->categories->pluck('id')->map(fn ($id) => (string) $id)->toArray(),
+                'tags' => $record->tags->pluck('name')->toArray(),
             ])
             ->schema([
                 Select::make('categories')
                     ->label('Categorias')
                     ->multiple()
-                    ->relationship('categories', 'name')
-                    ->preload()
+                    ->options(fn () => Category::orderBy('name')->pluck('name', 'id')->toArray())
+                    ->searchable()
                     ->createOptionForm([
                         TextInput::make('name')
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
                         TextInput::make('slug')->required()->unique(table: 'categories', column: 'slug'),
-                    ]),
-                Select::make('tags')
+                    ])
+                    ->createOptionUsing(fn (array $data) => Category::create($data)->getKey()),
+                TagsInput::make('tags')
                     ->label('Tags')
-                    ->multiple()
-                    ->relationship('tags', 'name')
-                    ->preload()
-                    ->createOptionForm([
-                        TextInput::make('name')
-                            ->required()
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                        TextInput::make('slug')->required()->unique(table: 'tags', column: 'slug'),
-                    ]),
+                    ->placeholder('Digite e pressione vírgula ou Enter')
+                    ->separator(',')
+                    ->suggestions(fn () => Tag::orderBy('name')->pluck('name')->toArray())
+                    ->helperText('Cria várias de uma vez. Tags novas viram entradas no banco automaticamente.'),
             ])
             ->action(function (array $data, Post $record): void {
-                $record->categories()->sync($data['categories'] ?? []);
-                $record->tags()->sync($data['tags'] ?? []);
+                $categoryIds = collect($data['categories'] ?? [])
+                    ->filter()
+                    ->map(fn ($id) => (int) $id)
+                    ->values()
+                    ->all();
+                $record->categories()->sync($categoryIds);
+
+                $tagIds = collect($data['tags'] ?? [])
+                    ->map(fn ($name) => trim((string) $name))
+                    ->filter()
+                    ->unique()
+                    ->map(function (string $name) {
+                        return Tag::firstOrCreate(
+                            ['slug' => Str::slug($name)],
+                            ['name' => $name]
+                        )->getKey();
+                    })
+                    ->values()
+                    ->all();
+                $record->tags()->sync($tagIds);
             });
     }
 

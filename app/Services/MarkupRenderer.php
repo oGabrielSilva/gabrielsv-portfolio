@@ -12,6 +12,55 @@ class MarkupRenderer
 {
     private Highlighter $highlighter;
 
+    /**
+     * Aliases pra linguagens que tempest/highlight v2 não conhece nativamente.
+     * Mapeia pro highlighter mais próximo (não é 100% correto mas dá cor decente).
+     * Quando migrarmos pra Shiki essa tabela some.
+     */
+    private const LANGUAGE_ALIASES = [
+        'ts' => 'js',
+        'tsx' => 'js',
+        'typescript' => 'js',
+        'javascript' => 'js',
+        'jsx' => 'js',
+        'mjs' => 'js',
+        'cjs' => 'js',
+        'node' => 'js',
+        'yaml' => 'json',
+        'yml' => 'json',
+        'toml' => 'json',
+        'env' => 'bash',
+        'dotenv' => 'bash',
+        'sh' => 'bash',
+        'shell' => 'bash',
+        'zsh' => 'bash',
+        'console' => 'bash',
+        'dockerfile' => 'bash',
+        'docker' => 'bash',
+        'makefile' => 'bash',
+        'ini' => 'bash',
+        'conf' => 'bash',
+        'nginx' => 'bash',
+        'apache' => 'bash',
+        'sql' => 'php',
+        'mysql' => 'php',
+        'postgres' => 'php',
+        'postgresql' => 'php',
+        'go' => 'php',
+        'rust' => 'php',
+        'python' => 'php',
+        'py' => 'php',
+        'ruby' => 'php',
+        'rb' => 'php',
+        'java' => 'php',
+        'kotlin' => 'php',
+        'swift' => 'php',
+        'c' => 'php',
+        'cpp' => 'php',
+        'csharp' => 'php',
+        'cs' => 'php',
+    ];
+
     public function __construct()
     {
         $this->highlighter = new Highlighter(new CssTheme);
@@ -147,8 +196,9 @@ class MarkupRenderer
             $language = $this->detectLanguage($pre, $codeEl);
             $filename = $pre->getAttribute('data-filename');
 
+            $highlighterLang = $language ? (self::LANGUAGE_ALIASES[$language] ?? $language) : 'txt';
             try {
-                $highlighted = $this->highlighter->parse($rawCode, $language ?? 'txt');
+                $highlighted = $this->highlighter->parse($rawCode, $highlighterLang);
             } catch (\Throwable) {
                 $highlighted = htmlspecialchars($rawCode, ENT_QUOTES, 'UTF-8');
             }

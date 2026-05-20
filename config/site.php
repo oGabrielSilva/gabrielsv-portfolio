@@ -9,15 +9,19 @@ return [
         'email' => 'gabriel04gh1.gh@gmail.com',
     ],
 
+    // Links de redes sociais. Vazio = não renderiza no footer/author-box/sobre.
+    // Ordem aqui é a ordem visual no footer.
     'social' => [
         'github' => 'https://github.com/oGabrielSilva',
         'linkedin' => 'https://www.linkedin.com/in/ogabriel-henrique',
+        'x' => null,
         'email' => 'mailto:gabriel04gh1.gh@gmail.com',
     ],
 
     'social_handles' => [
         'github' => 'oGabrielSilva',
         'linkedin' => 'ogabriel-henrique',
+        'x' => null,
     ],
 
     'categories_colors' => [

@@ -45,6 +45,11 @@
                         <i data-lucide="wrench" class="w-4 h-4"></i>
                         <span>Ferramentas</span>
                     </a>
+                    <a href="{{ route('about') }}"
+                        class="text-sm font-medium text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1.5">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        <span>Sobre</span>
+                    </a>
                     <button type="button" data-command-palette-open
                         class="inline-flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-bulma-primary/40 hover:text-bulma-primary"
                         aria-label="Abrir busca">
@@ -82,6 +87,11 @@
                         class="text-gray-300 hover:text-white transition-colors py-2 inline-flex items-center gap-2">
                         <i data-lucide="wrench" class="w-4 h-4"></i>
                         Ferramentas
+                    </a>
+                    <a href="{{ route('about') }}"
+                        class="text-gray-300 hover:text-white transition-colors py-2 inline-flex items-center gap-2">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        Sobre
                     </a>
                 </div>
             </div>

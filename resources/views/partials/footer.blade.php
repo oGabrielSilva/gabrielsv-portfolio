@@ -3,6 +3,15 @@
     $quickStats = SiteStats::quickStats();
     $topCategories = SiteStats::topCategories(5);
     $social = $site['social'] ?? [];
+
+    // Mapa de rede -> [hover color class, label]. Ordem do array = ordem visual.
+    // Só renderiza se o link existir no config/site.php (filter abaixo).
+    $socialIcons = collect([
+        'github' => ['hover' => 'hover:text-bulma-primary', 'label' => 'GitHub'],
+        'linkedin' => ['hover' => 'hover:text-bulma-link', 'label' => 'LinkedIn'],
+        'x' => ['hover' => 'hover:text-white', 'label' => 'X (Twitter)'],
+        'email' => ['hover' => 'hover:text-bulma-primary', 'label' => 'E-mail'],
+    ])->filter(fn ($_, $key) => ! empty($social[$key]));
 @endphp
 
 <footer class="{{ $footerClass ?? '' }} border-t border-neutral-800 bg-neutral-950">
@@ -84,34 +93,23 @@
                 </ul>
             </div>
 
-            {{-- Conecte --}}
+            {{-- Conecte (ícone + nome, dinâmico via config/site.php) --}}
             <div class="space-y-3">
                 <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-400">Conecte</h4>
                 <ul class="space-y-2 text-sm">
-                    @if(!empty($social['github']))
+                    @foreach($socialIcons as $key => $meta)
                         <li>
-                            <a href="{{ $social['github'] }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-gray-400 transition-colors hover:text-bulma-primary">
-                                <x-icon-brand name="github" class="size-3.5" />
-                                GitHub
+                            <a
+                                href="{{ $social[$key] }}"
+                                @if($key !== 'email') target="_blank" rel="noopener me" @endif
+                                class="inline-flex items-center gap-1.5 text-gray-400 transition-colors {{ $meta['hover'] }}"
+                                aria-label="{{ $meta['label'] }}"
+                            >
+                                <x-icon-brand :name="$key" class="size-4" />
+                                {{ $meta['label'] }}
                             </a>
                         </li>
-                    @endif
-                    @if(!empty($social['linkedin']))
-                        <li>
-                            <a href="{{ $social['linkedin'] }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-gray-400 transition-colors hover:text-bulma-link">
-                                <x-icon-brand name="linkedin" class="size-3.5" />
-                                LinkedIn
-                            </a>
-                        </li>
-                    @endif
-                    @if(!empty($social['email']))
-                        <li>
-                            <a href="{{ $social['email'] }}" class="inline-flex items-center gap-1.5 text-gray-400 transition-colors hover:text-bulma-primary">
-                                <i data-lucide="mail" class="size-3.5"></i>
-                                E-mail
-                            </a>
-                        </li>
-                    @endif
+                    @endforeach
                     <li>
                         <a href="/feed.json" class="inline-flex items-center gap-1.5 text-gray-400 transition-colors hover:text-bulma-primary">
                             <i data-lucide="code" class="size-3.5"></i>

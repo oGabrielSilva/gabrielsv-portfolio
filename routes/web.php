@@ -49,8 +49,9 @@ Route::get('/uses', fn () => app(SitePageController::class)->show(
 Route::get('/now', fn () => app(SitePageController::class)->show(
     \App\Models\SitePage::where('slug', 'now')->firstOrFail()
 ))->name('now');
-
-Route::view('/sobre', 'pages.about')->name('about');
+Route::get('/sobre', fn () => app(SitePageController::class)->show(
+    \App\Models\SitePage::where('slug', 'sobre')->firstOrFail()
+))->name('about');
 Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
 // Páginas legais

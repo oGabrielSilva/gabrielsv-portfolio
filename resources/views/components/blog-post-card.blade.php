@@ -1,8 +1,10 @@
 @props(['post'])
 
 @php
-    $hasCover = (bool) $post->getFirstMediaUrl('cover');
-    $cover = $hasCover ? $post->getFirstMediaUrl('cover') : null;
+    $coverMedia = $post->getFirstMedia('cover');
+    $hasCover = (bool) $coverMedia;
+    $cover = $coverMedia?->getUrl();
+    $coverAlt = $coverMedia?->getCustomProperty('alt') ?: $post->title;
     $date = $post->published_at;
     $excerpt = $post->excerpt ?: Str::limit(strip_tags($post->body_html ?? ''), 120);
     $link = route('blog.show', $post);
@@ -19,7 +21,7 @@
         @if($cover)
             <img
                 src="{{ $cover }}"
-                alt="{{ $post->title }}"
+                alt="{{ $coverAlt }}"
                 class="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
                 decoding="async"

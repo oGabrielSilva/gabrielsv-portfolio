@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SitePages\Schemas;
 
+use App\Models\SitePage;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -10,6 +11,12 @@ use Filament\Schemas\Schema;
 
 class SitePageForm
 {
+    /**
+     * Slugs reservados: têm rota nomeada hardcoded em routes/web.php.
+     * Trocar quebra a URL e o link em todo o site.
+     */
+    private const RESERVED_SLUGS = ['sobre', 'uses', 'now'];
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -27,7 +34,11 @@ class SitePageForm
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(100)
-                            ->helperText('A URL fica /{slug}. Exemplo: "uses" → /uses.'),
+                            ->disabled(fn (?SitePage $record) => $record && in_array($record->slug, self::RESERVED_SLUGS, true))
+                            ->dehydrated()
+                            ->helperText(fn (?SitePage $record) => $record && in_array($record->slug, self::RESERVED_SLUGS, true)
+                                ? 'Slug reservado: a rota /'.$record->slug.' depende deste valor.'
+                                : 'A URL fica /{slug}. Exemplo: "uses" → /uses.'),
 
                         TextInput::make('subtitle')
                             ->label('Subtítulo')

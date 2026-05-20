@@ -33,6 +33,12 @@
                     <span class="text-sm text-gray-500">Artigos</span>
                 </div>
             </div>
+
+            <a href="{{ route('about') }}"
+                class="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-bulma-primary transition-colors hover:text-bulma-primary/80">
+                <span>Página completa</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
         </div>
 
         <div class="relative flex justify-center items-center" data-aos="fade-left">

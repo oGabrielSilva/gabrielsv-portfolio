@@ -1,7 +1,9 @@
 @extends('layouts.blog')
 
 @php
-    $cover = $post->getFirstMediaUrl('cover');
+    $coverMedia = $post->getFirstMedia('cover');
+    $cover = $coverMedia?->getUrl() ?? '';
+    $coverAlt = $coverMedia?->getCustomProperty('alt') ?: $post->title;
     $ogImage = $cover !== '' ? $cover : route('og.post', $post);
     $metaTitle = $post->meta_title ?: $post->title;
     $metaDescription = $post->meta_description ?: $post->excerpt ?: $post->title;
@@ -74,7 +76,7 @@
             <figure class="overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900">
                 <img
                     src="{{ $cover }}"
-                    alt="{{ $post->title }}"
+                    alt="{{ $coverAlt }}"
                     class="aspect-video w-full object-cover"
                     loading="eager"
                     decoding="async"
