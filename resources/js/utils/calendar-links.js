@@ -98,19 +98,20 @@ export function buildGoogleLink(event) {
 
 /**
  * Outlook.com (conta pessoal Microsoft).
- * https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose
- *   &rru=addevent&subject=...&startdt=ISO&enddt=ISO&body=...&location=...
+ * Base oficial: https://outlook.live.com/calendar/deeplink/compose
+ * (Não usar /calendar/0/deeplink — a versão com /0/ joga o request num
+ *  fluxo do Azure AD que estoura 2048 chars no querystring -> AADSTS90015.)
  */
 export function buildOutlookLink(event) {
-    return buildOutlookBase('https://outlook.live.com/calendar/0/deeplink/compose', event);
+    return buildOutlookBase('https://outlook.live.com/calendar/deeplink/compose', event);
 }
 
 /**
  * Office 365 (conta corporativa).
- * Mesmo formato do Outlook.com, host diferente.
+ * Mesma URL base, host diferente.
  */
 export function buildOffice365Link(event) {
-    return buildOutlookBase('https://outlook.office.com/calendar/0/deeplink/compose', event);
+    return buildOutlookBase('https://outlook.office.com/calendar/deeplink/compose', event);
 }
 
 function buildOutlookBase(base, event) {
