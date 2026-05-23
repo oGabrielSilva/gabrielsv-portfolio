@@ -67,53 +67,113 @@
                 </div>
             </div>
 
+            @php
+                $timezoneGroups = [
+                    'Brasil' => [
+                        'America/Sao_Paulo' => 'São Paulo (UTC-3)',
+                        'America/Manaus' => 'Manaus (UTC-4)',
+                        'America/Recife' => 'Recife (UTC-3)',
+                        'America/Noronha' => 'Fernando de Noronha (UTC-2)',
+                        'America/Rio_Branco' => 'Rio Branco (UTC-5)',
+                    ],
+                    'Outros' => [
+                        'UTC' => 'UTC',
+                        'Europe/Lisbon' => 'Lisboa',
+                        'Europe/London' => 'Londres',
+                        'America/New_York' => 'Nova York',
+                        'America/Los_Angeles' => 'Los Angeles',
+                        'Asia/Tokyo' => 'Tóquio',
+                    ],
+                ];
+                $reminderOptions = [
+                    '' => 'Nenhum',
+                    '5' => '5 minutos antes',
+                    '10' => '10 minutos antes',
+                    '15' => '15 minutos antes',
+                    '30' => '30 minutos antes',
+                    '60' => '1 hora antes',
+                    '1440' => '1 dia antes',
+                ];
+                $recurrenceOptions = [
+                    '' => 'Não repete',
+                    'daily' => 'Diário',
+                    'weekly' => 'Semanal',
+                    'monthly' => 'Mensal',
+                    'yearly' => 'Anual',
+                ];
+            @endphp
+
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {{-- Fuso horário --}}
                 <div>
-                    <label for="ics-timezone" class="block text-sm font-medium text-gray-300 mb-2">Fuso horário</label>
-                    <select id="ics-timezone"
-                        class="w-full py-3 px-4 rounded-lg border border-neutral-600 bg-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-bulma-primary focus:border-transparent transition-all text-sm">
-                        <optgroup label="Brasil">
-                            <option value="America/Sao_Paulo" selected>São Paulo (UTC-3)</option>
-                            <option value="America/Manaus">Manaus (UTC-4)</option>
-                            <option value="America/Recife">Recife (UTC-3)</option>
-                            <option value="America/Noronha">Fernando de Noronha (UTC-2)</option>
-                            <option value="America/Rio_Branco">Rio Branco (UTC-5)</option>
-                        </optgroup>
-                        <optgroup label="Outros">
-                            <option value="UTC">UTC</option>
-                            <option value="Europe/Lisbon">Lisboa</option>
-                            <option value="Europe/London">Londres</option>
-                            <option value="America/New_York">Nova York</option>
-                            <option value="America/Los_Angeles">Los Angeles</option>
-                            <option value="Asia/Tokyo">Tóquio</option>
-                        </optgroup>
-                    </select>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Fuso horário</label>
+                    <input type="hidden" id="ics-timezone" value="America/Sao_Paulo">
+                    <div class="hs-dropdown relative [--strategy:absolute] [--adaptive:none]">
+                        <button id="ics-timezone-dropdown" type="button"
+                            class="hs-dropdown-toggle w-full py-3 px-4 inline-flex justify-between items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-bulma-primary transition-all"
+                            aria-haspopup="menu" aria-expanded="false" aria-label="Selecionar fuso horário">
+                            <span id="ics-timezone-label" class="truncate">São Paulo (UTC-3)</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform shrink-0"></i>
+                        </button>
+                        <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-full bg-neutral-800 shadow-md rounded-lg p-2 mt-2 border border-neutral-700 z-50 max-h-72 overflow-y-auto"
+                            role="menu" aria-orientation="vertical">
+                            @foreach($timezoneGroups as $groupLabel => $items)
+                                <p class="px-3 py-1.5 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">{{ $groupLabel }}</p>
+                                @foreach($items as $tzValue => $tzLabel)
+                                    <button type="button" data-ics-dropdown="timezone" data-value="{{ $tzValue }}" data-label="{{ $tzLabel }}"
+                                        class="w-full text-left py-2 px-3 rounded-lg text-sm transition-colors text-gray-300 hover:bg-neutral-700 hover:text-white">
+                                        {{ $tzLabel }}
+                                    </button>
+                                @endforeach
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
+                {{-- Lembrete --}}
                 <div>
-                    <label for="ics-reminder" class="block text-sm font-medium text-gray-300 mb-2">Lembrete</label>
-                    <select id="ics-reminder"
-                        class="w-full py-3 px-4 rounded-lg border border-neutral-600 bg-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-bulma-primary focus:border-transparent transition-all text-sm">
-                        <option value="">Nenhum</option>
-                        <option value="5">5 minutos antes</option>
-                        <option value="10">10 minutos antes</option>
-                        <option value="15" selected>15 minutos antes</option>
-                        <option value="30">30 minutos antes</option>
-                        <option value="60">1 hora antes</option>
-                        <option value="1440">1 dia antes</option>
-                    </select>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Lembrete</label>
+                    <input type="hidden" id="ics-reminder" value="15">
+                    <div class="hs-dropdown relative [--strategy:absolute] [--adaptive:none]">
+                        <button id="ics-reminder-dropdown" type="button"
+                            class="hs-dropdown-toggle w-full py-3 px-4 inline-flex justify-between items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-bulma-primary transition-all"
+                            aria-haspopup="menu" aria-expanded="false" aria-label="Selecionar lembrete">
+                            <span id="ics-reminder-label" class="truncate">15 minutos antes</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform shrink-0"></i>
+                        </button>
+                        <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-full bg-neutral-800 shadow-md rounded-lg p-2 mt-2 border border-neutral-700 z-50"
+                            role="menu" aria-orientation="vertical">
+                            @foreach($reminderOptions as $value => $label)
+                                <button type="button" data-ics-dropdown="reminder" data-value="{{ $value }}" data-label="{{ $label }}"
+                                    class="w-full text-left py-2 px-3 rounded-lg text-sm transition-colors text-gray-300 hover:bg-neutral-700 hover:text-white">
+                                    {{ $label }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
+                {{-- Recorrência --}}
                 <div>
-                    <label for="ics-recurrence" class="block text-sm font-medium text-gray-300 mb-2">Recorrência</label>
-                    <select id="ics-recurrence"
-                        class="w-full py-3 px-4 rounded-lg border border-neutral-600 bg-neutral-700 text-white focus:outline-none focus:ring-2 focus:ring-bulma-primary focus:border-transparent transition-all text-sm">
-                        <option value="">Não repete</option>
-                        <option value="daily">Diário</option>
-                        <option value="weekly">Semanal</option>
-                        <option value="monthly">Mensal</option>
-                        <option value="yearly">Anual</option>
-                    </select>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Recorrência</label>
+                    <input type="hidden" id="ics-recurrence" value="">
+                    <div class="hs-dropdown relative [--strategy:absolute] [--adaptive:none]">
+                        <button id="ics-recurrence-dropdown" type="button"
+                            class="hs-dropdown-toggle w-full py-3 px-4 inline-flex justify-between items-center gap-x-2 text-sm font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-bulma-primary transition-all"
+                            aria-haspopup="menu" aria-expanded="false" aria-label="Selecionar recorrência">
+                            <span id="ics-recurrence-label" class="truncate">Não repete</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 hs-dropdown-open:rotate-180 transition-transform shrink-0"></i>
+                        </button>
+                        <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-full bg-neutral-800 shadow-md rounded-lg p-2 mt-2 border border-neutral-700 z-50"
+                            role="menu" aria-orientation="vertical">
+                            @foreach($recurrenceOptions as $value => $label)
+                                <button type="button" data-ics-dropdown="recurrence" data-value="{{ $value }}" data-label="{{ $label }}"
+                                    class="w-full text-left py-2 px-3 rounded-lg text-sm transition-colors text-gray-300 hover:bg-neutral-700 hover:text-white">
+                                    {{ $label }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
 

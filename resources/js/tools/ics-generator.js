@@ -89,7 +89,7 @@ class IcsGenerator {
     bindEvents() {
         const inputs = [
             'title', 'description', 'location', 'url',
-            'start', 'end', 'timezone', 'reminder', 'recurUntil',
+            'start', 'end', 'recurUntil',
         ];
         inputs.forEach(key => {
             this.fields[key]?.addEventListener('input', () => this.render());
@@ -100,11 +100,27 @@ class IcsGenerator {
             this.render();
         });
 
-        this.fields.recurrence.addEventListener('change', () => {
-            const hasRecurrence = !!this.fields.recurrence.value;
-            this.fields.recurUntilWrap.classList.toggle('hidden', !hasRecurrence);
-            this.render();
+        // Dropdowns Preline (timezone, reminder, recurrence) — escrevem no
+        // hidden input correspondente e disparam render. Para recurrence,
+        // também alterna o campo "termina em".
+        this.root.querySelectorAll('[data-ics-dropdown]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const field = btn.dataset.icsDropdown;
+                const value = btn.dataset.value;
+                const label = btn.dataset.label;
+                this.setDropdownValue(field, value, label);
+
+                if (field === 'recurrence') {
+                    this.fields.recurUntilWrap.classList.toggle('hidden', !value);
+                }
+
+                const dropdown = document.getElementById(`ics-${field}-dropdown`);
+                if (dropdown && window.HSDropdown) window.HSDropdown.close(dropdown);
+                this.render();
+            });
         });
+
+        window.HSStaticMethods?.autoInit();
 
         this.copyBtn.addEventListener('click', () => this.copyIcs());
         this.downloadBtn.addEventListener('click', () => this.downloadIcs());
@@ -124,6 +140,31 @@ class IcsGenerator {
             this.restoreFromHashOrDefaults();
             this.render();
         });
+    }
+
+    setDropdownValue(field, value, label) {
+        const hidden = this.fields[field];
+        if (hidden) hidden.value = value ?? '';
+
+        const labelEl = document.getElementById(`ics-${field}-label`);
+        if (labelEl && label != null) labelEl.textContent = label;
+
+        // Marca botão ativo (mesma estética do lorem)
+        this.root.querySelectorAll(`[data-ics-dropdown="${field}"]`).forEach(b => {
+            const active = b.dataset.value === (value ?? '');
+            b.classList.toggle('bg-bulma-primary/10', active);
+            b.classList.toggle('text-bulma-primary', active);
+            b.classList.toggle('text-gray-300', !active);
+        });
+    }
+
+    syncDropdownLabel(field, value) {
+        // Encontra o label correspondente ao value, usado ao restaurar do hash.
+        const btn = this.root.querySelector(
+            `[data-ics-dropdown="${field}"][data-value="${(value ?? '').replace(/"/g, '\\"')}"]`,
+        );
+        const label = btn?.dataset.label ?? '';
+        this.setDropdownValue(field, value, label);
     }
 
     toggleAllDay() {
@@ -154,7 +195,7 @@ class IcsGenerator {
     }
 
     applyDefaults() {
-        // Default: amanhã, 9h-10h, 15min lembrete.
+        // Default: amanhã, 9h-10h.
         const now = new Date();
         const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
         const y = tomorrow.getFullYear();
@@ -162,6 +203,11 @@ class IcsGenerator {
         const d = String(tomorrow.getDate()).padStart(2, '0');
         this.fields.start.value = `${y}-${m}-${d}T09:00`;
         this.fields.end.value = `${y}-${m}-${d}T10:00`;
+
+        // Sincroniza estado ativo dos dropdowns Preline com defaults do HTML.
+        this.syncDropdownLabel('timezone', 'America/Sao_Paulo');
+        this.syncDropdownLabel('reminder', '15');
+        this.syncDropdownLabel('recurrence', '');
     }
 
     applyState(state) {
@@ -170,10 +216,12 @@ class IcsGenerator {
         set(this.fields.description, state.description);
         set(this.fields.location, state.location);
         set(this.fields.url, state.url);
-        set(this.fields.timezone, state.timezone || 'America/Sao_Paulo');
-        set(this.fields.reminder, state.reminder ?? '15');
-        set(this.fields.recurrence, state.recurrence);
         set(this.fields.recurUntil, state.recurUntil);
+
+        // Dropdowns Preline: atualiza hidden + label + estado ativo.
+        this.syncDropdownLabel('timezone', state.timezone || 'America/Sao_Paulo');
+        this.syncDropdownLabel('reminder', state.reminder ?? '15');
+        this.syncDropdownLabel('recurrence', state.recurrence || '');
 
         if (state.allDay) {
             this.fields.allDay.checked = true;
