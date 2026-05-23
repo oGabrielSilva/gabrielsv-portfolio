@@ -78,6 +78,12 @@ class IcsGenerator {
         this.appleDownload = document.getElementById('ics-apple-download');
         this.status = document.getElementById('ics-status');
 
+        // Snippets pra dev
+        this.snippetHtml = document.getElementById('ics-snippet-html');
+        this.snippetHtmlCopy = document.getElementById('ics-snippet-html-copy');
+        this.snippetDataUri = document.getElementById('ics-snippet-datauri');
+        this.snippetDataUriCopy = document.getElementById('ics-snippet-datauri-copy');
+
         this.providers = Array.from(root.querySelectorAll('[data-provider]'));
 
         this.bindEvents();
@@ -131,6 +137,9 @@ class IcsGenerator {
             const key = li.dataset.provider;
             li.querySelector('[data-action="copy"]').addEventListener('click', () => this.copyProvider(key));
         });
+
+        this.snippetHtmlCopy?.addEventListener('click', () => this.copyValue(this.snippetHtml?.textContent, 'HTML copiado!'));
+        this.snippetDataUriCopy?.addEventListener('click', () => this.copyValue(this.snippetDataUri?.textContent, 'Data URI copiado!'));
 
         window.addEventListener('hashchange', () => {
             if (this.suppressNextHashChange) {
@@ -324,16 +333,48 @@ class IcsGenerator {
             recurrence: state.recurrence,
             recurUntil: state.recurUntil,
         };
+        const providerUrls = {};
         this.providers.forEach(li => {
             const key = li.dataset.provider;
             const url = PROVIDER_BUILDERS[key](providerEvent);
+            providerUrls[key] = url;
             const openLink = li.querySelector('[data-action="open"]');
             openLink.href = url;
             openLink.dataset.url = url;
             openLink.classList.remove('opacity-50', 'pointer-events-none');
+
+            const urlEl = li.querySelector('[data-action="url"]');
+            if (urlEl) urlEl.textContent = url;
         });
 
+        this.renderSnippets(providerUrls);
+
         this.updateHash?.();
+    }
+
+    renderSnippets(providerUrls) {
+        const escape = s => String(s ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        if (this.snippetHtml) {
+            const lines = [
+                `<a href="${escape(providerUrls.google)}" target="_blank" rel="noopener">Adicionar ao Google Calendar</a>`,
+                `<a href="${escape(providerUrls.outlook)}" target="_blank" rel="noopener">Adicionar ao Outlook</a>`,
+                `<a href="${escape(providerUrls.office365)}" target="_blank" rel="noopener">Adicionar ao Office 365</a>`,
+                `<a href="${escape(providerUrls.yahoo)}" target="_blank" rel="noopener">Adicionar ao Yahoo</a>`,
+            ];
+            this.snippetHtml.textContent = lines.join('\n');
+        }
+
+        if (this.snippetDataUri && this.icsText) {
+            // base64 do .ics serve como data: URI portátil pra <a download>.
+            const b64 = btoa(unescape(encodeURIComponent(this.icsText)));
+            this.snippetDataUri.textContent =
+                `data:text/calendar;charset=utf-8;base64,${b64}`;
+        }
     }
 
     persistToHash() {
@@ -353,7 +394,11 @@ class IcsGenerator {
             const openLink = li.querySelector('[data-action="open"]');
             openLink.removeAttribute('href');
             openLink.classList.add('opacity-50', 'pointer-events-none');
+            const urlEl = li.querySelector('[data-action="url"]');
+            if (urlEl) urlEl.textContent = '—';
         });
+        if (this.snippetHtml) this.snippetHtml.textContent = '—';
+        if (this.snippetDataUri) this.snippetDataUri.textContent = '—';
         this.icsText = '';
     }
 
@@ -373,6 +418,19 @@ class IcsGenerator {
             this.status.classList.add('bg-amber-500/10', 'text-amber-400');
         }
         this.status.textContent = message;
+    }
+
+    async copyValue(value, successMsg = 'Copiado!') {
+        if (!value || value === '—') {
+            showToast('Preencha os campos primeiro', { variant: 'error' });
+            return;
+        }
+        try {
+            await copyText(value);
+            showToast(successMsg);
+        } catch {
+            showToast('Não foi possível copiar', { variant: 'error' });
+        }
     }
 
     async copyIcs() {

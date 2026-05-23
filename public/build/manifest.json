@@ -32,7 +32,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-D9Os8zEA.css",
+    "file": "assets/app-CBewfnTm.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -107,7 +107,7 @@
     ]
   },
   "resources/js/tools/ics-generator.js": {
-    "file": "assets/ics-generator-C71gyox3.js",
+    "file": "assets/ics-generator-DLnR3vsm.js",
     "name": "ics-generator",
     "src": "resources/js/tools/ics-generator.js",
     "isEntry": true,

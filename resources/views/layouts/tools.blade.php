@@ -159,23 +159,21 @@
 
     <div id="top" class="flex pt-14 sm:pt-16 min-h-screen">
         {{-- Sidebar (desktop only) --}}
-        <aside class="hidden relative lg:block lg:w-64 lg:shrink-0 bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
+        <aside class="hidden relative lg:block lg:w-72 lg:shrink-0 bg-neutral-800/50 border-r border-neutral-700/50 overflow-y-auto">
             <nav class="p-4">
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Ferramentas</h3>
                 <ul class="space-y-1">
                     @foreach($toolsList as $tool)
                         <li>
-                            <a href="{{ route($tool['route']) }}"
-                                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
+                            <a href="{{ route($tool['route']) }}" title="{{ $tool['name'] }}"
+                                class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors min-w-0
                                                                                                                                                     {{ request()->routeIs($tool['routeMatch']) ? 'bg-bulma-primary/10 text-bulma-primary' : 'text-gray-400 hover:text-white hover:bg-neutral-700/50' }}">
-                                <i data-lucide="{{ $tool['icon'] }}" class="w-4 h-4"></i>
-                                {{ $tool['name'] }}
+                                <i data-lucide="{{ $tool['icon'] }}" class="w-4 h-4 shrink-0"></i>
+                                <span class="truncate">{{ $tool['name'] }}</span>
                             </a>
                         </li>
                     @endforeach
                 </ul>
-
-
             </nav>
         </aside>
 

@@ -232,10 +232,11 @@
             </div>
         </div>
 
-        {{-- Card 3: Por provedor --}}
+        {{-- Card 3: Por provedor (URL exposta pra dev inspecionar) --}}
         <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6">
-            <h2 class="text-lg font-semibold text-white mb-4">Adicionar direto no calendário</h2>
-            <ul class="divide-y divide-neutral-700/50" data-providers>
+            <h2 class="text-lg font-semibold text-white mb-1">Adicionar direto no calendário</h2>
+            <p class="text-xs text-gray-500 mb-4">Cada provedor com a URL exposta — útil pra copiar manualmente, depurar ou colar em código.</p>
+            <ul class="space-y-4" data-providers>
                 @php
                     $providers = [
                         ['key' => 'google', 'label' => 'Google Calendar', 'icon' => 'calendar'],
@@ -245,37 +246,78 @@
                     ];
                 @endphp
                 @foreach ($providers as $p)
-                    <li class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3" data-provider="{{ $p['key'] }}">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <i data-lucide="{{ $p['icon'] }}" class="w-4 h-4 text-gray-400 shrink-0"></i>
-                            <span class="text-sm text-gray-300 truncate">{{ $p['label'] }}</span>
+                    <li class="rounded-lg border border-neutral-700/60 bg-neutral-900/40 p-3 sm:p-4" data-provider="{{ $p['key'] }}">
+                        <div class="flex items-center justify-between gap-3 mb-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="{{ $p['icon'] }}" class="w-4 h-4 text-gray-400 shrink-0"></i>
+                                <span class="text-sm font-medium text-gray-200 truncate">{{ $p['label'] }}</span>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button type="button" data-action="copy"
+                                    class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
+                                    <i data-lucide="copy" class="w-3 h-3"></i>
+                                    Copiar
+                                </button>
+                                <a data-action="open" target="_blank" rel="noopener"
+                                    class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-bulma-primary/40 bg-bulma-primary/10 text-bulma-primary hover:bg-bulma-primary/20 transition-all opacity-50 pointer-events-none">
+                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                                    Abrir
+                                </a>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                            <button type="button" data-action="copy"
-                                class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
-                                <i data-lucide="copy" class="w-3 h-3"></i>
-                                Copiar URL
-                            </button>
-                            <a data-action="open" target="_blank" rel="noopener"
-                                class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all opacity-50 pointer-events-none">
-                                <i data-lucide="external-link" class="w-3 h-3"></i>
-                                Abrir
-                            </a>
-                        </div>
+                        <code data-action="url" class="block py-2 px-3 bg-neutral-950 rounded text-[11px] text-gray-400 font-mono break-all leading-relaxed">—</code>
                     </li>
                 @endforeach
-                <li class="py-3 last:pb-0 flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <i data-lucide="calendar" class="w-4 h-4 text-gray-400 shrink-0"></i>
-                        <span class="text-sm text-gray-300 truncate">Apple Calendar</span>
+
+                {{-- Apple: download direto (sem URL scheme web) --}}
+                <li class="rounded-lg border border-neutral-700/60 bg-neutral-900/40 p-3 sm:p-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <i data-lucide="calendar" class="w-4 h-4 text-gray-400 shrink-0"></i>
+                            <span class="text-sm font-medium text-gray-200 truncate">Apple Calendar</span>
+                        </div>
+                        <button type="button" id="ics-apple-download"
+                            class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-bulma-primary/40 bg-bulma-primary/10 text-bulma-primary hover:bg-bulma-primary/20 transition-all">
+                            <i data-lucide="download" class="w-3 h-3"></i>
+                            Baixar .ics
+                        </button>
                     </div>
-                    <button type="button" id="ics-apple-download"
-                        class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
-                        <i data-lucide="download" class="w-3 h-3"></i>
-                        Baixar .ics
-                    </button>
+                    <p class="text-[11px] text-gray-500 mt-2">Apple não expõe URL pública pra criar evento na web. Baixe o <code>.ics</code> ou use o iOS/macOS.</p>
                 </li>
             </ul>
+        </div>
+
+        {{-- Card 4: Snippets pra devs --}}
+        <div class="bg-neutral-800/50 border border-neutral-700/50 rounded-xl p-4 sm:p-6 space-y-5">
+            <div>
+                <h2 class="text-lg font-semibold text-white mb-1">Para desenvolvedores</h2>
+                <p class="text-xs text-gray-500">Snippets prontos pra colar em landing, e-mail HTML ou docs.</p>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-2 gap-2">
+                    <label class="text-sm font-medium text-gray-300">HTML — botões "Adicionar ao calendário"</label>
+                    <button type="button" id="ics-snippet-html-copy"
+                        class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
+                        <i data-lucide="copy" class="w-3 h-3"></i>
+                        Copiar
+                    </button>
+                </div>
+                <pre id="ics-snippet-html" class="block py-3 px-4 bg-neutral-950 rounded-lg text-xs text-gray-300 font-mono whitespace-pre overflow-x-auto max-h-48">—</pre>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-2 gap-2">
+                    <label class="text-sm font-medium text-gray-300">JS — data URI do <code>.ics</code></label>
+                    <button type="button" id="ics-snippet-datauri-copy"
+                        class="py-1.5 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-neutral-600 bg-neutral-700 text-gray-300 hover:bg-neutral-600 hover:text-white transition-all">
+                        <i data-lucide="copy" class="w-3 h-3"></i>
+                        Copiar
+                    </button>
+                </div>
+                <pre id="ics-snippet-datauri" class="block py-3 px-4 bg-neutral-950 rounded-lg text-xs text-gray-300 font-mono whitespace-pre-wrap break-all overflow-x-auto max-h-48">—</pre>
+                <p class="text-[11px] text-gray-500 mt-2">Use como <code>href</code> de um <code>&lt;a download="evento.ics"&gt;</code>. Funciona offline, sem hospedar arquivo.</p>
+            </div>
         </div>
 
         {{-- Card 4: Dica --}}
