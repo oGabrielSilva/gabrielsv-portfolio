@@ -125,4 +125,5 @@ Route::prefix('tools')->name('tools.')->group(function () {
     Route::get('/unit-converter', [ToolsController::class, 'unitConverter'])->name('unit-converter');
     Route::get('/whatsapp-link', [ToolsController::class, 'whatsappLink'])->name('whatsapp-link');
     Route::get('/email-link', [ToolsController::class, 'emailLink'])->name('email-link');
+    Route::get('/ics-generator', [ToolsController::class, 'icsGenerator'])->name('ics-generator');
 });

@@ -32,7 +32,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-nXpZx99L.css",
+    "file": "assets/app-D9Os8zEA.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -100,6 +100,16 @@
     "file": "assets/email-link-b88k2i6z.js",
     "name": "email-link",
     "src": "resources/js/tools/email-link.js",
+    "isEntry": true,
+    "imports": [
+      "_clipboard-CTfDTmLP.js",
+      "_toast-DN0shrKh.js"
+    ]
+  },
+  "resources/js/tools/ics-generator.js": {
+    "file": "assets/ics-generator-DMl9GirR.js",
+    "name": "ics-generator",
+    "src": "resources/js/tools/ics-generator.js",
     "isEntry": true,
     "imports": [
       "_clipboard-CTfDTmLP.js",

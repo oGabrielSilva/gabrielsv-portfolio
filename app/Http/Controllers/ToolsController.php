@@ -192,4 +192,9 @@ class ToolsController extends Controller
     {
         return view('tools.email-link');
     }
+
+    public function icsGenerator()
+    {
+        return view('tools.ics-generator');
+    }
 }

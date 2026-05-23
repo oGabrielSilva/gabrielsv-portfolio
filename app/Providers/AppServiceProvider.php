@@ -184,6 +184,15 @@ class AppServiceProvider extends ServiceProvider
             'icon' => 'mail',
             'color' => 'sky-400',
         ],
+        [
+            'route' => 'tools.ics-generator',
+            'routeMatch' => 'tools.ics-generator',
+            'slug' => 'ics-generator',
+            'name' => 'Gerador de ICS',
+            'description' => 'Cria arquivo .ics pronto para Google, Apple, Outlook e Yahoo. Lembrete, recorrência, fuso BR e link compartilhável.',
+            'icon' => 'calendar-plus',
+            'color' => 'emerald-400',
+        ],
     ];
 
     /**
