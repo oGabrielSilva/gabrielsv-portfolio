@@ -136,7 +136,7 @@ class PostModalSchemas
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                        TextInput::make('slug')->required()->unique(table: 'categories', column: 'slug'),
+                        TextInput::make('slug')->required()->unique(table: 'categories', column: 'slug', ignoreRecord: false),
                     ])
                     ->createOptionUsing(fn (array $data) => Category::create($data)->getKey()),
                 Select::make('tags')
@@ -149,7 +149,7 @@ class PostModalSchemas
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                        TextInput::make('slug')->required()->unique(table: 'tags', column: 'slug'),
+                        TextInput::make('slug')->required()->unique(table: 'tags', column: 'slug', ignoreRecord: false),
                     ])
                     ->createOptionUsing(fn (array $data) => Tag::create($data)->getKey()),
                 TextInput::make('new_tags')
