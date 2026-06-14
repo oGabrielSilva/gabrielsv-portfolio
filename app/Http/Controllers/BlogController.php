@@ -151,8 +151,10 @@ class BlogController extends Controller
         $tocResult = $tocService->extract($post->body_html);
         $renderedHtml = $renderer->render($tocResult['html']);
 
-        // Só referencia o bundle do Chart.js quando o post realmente tem gráfico.
-        $hasChart = str_contains((string) $post->body_html, 'data-chart');
+        // Só referencia o bundle do Chart.js quando o post tem gráfico. Olha o
+        // HTML já renderizado (<figure class="chart">), porque o marcador pode
+        // ter virado code block no editor e o body_html não ter mais 'data-chart'.
+        $hasChart = str_contains($renderedHtml, '<figure class="chart"');
 
         // Só referencia o highlight.js quando há bloco de código com linguagem
         // (o MarkupRenderer emite class="language-X" nesses casos).

@@ -34,13 +34,20 @@ class MarkupRenderer
      * aria-label (acessibilidade/SEO). JSON inválido: o marcador é removido sem
      * quebrar a página.
      *
-     * Dois formatos aceitos:
-     *   - Novo:    <pre data-chart>{json}</pre>        (JSON no conteúdo)
-     *   - Legado:  <div data-chart='{json}'></div>    (JSON no atributo)
+     * Três formas aceitas:
+     *   - <pre data-chart>{json}</pre>        (marcador explícito, JSON no conteúdo)
+     *   - <div data-chart='{json}'></div>    (legado, JSON no atributo)
+     *   - <pre><code>{json}</code></pre>     (code block sem linguagem cujo
+     *                                         conteúdo é um gráfico; cobre o caso
+     *                                         do editor TipTap, que converte o
+     *                                         <pre data-chart> em code block e
+     *                                         descarta o atributo)
      */
     private function renderCharts(string $html): string
     {
-        if (! str_contains($html, 'data-chart')) {
+        // 'data-chart' = marcador explícito; 'datasets' = JSON de gráfico solto
+        // num code block (sem o atributo, depois do round-trip do editor).
+        if (! str_contains($html, 'data-chart') && ! str_contains($html, 'datasets')) {
             return $html;
         }
 
@@ -50,42 +57,66 @@ class MarkupRenderer
         libxml_clear_errors();
 
         $xpath = new DOMXPath($dom);
-        $nodes = $xpath->query('//pre[@data-chart] | //div[@data-chart]');
+        $changed = false;
 
-        if ($nodes === false || $nodes->length === 0) {
-            return $html;
-        }
-
-        // Itera numa cópia: vamos substituir nós durante o laço.
-        foreach (iterator_to_array($nodes) as $node) {
+        // 1. Marcadores explícitos. JSON inválido aqui = marcador malformado:
+        //    remove pra não poluir a página.
+        foreach (iterator_to_array($xpath->query('//pre[@data-chart] | //div[@data-chart]')) as $node) {
             if (! $node instanceof DOMElement) {
                 continue;
             }
-
-            // No <pre> o JSON é o conteúdo; no <div> legado é o atributo.
             $json = $node->nodeName === 'pre'
                 ? trim($node->textContent)
                 : $node->getAttribute('data-chart');
-
             try {
                 $chart = \App\Services\Charts\ChartData::fromJson($json);
             } catch (\Throwable) {
-                // Marcador malformado: remove pra não poluir a página.
                 $node->parentNode?->removeChild($node);
+                $changed = true;
 
                 continue;
             }
+            $this->replaceWithChartFigure($dom, $node, $json, $chart);
+            $changed = true;
+        }
 
-            $figure = $dom->createElement('figure');
-            $figure->setAttribute('class', 'chart');
-            // Container que o Chart.js hidrata (resources/js/blog/chart.js).
-            $figure->setAttribute('data-chart', $json);
-            // Descrição textual pros bots/leitores de tela (não há SVG nem imagem
-            // no servidor; o título do gráfico já entra aqui via ariaLabel()).
-            $figure->setAttribute('role', 'img');
-            $figure->setAttribute('aria-label', $chart->ariaLabel());
+        // 2. Code block cujo conteúdo é um gráfico: <pre><code> sem linguagem
+        //    (ou language-chart) que valida como ChartData. Um <code> com
+        //    linguagem real (language-php etc.) nunca é tratado como gráfico.
+        foreach (iterator_to_array($xpath->query('//pre[code and not(@data-chart)]')) as $pre) {
+            if (! $pre instanceof DOMElement) {
+                continue;
+            }
+            $code = null;
+            foreach ($pre->childNodes as $child) {
+                if ($child instanceof DOMElement && $child->nodeName === 'code') {
+                    $code = $child;
+                    break;
+                }
+            }
+            if (! $code) {
+                continue;
+            }
+            $class = $code->getAttribute('class');
+            if ($class !== '' && ! str_contains($class, 'language-chart')) {
+                continue;
+            }
+            $json = trim($code->textContent);
+            if ($json === '' || $json[0] !== '{') {
+                continue;
+            }
+            try {
+                $chart = \App\Services\Charts\ChartData::fromJson($json);
+            } catch (\Throwable) {
+                // Não é gráfico: code block normal, deixa quieto.
+                continue;
+            }
+            $this->replaceWithChartFigure($dom, $pre, $json, $chart);
+            $changed = true;
+        }
 
-            $node->parentNode?->replaceChild($figure, $node);
+        if (! $changed) {
+            return $html;
         }
 
         $root = $dom->getElementById('__root');
@@ -99,6 +130,20 @@ class MarkupRenderer
         }
 
         return $out;
+    }
+
+    private function replaceWithChartFigure(DOMDocument $dom, DOMElement $node, string $json, \App\Services\Charts\ChartData $chart): void
+    {
+        $figure = $dom->createElement('figure');
+        $figure->setAttribute('class', 'chart');
+        // Container que o Chart.js hidrata (resources/js/blog/chart.js).
+        $figure->setAttribute('data-chart', $json);
+        // Descrição textual pros bots/leitores de tela (não há imagem no
+        // servidor; o título do gráfico já entra aqui via ariaLabel()).
+        $figure->setAttribute('role', 'img');
+        $figure->setAttribute('aria-label', $chart->ariaLabel());
+
+        $node->parentNode?->replaceChild($figure, $node);
     }
 
     /**
