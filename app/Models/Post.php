@@ -127,6 +127,13 @@ class Post extends Model implements Feedable, HasMedia
 
     public function previousPost(): ?self
     {
+        // Rascunho em preview não tem published_at; sem o guard a comparação
+        // viraria where('published_at', '<', null), que o Laravel rejeita
+        // ("Illegal operator and value combination").
+        if ($this->published_at === null) {
+            return null;
+        }
+
         return static::published()
             ->where('id', '!=', $this->id)
             ->where('published_at', '<', $this->published_at)
@@ -136,6 +143,10 @@ class Post extends Model implements Feedable, HasMedia
 
     public function nextPost(): ?self
     {
+        if ($this->published_at === null) {
+            return null;
+        }
+
         return static::published()
             ->where('id', '!=', $this->id)
             ->where('published_at', '>', $this->published_at)
