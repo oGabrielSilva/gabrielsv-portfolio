@@ -16,6 +16,18 @@
 @section('og_type', 'article')
 @section('og_image', $ogImage)
 
+@if($isDraftPreview)
+    @section('extra_head')
+        <meta name="robots" content="noindex, nofollow">
+    @endsection
+@endif
+
+@if($hasChart)
+    @push('scripts')
+        @vite('resources/js/blog/chart.js')
+    @endpush
+@endif
+
 @push('jsonld')
     <script type="application/ld+json">
     {!! json_encode(app(\App\Services\JsonLdBuilder::class)->forPost($post), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
@@ -35,6 +47,13 @@
     <div id="reading-progress" class="pointer-events-none fixed left-0 top-0 z-50 h-0.75 w-0 bg-bulma-primary transition-[width] duration-100 ease-out" aria-hidden="true"></div>
 
     <article class="space-y-8">
+        @if($isDraftPreview)
+            <div class="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-300" role="status">
+                <i data-lucide="eye" class="size-4 shrink-0"></i>
+                <span>Pré-visualização de rascunho. Este post ainda não está publicado e não é indexado por buscadores.</span>
+            </div>
+        @endif
+
         {{-- Breadcrumbs --}}
         <x-blog.breadcrumbs :items="array_values(array_filter([
             ['name' => 'Início', 'url' => url('/')],

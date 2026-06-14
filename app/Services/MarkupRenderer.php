@@ -77,8 +77,76 @@ class MarkupRenderer
 
         $html = $this->normalizeWordPressCodeBlocks($html);
         $html = $this->highlightCodeBlocks($html);
+        $html = $this->renderCallouts($html);
 
-        return $this->renderCallouts($html);
+        return $this->renderCharts($html);
+    }
+
+    /**
+     * Valida cada <div data-chart='{json}'> e o deixa pronto pra hidratação do
+     * Chart.js no cliente — que é quem desenha o gráfico de fato. O servidor
+     * não renderiza imagem: emite só o container com o JSON e uma descrição
+     * textual no aria-label (acessibilidade/SEO). JSON inválido: o marcador é
+     * removido sem quebrar a página.
+     */
+    private function renderCharts(string $html): string
+    {
+        if (! str_contains($html, 'data-chart')) {
+            return $html;
+        }
+
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8"><div id="__root">'.$html.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $xpath = new DOMXPath($dom);
+        $nodes = $xpath->query('//div[@data-chart]');
+
+        if ($nodes === false || $nodes->length === 0) {
+            return $html;
+        }
+
+        // Itera numa cópia: vamos substituir nós durante o laço.
+        foreach (iterator_to_array($nodes) as $node) {
+            if (! $node instanceof DOMElement) {
+                continue;
+            }
+
+            $json = $node->getAttribute('data-chart');
+
+            try {
+                $chart = \App\Services\Charts\ChartData::fromJson($json);
+            } catch (\Throwable) {
+                // Marcador malformado: remove pra não poluir a página.
+                $node->parentNode?->removeChild($node);
+
+                continue;
+            }
+
+            $figure = $dom->createElement('figure');
+            $figure->setAttribute('class', 'chart');
+            // Container que o Chart.js hidrata (resources/js/blog/chart.js).
+            $figure->setAttribute('data-chart', $json);
+            // Descrição textual pros bots/leitores de tela (não há SVG nem imagem
+            // no servidor; o título do gráfico já entra aqui via ariaLabel()).
+            $figure->setAttribute('role', 'img');
+            $figure->setAttribute('aria-label', $chart->ariaLabel());
+
+            $node->parentNode?->replaceChild($figure, $node);
+        }
+
+        $root = $dom->getElementById('__root');
+        if (! $root) {
+            return $html;
+        }
+
+        $out = '';
+        foreach ($root->childNodes as $child) {
+            $out .= $dom->saveHTML($child);
+        }
+
+        return $out;
     }
 
     /**
@@ -194,9 +262,18 @@ class MarkupRenderer
 
             $rawCode = $codeEl ? $codeEl->textContent : $pre->textContent;
             $language = $this->detectLanguage($pre, $codeEl);
+
+            // Blocos criados no RichEditor do Filament não trazem class="language-X".
+            // Sem isso o highlighter usaria 'txt' (sem tokens = texto branco).
+            // Tenta farejar a linguagem pelo conteúdo; se nada bater, assume o
+            // default do blog (js) pra ao menos ter cor.
+            if ($language === null) {
+                $language = $this->detectLanguageFromCode($rawCode) ?? 'js';
+            }
+
             $filename = $pre->getAttribute('data-filename');
 
-            $highlighterLang = $language ? (self::LANGUAGE_ALIASES[$language] ?? $language) : 'txt';
+            $highlighterLang = self::LANGUAGE_ALIASES[$language] ?? $language;
             try {
                 $highlighted = $this->highlighter->parse($rawCode, $highlighterLang);
             } catch (\Throwable) {
@@ -290,6 +367,90 @@ class MarkupRenderer
         $dataLang = $pre->getAttribute('data-language');
         if ($dataLang !== '') {
             return strtolower($dataLang);
+        }
+
+        return null;
+    }
+
+    /**
+     * Fareja a linguagem pelo conteúdo do bloco quando não há class="language-X"
+     * (caso dos blocos criados no RichEditor). Heurística por pistas: cada regra
+     * usa marcas inequívocas da linguagem. Retorna null quando nada é
+     * conclusivo, deixando o caller aplicar o default (js).
+     *
+     * Ordem importa: linguagens com sinais únicos (tag PHP, anotações Java,
+     * package Go) vêm antes das de sintaxe mais genérica (JS).
+     */
+    private function detectLanguageFromCode(string $code): ?string
+    {
+        $code = trim($code);
+        if ($code === '') {
+            return null;
+        }
+
+        // PHP: tag de abertura, namespace/use, ou $variáveis com ->.
+        if (preg_match('/<\?php|^\s*(namespace|use)\s+[\\\\A-Za-z]|\$\w+\s*->/m', $code)) {
+            return 'php';
+        }
+
+        // JSON: começa com { ou [, tem "chave": e nenhuma marca de código.
+        if (preg_match('/^\s*[\{\[]/', $code)
+            && preg_match('/"[^"]+"\s*:/', $code)
+            && ! preg_match('/;|=>|function|\bconst\b|\bif\b/', $code)) {
+            return 'json';
+        }
+
+        // HTML/XML: começa com tag, doctype ou declaração xml.
+        if (preg_match('/^\s*<(?:!doctype|\?xml|[a-z][a-z0-9-]*[\s>\/])/i', $code)) {
+            return 'html';
+        }
+
+        // Java: anotações, System.out, import com ;, ou assinatura + tipo.
+        if (preg_match('/@(Override|Service|Autowired|Component|Repository|SpringBootApplication|Entity)\b/', $code)
+            || preg_match('/\bSystem\.out\b|\bpublic\s+static\s+void\s+main\b/', $code)
+            || preg_match('/^\s*import\s+[a-z]+(\.[a-z0-9]+){2,};/m', $code)) {
+            return 'java';
+        }
+
+        // C#: using namespace, atributos, Console.WriteLine, async Task.
+        if (preg_match('/\bConsole\.WriteLine\b|\busing\s+System\b|\bnamespace\s+\w+\s*\{|\bpublic\s+class\s+\w+\s*:/m', $code)) {
+            return 'csharp';
+        }
+
+        // Go: package + func, ou := / fmt.
+        if (preg_match('/^\s*package\s+\w+/m', $code)
+            && preg_match('/\bfunc\b|\bimport\s*\(|:=/', $code)) {
+            return 'go';
+        }
+
+        // Rust: fn main, let mut, use ::, println!.
+        if (preg_match('/\bfn\s+\w+\s*\(|\blet\s+mut\b|\bprintln!|\buse\s+\w+::/', $code)) {
+            return 'rust';
+        }
+
+        // Python: def/class com :, imports, f-strings, __dunder__.
+        if (preg_match('/^\s*(def|class)\s+\w+.*:\s*$|^\s*(from\s+\w+\s+import|import\s+\w+)\b|\bprint\(|__\w+__/m', $code)) {
+            return 'python';
+        }
+
+        // Ruby: def...end, puts, require, símbolos :sym, blocos do |x|.
+        if (preg_match('/\bdef\s+\w+.*\n.*\bend\b|\bputs\s+|\brequire\s+[\'"]|\bdo\s*\|\w+\|/s', $code)) {
+            return 'ruby';
+        }
+
+        // SQL: verbos no início (case-insensitive).
+        if (preg_match('/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)\s/i', $code)) {
+            return 'sql';
+        }
+
+        // Bash/shell: shebang ou comandos/CLI comuns no início de linha.
+        if (preg_match('/^#!.*\b(sh|bash|zsh)\b|^\s*(npm|yarn|pnpm|composer|php artisan|docker|git|cd|sudo|apt|curl|wget|export)\s/m', $code)) {
+            return 'bash';
+        }
+
+        // JS/TS: imports ES, export, const/let, arrow functions, require.
+        if (preg_match('/\b(import\s+.+\s+from\s+[\'"]|export\s+(default|const|function|class)|const\s+\w+\s*=|let\s+\w+\s*=|=>|require\()/', $code)) {
+            return 'js';
         }
 
         return null;

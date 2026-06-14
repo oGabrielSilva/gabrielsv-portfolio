@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
+use App\Filament\Resources\Posts\Support\PostModalSchemas;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -13,6 +15,15 @@ class PostForm
     {
         return $schema
             ->components([
+                // Ações de conteúdo acima do título (preview + importar HTML).
+                // Só fazem sentido num post já existente; no create ficam ocultas.
+                Actions::make([
+                    PostModalSchemas::preview(),
+                    PostModalSchemas::importHtml(),
+                ])
+                    ->visible(fn (?\App\Models\Post $record): bool => $record !== null)
+                    ->columnSpanFull(),
+
                 TextInput::make('title')
                     ->label('')
                     ->placeholder('Título do post')

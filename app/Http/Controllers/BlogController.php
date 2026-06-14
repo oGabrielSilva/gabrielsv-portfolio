@@ -131,17 +131,23 @@ class BlogController extends Controller
 
     public function show(Post $post, TableOfContentsService $tocService, MarkupRenderer $renderer): View
     {
-        abort_unless(
-            $post->status === 'published'
-                && $post->published_at !== null
-                && $post->published_at->lte(now()),
-            404,
-        );
+        $isPublished = $post->status === 'published'
+            && $post->published_at !== null
+            && $post->published_at->lte(now());
+
+        // Usuário autenticado (só o admin existe) pode pré-visualizar rascunhos.
+        // A view marca essas páginas como noindex e exibe um banner de rascunho.
+        $isDraftPreview = ! $isPublished && auth()->check();
+
+        abort_unless($isPublished || $isDraftPreview, 404);
 
         $post->load(['categories', 'tags', 'author', 'media']);
 
         $tocResult = $tocService->extract($post->body_html);
         $renderedHtml = $renderer->render($tocResult['html']);
+
+        // Só referencia o bundle do Chart.js quando o post realmente tem gráfico.
+        $hasChart = str_contains((string) $post->body_html, 'data-chart');
 
         $seriesPosts = $post->series_slug
             ? Post::published()
@@ -159,6 +165,8 @@ class BlogController extends Controller
             'previous' => $post->previousPost(),
             'next' => $post->nextPost(),
             'seriesPosts' => $seriesPosts,
+            'hasChart' => $hasChart,
+            'isDraftPreview' => $isDraftPreview,
         ]);
     }
 

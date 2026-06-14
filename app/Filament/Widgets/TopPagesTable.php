@@ -33,6 +33,10 @@ class TopPagesTable extends TableWidget
                     ->limit(10)
             )
             ->paginated(false)
+            // Sem isso o TableWidget acrescenta um orderBy pela primary key
+            // (page_views.id) como tiebreaker, e com GROUP BY isso viola o
+            // only_full_group_by do MySQL 8 / MariaDB.
+            ->defaultKeySort(false)
             ->columns([
                 TextColumn::make('path')
                     ->label('Caminho')
