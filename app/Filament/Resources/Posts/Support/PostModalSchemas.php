@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Posts\Support;
 
+use App\Filament\Resources\Posts\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Services\HtmlImportService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +17,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class PostModalSchemas
@@ -292,18 +295,21 @@ class PostModalSchemas
             ->icon(Heroicon::OutlinedCodeBracket)
             ->color('gray')
             ->modalHeading('Importar HTML do artigo')
-            ->modalDescription('Cole o HTML completo do artigo. Gráficos devem vir como <div data-chart=\'…\'>. Scripts e elementos perigosos são removidos automaticamente. Isso substitui o conteúdo atual do post.')
+            ->modalDescription('Cole o HTML completo do artigo. Gráficos vão como <pre data-chart>{json}</pre>. Scripts e elementos perigosos são removidos automaticamente. Isso substitui o conteúdo atual do post.')
             ->modalWidth('3xl')
             ->modalSubmitActionLabel('Importar e substituir')
             ->schema([
                 Textarea::make('html')
                     ->label('HTML')
                     ->required()
-                    ->rows(18)
-                    ->placeholder('<h2>Título</h2><p>Texto…</p><div data-chart=\'{"type":"bar",…}\'></div>')
+                    ->rows(16)
+                    ->placeholder('<h2>Título</h2><p>Texto…</p><pre data-chart>{"type":"bar",…}</pre>')
                     ->helperText('O conteúdo passa por sanitização antes de ser salvo.'),
+                Placeholder::make('chart_help')
+                    ->label('Como inserir gráficos')
+                    ->content(new HtmlString(self::chartHelpHtml())),
             ])
-            ->action(function (array $data, Post $record): void {
+            ->action(function (array $data, Post $record, $livewire): void {
                 $clean = app(HtmlImportService::class)->sanitize($data['html'] ?? '');
 
                 if (trim($clean) === '') {
@@ -320,11 +326,40 @@ class PostModalSchemas
 
                 Notification::make()
                     ->title('HTML importado')
-                    ->body('O conteúdo foi sanitizado e salvo. Recarregando o editor…')
+                    ->body('O conteúdo foi sanitizado e salvo.')
                     ->success()
                     ->send();
 
-                redirect(request()->header('Referer') ?? '');
+                // Recarrega a página de edição para o RichEditor remontar com o
+                // body_html importado. Sem isso o editor continuaria com o valor
+                // antigo em memória e o próximo "Salvar" sobrescreveria o import.
+                // Usa $livewire->redirect() (igual aos redirects das Pages do
+                // projeto); o redirect() global solto não dispara no Livewire.
+                $livewire->redirect(PostResource::getUrl('edit', ['record' => $record]));
             });
+    }
+
+    /**
+     * HTML das instruções de gráfico, reaproveitado no modal de import e no
+     * help abaixo do editor (PostForm). Mantém um único lugar pra documentar o
+     * marcador <pre data-chart>. Estilos inline porque o CSS do Filament pode
+     * purgar utilitários Tailwind soltos num HtmlString.
+     */
+    public static function chartHelpHtml(): string
+    {
+        return <<<'HTML'
+<div style="font-size:.8125rem;line-height:1.5">
+  <p style="margin:0 0 .5rem">Um gráfico é um bloco <code>&lt;pre data-chart&gt;</code> com um JSON dentro. Cole pelo botão <strong>Importar HTML</strong>. O servidor descreve o gráfico no <code>aria-label</code> (SEO) e o Chart.js o desenha no site.</p>
+  <p style="margin:0 0 .25rem"><strong>Exemplo</strong> (barras empilhadas horizontais):</p>
+  <pre style="background:rgba(0,0,0,.35);padding:.5rem .625rem;border-radius:.375rem;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.6875rem;margin:0 0 .625rem">&lt;pre data-chart&gt;{"type":"bar","stacked":true,"horizontal":true,"labels":["Node","PHP","Java"],"datasets":[{"label":"Nativo","data":[67,22,41],"color":"#1D9E75"},{"label":"Manual","data":[0,48,197],"color":"#D85A30"}],"xLabel":"Linhas","title":"Verbosidade"}&lt;/pre&gt;</pre>
+  <p style="margin:0 0 .25rem"><strong>Campos:</strong> <code>type</code> ("bar"), <code>labels</code> (categorias) e <code>datasets</code> (séries, cada uma com <code>label</code>, <code>data</code> numérico e <code>color</code> hex). Opcionais: <code>stacked</code>, <code>horizontal</code>, <code>xLabel</code>, <code>title</code>.</p>
+  <ul style="margin:0;padding-left:1.1rem;list-style:disc">
+    <li><code>data</code> alinha com <code>labels</code> por posição (mesma ordem e tamanho).</li>
+    <li><code>color</code> só aceita hex (<code>#rgb</code> ou <code>#rrggbb</code>).</li>
+    <li>A legenda aparece sozinha quando há 2 séries ou mais.</li>
+    <li>JSON inválido: o gráfico é omitido e a página não quebra.</li>
+  </ul>
+</div>
+HTML;
     }
 }

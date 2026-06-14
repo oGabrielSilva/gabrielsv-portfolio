@@ -7,9 +7,10 @@ use InvalidArgumentException;
 /**
  * DTO imutável de um gráfico embutido num post.
  *
- * É o schema próprio do projeto (não o config cru do Chart.js): serve de fonte
- * única tanto pro SVG renderizado no servidor (SEO/no-JS) quanto pro Chart.js
- * que hidrata no cliente. Lê de um JSON guardado num <div data-chart='...'>.
+ * É o schema próprio do projeto (não o config cru do Chart.js). Lê de um JSON
+ * guardado num <div data-chart='...'> e serve a dois consumidores: o aria-label
+ * com a descrição textual (SEO/leitores de tela, já que o servidor não desenha
+ * imagem) e o Chart.js, que hidrata o gráfico no cliente.
  *
  * Marcador esperado no body_html:
  *
@@ -129,28 +130,6 @@ class ChartData
     private function num(float $value): string
     {
         return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
-    }
-
-    /** Maior soma (empilhado) ou maior valor (agrupado) — define a escala do eixo. */
-    public function maxValue(): float
-    {
-        $max = 0.0;
-
-        foreach ($this->labels as $index => $_) {
-            if ($this->stacked) {
-                $sum = 0.0;
-                foreach ($this->datasets as $ds) {
-                    $sum += $ds['data'][$index] ?? 0.0;
-                }
-                $max = max($max, $sum);
-            } else {
-                foreach ($this->datasets as $ds) {
-                    $max = max($max, $ds['data'][$index] ?? 0.0);
-                }
-            }
-        }
-
-        return $max > 0 ? $max : 1.0;
     }
 
     /** Aceita só hex (#rgb / #rrggbb); senão cai na paleta padrão por índice. */

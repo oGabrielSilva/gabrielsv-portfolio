@@ -76,18 +76,25 @@ class MarkupRenderer
         }
 
         $html = $this->normalizeWordPressCodeBlocks($html);
+        // Charts saem antes do highlight: um gráfico é um <pre data-chart> e, se
+        // passasse pelo highlightCodeBlocks, viraria bloco de código em vez de
+        // gráfico.
+        $html = $this->renderCharts($html);
         $html = $this->highlightCodeBlocks($html);
-        $html = $this->renderCallouts($html);
 
-        return $this->renderCharts($html);
+        return $this->renderCallouts($html);
     }
 
     /**
-     * Valida cada <div data-chart='{json}'> e o deixa pronto pra hidratação do
-     * Chart.js no cliente — que é quem desenha o gráfico de fato. O servidor
-     * não renderiza imagem: emite só o container com o JSON e uma descrição
-     * textual no aria-label (acessibilidade/SEO). JSON inválido: o marcador é
-     * removido sem quebrar a página.
+     * Converte o marcador de gráfico num container pronto pra hidratação do
+     * Chart.js no cliente, que é quem desenha de fato. O servidor não renderiza
+     * imagem: emite só o <figure> com o JSON e uma descrição textual no
+     * aria-label (acessibilidade/SEO). JSON inválido: o marcador é removido sem
+     * quebrar a página.
+     *
+     * Dois formatos aceitos:
+     *   - Novo:    <pre data-chart>{json}</pre>        (JSON no conteúdo)
+     *   - Legado:  <div data-chart='{json}'></div>    (JSON no atributo)
      */
     private function renderCharts(string $html): string
     {
@@ -101,7 +108,7 @@ class MarkupRenderer
         libxml_clear_errors();
 
         $xpath = new DOMXPath($dom);
-        $nodes = $xpath->query('//div[@data-chart]');
+        $nodes = $xpath->query('//pre[@data-chart] | //div[@data-chart]');
 
         if ($nodes === false || $nodes->length === 0) {
             return $html;
@@ -113,7 +120,10 @@ class MarkupRenderer
                 continue;
             }
 
-            $json = $node->getAttribute('data-chart');
+            // No <pre> o JSON é o conteúdo; no <div> legado é o atributo.
+            $json = $node->nodeName === 'pre'
+                ? trim($node->textContent)
+                : $node->getAttribute('data-chart');
 
             try {
                 $chart = \App\Services\Charts\ChartData::fromJson($json);
@@ -264,16 +274,17 @@ class MarkupRenderer
             $language = $this->detectLanguage($pre, $codeEl);
 
             // Blocos criados no RichEditor do Filament não trazem class="language-X".
-            // Sem isso o highlighter usaria 'txt' (sem tokens = texto branco).
-            // Tenta farejar a linguagem pelo conteúdo; se nada bater, assume o
-            // default do blog (js) pra ao menos ter cor.
+            // Tenta farejar a linguagem pelo conteúdo; se nada for conclusivo,
+            // mantém null e cai em 'txt' (texto neutro). Não forçamos uma
+            // linguagem: saída de terminal, config e prosa em <pre> sairiam
+            // coloridas como código (era o bug do fallback 'js').
             if ($language === null) {
-                $language = $this->detectLanguageFromCode($rawCode) ?? 'js';
+                $language = $this->detectLanguageFromCode($rawCode);
             }
 
             $filename = $pre->getAttribute('data-filename');
 
-            $highlighterLang = self::LANGUAGE_ALIASES[$language] ?? $language;
+            $highlighterLang = $language ? (self::LANGUAGE_ALIASES[$language] ?? $language) : 'txt';
             try {
                 $highlighted = $this->highlighter->parse($rawCode, $highlighterLang);
             } catch (\Throwable) {

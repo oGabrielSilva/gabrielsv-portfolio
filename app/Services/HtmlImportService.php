@@ -15,7 +15,8 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
  * Como o HTML é não-confiável, ele é sanitizado aqui contra XSS com uma
  * allowlist explícita: mantém o que os posts do blog usam (texto, headings,
  * tabelas, listas, code blocks, links, imagens e o marcador data-chart) e
- * remove tudo que executa (script, on*, iframe, etc.).
+ * remove tudo que executa (script, on*, iframe, etc.). Estilos inline (style)
+ * também são descartados: o blog renderiza com o próprio design system.
  */
 class HtmlImportService
 {
@@ -38,17 +39,24 @@ class HtmlImportService
             ->allowRelativeMedias()
             // Atributos que o blog usa na renderização.
             ->allowAttribute('class', allowedElements: '*')
-            ->allowAttribute('id', allowedElements: '*')
-            ->allowAttribute('style', allowedElements: '*')
-            // Marcador de gráfico: o Chart.js lê este atributo no cliente.
-            ->allowAttribute('data-chart', allowedElements: 'div')
+            // id só em headings: é o que o sumário (TableOfContentsService) usa
+            // como âncora. Liberar id em '*' deixaria o conteúdo importado colidir
+            // com ids da própria página (ex.: o wrapper __root do MarkupRenderer
+            // ou __toc_root do TOC, que são resolvidos por getElementById).
+            ->allowAttribute('id', allowedElements: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+            // Sem 'style' inline: o blog tem CSS próprio e style em '*' é
+            // superfície de CSS injection/clickjacking. O gráfico não precisa de
+            // style (vem no data-chart); o resto herda o design system.
+            // Marcador de gráfico: <pre data-chart>{json}</pre> (novo formato) ou
+            // <div data-chart='{json}'> (legado). O MarkupRenderer converte os dois.
+            ->allowAttribute('data-chart', allowedElements: ['div', 'pre'])
             ->allowAttribute('data-language', allowedElements: 'pre')
             ->allowAttribute('data-filename', allowedElements: 'pre')
             // Atributos de tabela usados por conteúdo importado.
             ->allowAttribute('colspan', allowedElements: ['td', 'th'])
             ->allowAttribute('rowspan', allowedElements: ['td', 'th'])
             // <div> não está no conjunto "safe" por padrão; o data-chart é um div.
-            ->allowElement('div', ['class', 'id', 'style', 'data-chart'])
+            ->allowElement('div', ['class', 'data-chart'])
             ->allowElement('figure', ['class'])
             ->allowElement('figcaption', ['class'])
             // Limite generoso pra artigos longos (default do Filament é 500k).

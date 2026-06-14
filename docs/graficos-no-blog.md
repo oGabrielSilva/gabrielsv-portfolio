@@ -5,11 +5,11 @@ gerarem o HTML do artigo já com o gráfico pronto.
 
 ## Como funciona (resumo)
 
-- No corpo do post (`body_html`), um gráfico é **um único elemento**:
-  `<div data-chart='{...json...}'></div>`.
-- `div` + atributo `data-*` passam pelo sanitizer do editor (Filament) intactos
-  e **não executam nada** — não use `<script>` nem `<canvas>` no artigo.
-- No servidor, esse `<div>` vira um `<figure class="chart" data-chart=...>` com
+- No corpo do post (`body_html`), um gráfico é **um único bloco**:
+  `<pre data-chart>{...json...}</pre>` (o JSON é o conteúdo do `<pre>`).
+- `<pre>` + `data-chart` passam pelo sanitizer do editor (Filament) intactos e
+  **não executam nada**. Não use `<script>` nem `<canvas>` no artigo.
+- No servidor, esse `<pre>` vira um `<figure class="chart" data-chart=...>` com
   uma descrição textual no `aria-label` (é o que o Google e leitores de tela
   leem).
 - No cliente, o **Chart.js** lê o JSON e desenha o gráfico de verdade. A lib só
@@ -18,15 +18,16 @@ gerarem o HTML do artigo já com o gráfico pronto.
 ## O marcador
 
 ```html
-<div data-chart='{ ...json... }'></div>
+<pre data-chart>{ ...json... }</pre>
 ```
 
-Regras do atributo:
+Regras:
 
-- Use **aspas simples** em volta do `data-chart` e o JSON normal (aspas duplas)
-  dentro. Nunca use aspas simples dentro do JSON.
-- O JSON deve ser válido e em uma linha (sem quebras de linha dentro do
-  atributo).
+- O JSON é o **conteúdo** do `<pre>` (não um atributo). Use as aspas duplas
+  normais do JSON.
+- O JSON deve ser válido. Pode ficar em uma linha só (recomendado) ou indentado.
+- O formato legado `<div data-chart='{json}'>` continua funcionando, mas prefira
+  o `<pre>`: ele sobrevive ao editor e fica visível como bloco.
 - Se o JSON for inválido, o servidor **remove o marcador** silenciosamente (o
   post não quebra, mas o gráfico não aparece).
 
@@ -62,19 +63,19 @@ Regras importantes:
 ### 1. Barras empilhadas horizontais (o caso mais comum)
 
 ```html
-<div data-chart='{"type":"bar","stacked":true,"horizontal":true,"labels":["Node / better-auth","PHP / Laravel Fortify","Java / Spring Boot"],"datasets":[{"label":"Nativo / config","data":[67,22,41],"color":"#1D9E75"},{"label":"Manual","data":[0,48,197],"color":"#D85A30"}],"xLabel":"Linhas de codigo escritas pelo dev","title":"Verbosidade real: o que voce escreve"}'></div>
+<pre data-chart>{"type":"bar","stacked":true,"horizontal":true,"labels":["Node / better-auth","PHP / Laravel Fortify","Java / Spring Boot"],"datasets":[{"label":"Nativo / config","data":[67,22,41],"color":"#1D9E75"},{"label":"Manual","data":[0,48,197],"color":"#D85A30"}],"xLabel":"Linhas de codigo escritas pelo dev","title":"Verbosidade real: o que voce escreve"}</pre>
 ```
 
 ### 2. Barras verticais simples (uma série)
 
 ```html
-<div data-chart='{"type":"bar","labels":["Jan","Fev","Mar","Abr"],"datasets":[{"label":"Visitas","data":[120,190,300,250],"color":"#00d1b2"}],"title":"Visitas por mes"}'></div>
+<pre data-chart>{"type":"bar","labels":["Jan","Fev","Mar","Abr"],"datasets":[{"label":"Visitas","data":[120,190,300,250],"color":"#00d1b2"}],"title":"Visitas por mes"}</pre>
 ```
 
 ### 3. Barras agrupadas (várias séries, lado a lado)
 
 ```html
-<div data-chart='{"type":"bar","labels":["2024","2025","2026"],"datasets":[{"label":"Frontend","data":[40,55,70],"color":"#3b82f6"},{"label":"Backend","data":[60,45,30],"color":"#f59e0b"}],"xLabel":"% do tempo","title":"Divisao de esforco"}'></div>
+<pre data-chart>{"type":"bar","labels":["2024","2025","2026"],"datasets":[{"label":"Frontend","data":[40,55,70],"color":"#3b82f6"},{"label":"Backend","data":[60,45,30],"color":"#f59e0b"}],"xLabel":"% do tempo","title":"Divisao de esforco"}</pre>
 ```
 
 ## Cores sugeridas (paleta do site)
@@ -89,18 +90,18 @@ Regras importantes:
 
 ## Onde colocar no artigo
 
-Insira o `<div data-chart>` como um bloco próprio, normalmente **logo após o
+Insira o `<pre data-chart>` como um bloco próprio, normalmente **logo após o
 parágrafo que apresenta o gráfico**. Não o coloque dentro de `<p>`, `<table>`,
-`<li>` ou outro elemento — ele deve ser um irmão direto dos parágrafos/headings
+`<li>` ou outro elemento: ele deve ser um irmão direto dos parágrafos/headings
 do corpo.
 
 ## Instrução pronta para um agente
 
 > Ao gerar o HTML deste artigo, sempre que houver um gráfico de barras,
-> insira-o como um único elemento `<div data-chart='{...}'></div>` com JSON
-> válido (aspas simples por fora, aspas duplas no JSON). Use o schema: `type`
+> insira-o como um único bloco `<pre data-chart>{...}</pre>` com JSON válido (o
+> JSON é o conteúdo do `<pre>`, com aspas duplas normais). Use o schema: `type`
 > ("bar"), `labels` (string[]), `datasets` ([{`label`, `data` number[],
 > `color` hex}]), e opcionalmente `stacked`, `horizontal`, `xLabel`, `title`.
 > O array `data` de cada série deve ter o mesmo tamanho e ordem de `labels`.
-> Nunca use `<canvas>` nem `<script>` — só o `<div data-chart>`. Coloque-o como
+> Nunca use `<canvas>` nem `<script>`, só o `<pre data-chart>`. Coloque-o como
 > bloco próprio no corpo, não dentro de outro elemento.

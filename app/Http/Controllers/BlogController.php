@@ -135,9 +135,14 @@ class BlogController extends Controller
             && $post->published_at !== null
             && $post->published_at->lte(now());
 
-        // Usuário autenticado (só o admin existe) pode pré-visualizar rascunhos.
-        // A view marca essas páginas como noindex e exibe um banner de rascunho.
-        $isDraftPreview = ! $isPublished && auth()->check();
+        // Só o autor do post pode pré-visualizar o próprio rascunho. Checar o
+        // autor (em vez de só auth()->check()) evita que um futuro usuário
+        // autenticado não-admin (ex.: newsletter logada) enxergue rascunhos.
+        // Hoje só o admin existe e ele é o autor dos posts. A view marca essas
+        // páginas como noindex e exibe um banner de rascunho.
+        $isDraftPreview = ! $isPublished
+            && auth()->check()
+            && (int) $post->author_id === (int) auth()->id();
 
         abort_unless($isPublished || $isDraftPreview, 404);
 
