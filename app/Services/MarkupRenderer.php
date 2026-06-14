@@ -5,67 +5,9 @@ namespace App\Services;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
-use Tempest\Highlight\Highlighter;
-use Tempest\Highlight\Themes\CssTheme;
 
 class MarkupRenderer
 {
-    private Highlighter $highlighter;
-
-    /**
-     * Aliases pra linguagens que tempest/highlight v2 não conhece nativamente.
-     * Mapeia pro highlighter mais próximo (não é 100% correto mas dá cor decente).
-     * Quando migrarmos pra Shiki essa tabela some.
-     */
-    private const LANGUAGE_ALIASES = [
-        'ts' => 'js',
-        'tsx' => 'js',
-        'typescript' => 'js',
-        'javascript' => 'js',
-        'jsx' => 'js',
-        'mjs' => 'js',
-        'cjs' => 'js',
-        'node' => 'js',
-        'yaml' => 'json',
-        'yml' => 'json',
-        'toml' => 'json',
-        'env' => 'bash',
-        'dotenv' => 'bash',
-        'sh' => 'bash',
-        'shell' => 'bash',
-        'zsh' => 'bash',
-        'console' => 'bash',
-        'dockerfile' => 'bash',
-        'docker' => 'bash',
-        'makefile' => 'bash',
-        'ini' => 'bash',
-        'conf' => 'bash',
-        'nginx' => 'bash',
-        'apache' => 'bash',
-        'sql' => 'php',
-        'mysql' => 'php',
-        'postgres' => 'php',
-        'postgresql' => 'php',
-        'go' => 'php',
-        'rust' => 'php',
-        'python' => 'php',
-        'py' => 'php',
-        'ruby' => 'php',
-        'rb' => 'php',
-        'java' => 'php',
-        'kotlin' => 'php',
-        'swift' => 'php',
-        'c' => 'php',
-        'cpp' => 'php',
-        'csharp' => 'php',
-        'cs' => 'php',
-    ];
-
-    public function __construct()
-    {
-        $this->highlighter = new Highlighter(new CssTheme);
-    }
-
     /**
      * Pós-processa o HTML do post: syntax highlight + copy buttons + callouts.
      */
@@ -271,25 +213,14 @@ class MarkupRenderer
             }
 
             $rawCode = $codeEl ? $codeEl->textContent : $pre->textContent;
+            // Só destaca quando a linguagem é explícita (class="language-X" no
+            // <code>/<pre> ou data-language). Sem isso fica null: o bloco sai
+            // como texto puro, sem auto-detecção por conteúdo (que chutava
+            // errado). A tokenização é no cliente, via highlight.js
+            // (resources/js/blog/highlight.js).
             $language = $this->detectLanguage($pre, $codeEl);
 
-            // Blocos criados no RichEditor do Filament não trazem class="language-X".
-            // Tenta farejar a linguagem pelo conteúdo; se nada for conclusivo,
-            // mantém null e cai em 'txt' (texto neutro). Não forçamos uma
-            // linguagem: saída de terminal, config e prosa em <pre> sairiam
-            // coloridas como código (era o bug do fallback 'js').
-            if ($language === null) {
-                $language = $this->detectLanguageFromCode($rawCode);
-            }
-
             $filename = $pre->getAttribute('data-filename');
-
-            $highlighterLang = $language ? (self::LANGUAGE_ALIASES[$language] ?? $language) : 'txt';
-            try {
-                $highlighted = $this->highlighter->parse($rawCode, $highlighterLang);
-            } catch (\Throwable) {
-                $highlighted = htmlspecialchars($rawCode, ENT_QUOTES, 'UTF-8');
-            }
 
             $wrapper = $dom->createElement('div');
             $wrapper->setAttribute('class', 'code-block'.($language ? ' code-block--'.$language : ''));
@@ -322,19 +253,12 @@ class MarkupRenderer
             $newPre = $dom->createElement('pre');
             $newCode = $dom->createElement('code');
             if ($language) {
+                // O highlight.js lê esta classe e tokeniza no cliente. O servidor
+                // emite só o código escapado (DOMDocument escapa no saveHTML),
+                // que também é o fallback legível sem JS.
                 $newCode->setAttribute('class', 'language-'.$language);
             }
-
-            $fragment = $dom->createDocumentFragment();
-            @$fragment->appendXML('<root>'.$highlighted.'</root>');
-            if ($fragment->firstChild) {
-                foreach ($fragment->firstChild->childNodes as $node) {
-                    $newCode->appendChild($node->cloneNode(true));
-                }
-            } else {
-                $newCode->appendChild($dom->createTextNode($rawCode));
-            }
-
+            $newCode->appendChild($dom->createTextNode($rawCode));
             $newPre->appendChild($newCode);
             $body->appendChild($newPre);
 
@@ -378,90 +302,6 @@ class MarkupRenderer
         $dataLang = $pre->getAttribute('data-language');
         if ($dataLang !== '') {
             return strtolower($dataLang);
-        }
-
-        return null;
-    }
-
-    /**
-     * Fareja a linguagem pelo conteúdo do bloco quando não há class="language-X"
-     * (caso dos blocos criados no RichEditor). Heurística por pistas: cada regra
-     * usa marcas inequívocas da linguagem. Retorna null quando nada é
-     * conclusivo, deixando o caller aplicar o default (js).
-     *
-     * Ordem importa: linguagens com sinais únicos (tag PHP, anotações Java,
-     * package Go) vêm antes das de sintaxe mais genérica (JS).
-     */
-    private function detectLanguageFromCode(string $code): ?string
-    {
-        $code = trim($code);
-        if ($code === '') {
-            return null;
-        }
-
-        // PHP: tag de abertura, namespace/use, ou $variáveis com ->.
-        if (preg_match('/<\?php|^\s*(namespace|use)\s+[\\\\A-Za-z]|\$\w+\s*->/m', $code)) {
-            return 'php';
-        }
-
-        // JSON: começa com { ou [, tem "chave": e nenhuma marca de código.
-        if (preg_match('/^\s*[\{\[]/', $code)
-            && preg_match('/"[^"]+"\s*:/', $code)
-            && ! preg_match('/;|=>|function|\bconst\b|\bif\b/', $code)) {
-            return 'json';
-        }
-
-        // HTML/XML: começa com tag, doctype ou declaração xml.
-        if (preg_match('/^\s*<(?:!doctype|\?xml|[a-z][a-z0-9-]*[\s>\/])/i', $code)) {
-            return 'html';
-        }
-
-        // Java: anotações, System.out, import com ;, ou assinatura + tipo.
-        if (preg_match('/@(Override|Service|Autowired|Component|Repository|SpringBootApplication|Entity)\b/', $code)
-            || preg_match('/\bSystem\.out\b|\bpublic\s+static\s+void\s+main\b/', $code)
-            || preg_match('/^\s*import\s+[a-z]+(\.[a-z0-9]+){2,};/m', $code)) {
-            return 'java';
-        }
-
-        // C#: using namespace, atributos, Console.WriteLine, async Task.
-        if (preg_match('/\bConsole\.WriteLine\b|\busing\s+System\b|\bnamespace\s+\w+\s*\{|\bpublic\s+class\s+\w+\s*:/m', $code)) {
-            return 'csharp';
-        }
-
-        // Go: package + func, ou := / fmt.
-        if (preg_match('/^\s*package\s+\w+/m', $code)
-            && preg_match('/\bfunc\b|\bimport\s*\(|:=/', $code)) {
-            return 'go';
-        }
-
-        // Rust: fn main, let mut, use ::, println!.
-        if (preg_match('/\bfn\s+\w+\s*\(|\blet\s+mut\b|\bprintln!|\buse\s+\w+::/', $code)) {
-            return 'rust';
-        }
-
-        // Python: def/class com :, imports, f-strings, __dunder__.
-        if (preg_match('/^\s*(def|class)\s+\w+.*:\s*$|^\s*(from\s+\w+\s+import|import\s+\w+)\b|\bprint\(|__\w+__/m', $code)) {
-            return 'python';
-        }
-
-        // Ruby: def...end, puts, require, símbolos :sym, blocos do |x|.
-        if (preg_match('/\bdef\s+\w+.*\n.*\bend\b|\bputs\s+|\brequire\s+[\'"]|\bdo\s*\|\w+\|/s', $code)) {
-            return 'ruby';
-        }
-
-        // SQL: verbos no início (case-insensitive).
-        if (preg_match('/^\s*(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)\s/i', $code)) {
-            return 'sql';
-        }
-
-        // Bash/shell: shebang ou comandos/CLI comuns no início de linha.
-        if (preg_match('/^#!.*\b(sh|bash|zsh)\b|^\s*(npm|yarn|pnpm|composer|php artisan|docker|git|cd|sudo|apt|curl|wget|export)\s/m', $code)) {
-            return 'bash';
-        }
-
-        // JS/TS: imports ES, export, const/let, arrow functions, require.
-        if (preg_match('/\b(import\s+.+\s+from\s+[\'"]|export\s+(default|const|function|class)|const\s+\w+\s*=|let\s+\w+\s*=|=>|require\()/', $code)) {
-            return 'js';
         }
 
         return null;

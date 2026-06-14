@@ -325,18 +325,41 @@ pre::-webkit-scrollbar-thumb:hover,
     border-color: var(--color-bulma-primary);
 }
 
-/* Tempest/highlight tokens (mapeamento básico) */
-.code-block .hl-keyword { color: #c084fc; }
-.code-block .hl-type { color: #60a5fa; }
-.code-block .hl-attribute { color: #f59e0b; }
-.code-block .hl-property { color: #fbbf24; }
-.code-block .hl-value, .code-block .hl-string { color: #34d399; }
-.code-block .hl-number { color: #f97316; }
-.code-block .hl-comment { color: #6b7280; font-style: italic; }
-.code-block .hl-symbol { color: #e5e7eb; }
-.code-block .hl-variable, .code-block .hl-generic { color: #f87171; }
-.code-block .hl-addition { color: #34d399; background: rgba(52, 211, 153, 0.08); display: block; }
-.code-block .hl-deletion { color: #f87171; background: rgba(248, 113, 113, 0.08); display: block; }
+/* Tokens do highlight.js (tokeniza no cliente). Paleta alinhada ao site,
+   sem importar tema externo, pra manter a estética dos code blocks. */
+.code-block .hljs-keyword,
+.code-block .hljs-built_in,
+.code-block .hljs-literal,
+.code-block .hljs-selector-tag { color: #c084fc; }
+.code-block .hljs-type,
+.code-block .hljs-title.class_,
+.code-block .hljs-tag,
+.code-block .hljs-name { color: #60a5fa; }
+.code-block .hljs-title,
+.code-block .hljs-title.function_,
+.code-block .hljs-section { color: #93c5fd; }
+.code-block .hljs-attr,
+.code-block .hljs-attribute,
+.code-block .hljs-property,
+.code-block .hljs-selector-attr,
+.code-block .hljs-selector-class,
+.code-block .hljs-selector-id { color: #fbbf24; }
+.code-block .hljs-string,
+.code-block .hljs-regexp { color: #34d399; }
+.code-block .hljs-number,
+.code-block .hljs-bullet { color: #f97316; }
+.code-block .hljs-comment,
+.code-block .hljs-quote { color: #6b7280; font-style: italic; }
+.code-block .hljs-variable,
+.code-block .hljs-template-variable,
+.code-block .hljs-params { color: #f87171; }
+.code-block .hljs-symbol,
+.code-block .hljs-meta { color: #9ca3af; }
+.code-block .hljs-addition { color: #34d399; background: rgba(52, 211, 153, 0.08); display: inline-block; width: 100%; }
+.code-block .hljs-deletion { color: #f87171; background: rgba(248, 113, 113, 0.08); display: inline-block; width: 100%; }
+.code-block .hljs-emphasis { font-style: italic; }
+.code-block .hljs-strong { font-weight: 700; }
+.code-block .hljs-link { text-decoration: underline; }
 
 /* ==========================================================================
    Callouts (Lote 1.7)

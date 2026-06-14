@@ -63,6 +63,16 @@ class PostForm
                             ->hiddenLabel()
                             ->content(new HtmlString(PostModalSchemas::chartHelpHtml())),
                     ]),
+
+                Section::make('Blocos de código')
+                    ->collapsible()
+                    ->collapsed()
+                    ->columnSpanFull()
+                    ->schema([
+                        Placeholder::make('code_help')
+                            ->hiddenLabel()
+                            ->content(new HtmlString(PostModalSchemas::codeHelpHtml())),
+                    ]),
             ]);
     }
 }

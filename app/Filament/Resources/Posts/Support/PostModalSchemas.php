@@ -308,6 +308,9 @@ class PostModalSchemas
                 Placeholder::make('chart_help')
                     ->label('Como inserir gráficos')
                     ->content(new HtmlString(self::chartHelpHtml())),
+                Placeholder::make('code_help')
+                    ->label('Como inserir blocos de código')
+                    ->content(new HtmlString(self::codeHelpHtml())),
             ])
             ->action(function (array $data, Post $record, $livewire): void {
                 $clean = app(HtmlImportService::class)->sanitize($data['html'] ?? '');
@@ -359,6 +362,24 @@ class PostModalSchemas
     <li>A legenda aparece sozinha quando há 2 séries ou mais.</li>
     <li>JSON inválido: o gráfico é omitido e a página não quebra.</li>
   </ul>
+</div>
+HTML;
+    }
+
+    /**
+     * HTML das instruções de bloco de código, reaproveitado no modal de import e
+     * no help abaixo do editor (PostForm). O highlight é no cliente (highlight.js).
+     */
+    public static function codeHelpHtml(): string
+    {
+        return <<<'HTML'
+<div style="font-size:.8125rem;line-height:1.5">
+  <p style="margin:0 0 .5rem">Bloco de código: <code>&lt;pre&gt;&lt;code class="language-X"&gt;…&lt;/code&gt;&lt;/pre&gt;</code>, onde X é a linguagem. Escape <code>&lt;</code>, <code>&gt;</code> e <code>&amp;</code> dentro do código. Sem <code>language-X</code> o bloco fica texto puro (sem cor). O destaque é no cliente, sem auto-detecção.</p>
+  <p style="margin:0 0 .25rem"><strong>Exemplo:</strong></p>
+  <pre style="background:rgba(0,0,0,.35);padding:.5rem .625rem;border-radius:.375rem;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.6875rem;margin:0 0 .625rem">&lt;pre&gt;&lt;code class="language-go"&gt;package main
+
+func main() {}&lt;/code&gt;&lt;/pre&gt;</pre>
+  <p style="margin:0"><strong>Slugs:</strong> javascript (js), typescript (ts), python, go, rust, java, csharp (cs), php, ruby (rb), c, cpp, kotlin, swift, bash (sh), shell, powershell, sql, json, yaml (yml), xml (html), css, scss, dockerfile, ini, diff, markdown, makefile, nginx. Opcional: <code>data-filename="arquivo.ext"</code> no <code>&lt;pre&gt;</code>.</p>
 </div>
 HTML;
     }

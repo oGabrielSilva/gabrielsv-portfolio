@@ -28,6 +28,12 @@
     @endpush
 @endif
 
+@if($hasCode)
+    @push('scripts')
+        @vite('resources/js/blog/highlight.js')
+    @endpush
+@endif
+
 @push('jsonld')
     <script type="application/ld+json">
     {!! json_encode(app(\App\Services\JsonLdBuilder::class)->forPost($post), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}

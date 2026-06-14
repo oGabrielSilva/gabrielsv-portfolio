@@ -22,6 +22,7 @@ export default defineConfig({
                 "resources/js/app.js",
                 "resources/js/card-generator.js", // Esse estava fora da pasta tools
                 "resources/js/blog/chart.js", // Chart.js: só carregado em posts com gráfico
+                "resources/js/blog/highlight.js", // highlight.js: só carregado em posts com código
 
                 // Injeta automaticamente todos os JS da pasta tools
                 ...getFiles("resources/js/tools"),

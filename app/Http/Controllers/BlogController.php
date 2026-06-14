@@ -154,6 +154,10 @@ class BlogController extends Controller
         // Só referencia o bundle do Chart.js quando o post realmente tem gráfico.
         $hasChart = str_contains((string) $post->body_html, 'data-chart');
 
+        // Só referencia o highlight.js quando há bloco de código com linguagem
+        // (o MarkupRenderer emite class="language-X" nesses casos).
+        $hasCode = str_contains($renderedHtml, 'class="language-');
+
         $seriesPosts = $post->series_slug
             ? Post::published()
                 ->where('series_slug', $post->series_slug)
@@ -171,6 +175,7 @@ class BlogController extends Controller
             'next' => $post->nextPost(),
             'seriesPosts' => $seriesPosts,
             'hasChart' => $hasChart,
+            'hasCode' => $hasCode,
             'isDraftPreview' => $isDraftPreview,
         ]);
     }
