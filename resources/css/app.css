@@ -418,3 +418,14 @@ pre::-webkit-scrollbar-thumb:hover,
     border-radius: 1px;
 }
 
+/* ==========================================================================
+   Gráficos (data-chart): desenhados pelo Chart.js no cliente
+   ========================================================================== */
+/* Reserva altura pro canvas — Chart.js usa maintainAspectRatio:false e
+   colapsaria sem uma altura definida no container. */
+.chart {
+    position: relative;
+    margin: 2rem 0;
+    height: clamp(260px, 40vw, 360px);
+}
+

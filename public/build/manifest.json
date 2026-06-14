@@ -32,7 +32,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-CBewfnTm.css",
+    "file": "assets/app-HHDS9th0.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -51,6 +51,12 @@
     "css": [
       "assets/app-DvB2Xm2x.css"
     ]
+  },
+  "resources/js/blog/chart.js": {
+    "file": "assets/chart-DdqIFQ_V.js",
+    "name": "chart",
+    "src": "resources/js/blog/chart.js",
+    "isEntry": true
   },
   "resources/js/card-generator.js": {
     "file": "assets/card-generator-CtH3wJ6f.js",

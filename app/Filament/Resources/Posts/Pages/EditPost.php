@@ -4,12 +4,10 @@ namespace App\Filament\Resources\Posts\Pages;
 
 use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Resources\Posts\Support\PostModalSchemas;
-use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Icons\Heroicon;
 
 class EditPost extends EditRecord
 {
@@ -17,17 +15,14 @@ class EditPost extends EditRecord
 
     protected function getHeaderActions(): array
     {
+        // preview() e importHtml() agora ficam no topo do form (PostForm),
+        // acima do título — não no header, pra não apertar o cabeçalho.
         return [
             PostModalSchemas::publication(),
             PostModalSchemas::cover(),
             PostModalSchemas::taxonomy(),
             PostModalSchemas::series(),
             PostModalSchemas::seo(),
-            Action::make('view')
-                ->label('Ver no site')
-                ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
-                ->url(fn () => route('blog.show', $this->record), shouldOpenInNewTab: true)
-                ->visible(fn () => $this->record->status === 'published'),
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),

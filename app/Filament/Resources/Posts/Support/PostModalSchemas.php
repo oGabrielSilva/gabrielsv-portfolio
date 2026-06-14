@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Posts\Support;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\HtmlImportService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 
@@ -252,6 +254,77 @@ class PostModalSchemas
                     'series_slug' => $data['series_slug'] ?: null,
                     'series_order' => $data['series_order'] ?: null,
                 ]);
+            });
+    }
+
+    /**
+     * Action de pré-visualização do post.
+     *
+     * Sempre disponível. Em rascunho, abre o preview (BlogController::show
+     * libera draft pra usuário logado, com noindex); publicado, abre a página
+     * pública. Abre em nova aba.
+     */
+    public static function preview(): Action
+    {
+        return Action::make('preview')
+            ->label(fn (Post $record) => $record->status === 'published' ? 'Ver no site' : 'Pré-visualizar')
+            ->icon(Heroicon::OutlinedEye)
+            ->color('gray')
+            ->url(fn (Post $record) => route('blog.show', $record), shouldOpenInNewTab: true);
+    }
+
+    /**
+     * Action que importa o HTML completo do artigo.
+     *
+     * O conteúdo colado é sanitizado (HtmlImportService) e gravado direto em
+     * body_html, SEM passar pelo RichEditor/TipTap — que reparseia o HTML e
+     * descartaria o marcador <div data-chart> dos gráficos. A sanitização
+     * remove script/iframe/canvas/on* e preserva o que o blog usa (texto,
+     * tabelas, code blocks, links, imagens e o data-chart).
+     *
+     * Como o RichEditor já está montado com o valor antigo, recarregamos a
+     * página após gravar pra ele refletir o conteúdo importado.
+     */
+    public static function importHtml(): Action
+    {
+        return Action::make('importHtml')
+            ->label('Importar HTML')
+            ->icon(Heroicon::OutlinedCodeBracket)
+            ->color('gray')
+            ->modalHeading('Importar HTML do artigo')
+            ->modalDescription('Cole o HTML completo do artigo. Gráficos devem vir como <div data-chart=\'…\'>. Scripts e elementos perigosos são removidos automaticamente. Isso substitui o conteúdo atual do post.')
+            ->modalWidth('3xl')
+            ->modalSubmitActionLabel('Importar e substituir')
+            ->schema([
+                Textarea::make('html')
+                    ->label('HTML')
+                    ->required()
+                    ->rows(18)
+                    ->placeholder('<h2>Título</h2><p>Texto…</p><div data-chart=\'{"type":"bar",…}\'></div>')
+                    ->helperText('O conteúdo passa por sanitização antes de ser salvo.'),
+            ])
+            ->action(function (array $data, Post $record): void {
+                $clean = app(HtmlImportService::class)->sanitize($data['html'] ?? '');
+
+                if (trim($clean) === '') {
+                    Notification::make()
+                        ->title('Nada foi importado')
+                        ->body('O HTML ficou vazio após a sanitização.')
+                        ->warning()
+                        ->send();
+
+                    return;
+                }
+
+                $record->update(['body_html' => $clean]);
+
+                Notification::make()
+                    ->title('HTML importado')
+                    ->body('O conteúdo foi sanitizado e salvo. Recarregando o editor…')
+                    ->success()
+                    ->send();
+
+                redirect(request()->header('Referer') ?? '');
             });
     }
 }
