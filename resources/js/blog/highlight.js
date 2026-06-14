@@ -16,6 +16,7 @@
  */
 import hljs from "highlight.js/lib/core";
 
+import apache from "highlight.js/lib/languages/apache";
 import bash from "highlight.js/lib/languages/bash";
 import c from "highlight.js/lib/languages/c";
 import cpp from "highlight.js/lib/languages/cpp";
@@ -47,6 +48,7 @@ import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
 
 const langs = {
+    apache,
     bash,
     c,
     cpp,
@@ -81,6 +83,10 @@ const langs = {
 for (const [name, mod] of Object.entries(langs)) {
     hljs.registerLanguage(name, mod);
 }
+
+// Aliases que o highlight.js não traz mas aparecem no conteúdo (ex.: posts
+// antigos do WordPress rotulados como "Zsh"). Mapeia pro grammar mais próximo.
+hljs.registerAliases(["zsh"], { languageName: "bash" });
 
 // Nosso conteúdo já vem escapado do servidor; silencia o aviso de innerHTML.
 hljs.configure({ ignoreUnescapedHTML: true });
